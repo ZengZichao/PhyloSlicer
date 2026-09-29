@@ -1,0 +1,95 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "phyloslicer"
+dynamic = ["version"]
+description = "High-performance temporal slicing of phylogenies and cumulative-diversity rate analysis for macroecology in Python"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "BSD-3-Clause" }
+authors = [{ name = "Zichao Zeng", email = "zengzichao@sjtu.edu.cn" }]
+keywords = [
+    "phylogenetics", "macroecology", "biogeography", "diversification",
+    "spatial-phylogenetics", "phylogenetic-diversity", "time-slicing",
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: BSD License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Scientific/Engineering :: Bio-Informatics",
+]
+dependencies = [
+    "numpy>=1.24",
+    "scipy>=1.11",
+    "pandas>=2.0",
+    "matplotlib>=3.7",
+]
+
+[project.optional-dependencies]
+accel = ["numba>=0.59"]
+spatial = ["geopandas>=0.14"]
+io = ["dendropy>=5.0", "biopython>=1.83"]
+dev = [
+    "pytest>=8.0",
+    "pytest-cov",
+    # no `hypothesis`: the property tests in tests/test_invariants.py randomise
+    # over seeded numpy generators (Yule and birth-death trees), so declaring an
+    # extra that no test imports would leave a dangling dependency claim
+    "ruff==0.15.5",  # pinned: the lint gate must mean the same thing
+    # locally and in CI, and ruff 0.16 changes rulesets between minor versions
+    "mypy",
+    "pre-commit",
+]
+
+[project.scripts]
+phyloslicer = "phyloslicer.cli.main:main"
+
+[project.urls]
+Homepage = "https://github.com/ZengZichao/PhyloSlicer"
+Repository = "https://github.com/ZengZichao/PhyloSlicer"
+Documentation = "https://github.com/ZengZichao/PhyloSlicer/blob/main/docs/USER_GUIDE.md"
+Changelog = "https://github.com/ZengZichao/PhyloSlicer/blob/main/CHANGELOG.md"
+Issues = "https://github.com/ZengZichao/PhyloSlicer/issues"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.dynamic]
+# single source of truth: src/phyloslicer/__init__.py.__version__
+version = { attr = "phyloslicer.__version__" }
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+# lets a reader run ``pytest`` straight from a source checkout, without
+# installing the package first (the docs promise out-of-the-box runs)
+pythonpath = ["src"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+# E501 is enforced: the project declares a 100-column limit, so a line over it
+# is a real inconsistency rather than a style preference.
+select = ["E", "F", "I"]
+
+[tool.ruff.lint.per-file-ignores]
+# These runners insert src/ into sys.path before importing phyloslicer so they
+# work from a source checkout with no install step; the import order is the
+# mechanism, not an oversight.
+"benchmarks/*.py" = ["E402"]
+"examples/*.py" = ["E402"]
+"testing_suite/scripts/*.py" = ["E402"]
+"validation/*.py" = ["E402"]
+
+[tool.mypy]
+python_version = "3.10"
+ignore_missing_imports = true

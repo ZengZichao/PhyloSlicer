@@ -1,0 +1,4 @@
+tips,n_slices,array_peak_bytes,copies_peak_bytes,copies_over_array,source
+2000,25,1933888,2808112,1.45,benchmarks/benchmark_memory.py
+2000,50,3492618,5616224,1.61,benchmarks/benchmark_memory.py
+2000,100,6691010,11232672,1.68,benchmarks/benchmark_memory.py

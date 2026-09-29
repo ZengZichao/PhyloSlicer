@@ -1,0 +1,48 @@
+{
+  "title": "PhyloSlicer: temporal slicing of phylogenies and cumulative-diversity rate analysis for macroecology in Python",
+  "upload_type": "software",
+  "description": "Independent, vectorised Python implementation of slicing phylogenies to infer phylogenetic patterns over evolutionary time: a single (E, k) interval-intersection contribution matrix instead of per-slice tree copies, sparse-matrix PD/PE/PB indices, certified cumulative-diversity rate fitting with diagnostics, posterior-tree uncertainty, spatial adjacency helpers and a CLI. Cross-validated against treesliceR v1.1.0.",
+  "publication_date": "2026-09-29",
+  "version": "0.1.0",
+  "language": "eng",
+  "license": "BSD-3-Clause",
+  "access_right": "open",
+  "creators": [
+    {
+      "orcid": "0000-0001-6553-970X",
+      "name": "Zichao Zeng",
+      "affiliation": "School of Life Sciences and Biotechnology, Shanghai Jiao Tong University, Shanghai, China"
+    }
+  ],
+  "keywords": [
+    "phylogenetics",
+    "macroecology",
+    "biogeography",
+    "diversification",
+    "spatial phylogenetics",
+    "phylogenetic diversity",
+    "time slicing"
+  ],
+  "notes": "Source code: https://github.com/ZengZichao/PhyloSlicer (BSD-3-Clause). The methodological source of the slicing paradigm, treesliceR (Araujo et al. 2025, Ecography 2025:e07364, doi:10.1111/ecog.07364), should be cited alongside this package.",
+  "related_identifiers": [
+    {
+      "scheme": "url",
+      "identifier": "https://github.com/ZengZichao/PhyloSlicer",
+      "relation": "isSupplementTo",
+      "resource_type": "software"
+    },
+    {
+      "scheme": "doi",
+      "identifier": "10.1111/ecog.07364",
+      "relation": "isDerivativeOf",
+      "resource_type": "text"
+    }
+  ],
+  "references": [
+    {
+      "scheme": "doi",
+      "identifier": "10.1111/ecog.07364",
+      "title": "'treesliceR': a package for slicing phylogenies and inferring phylogenetic patterns over evolutionary time"
+    }
+  ]
+}

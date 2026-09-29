@@ -1,0 +1,60 @@
+cff-version: 1.2.0
+message: "If you use PhyloSlicer, please cite it as below, and cite the treesliceR method paper that introduced the temporal-slicing paradigm."
+title: "PhyloSlicer: temporal slicing of phylogenies and cumulative-diversity rate analysis for macroecology in Python"
+abstract: >-
+  Independent, vectorised Python implementation of slicing phylogenies to infer
+  phylogenetic patterns over evolutionary time. Expresses slicing as a single
+  (E, k) interval-intersection contribution matrix so no tree is copied per
+  slice, and adds sparse-matrix diversity indices (PD, PE, PB and its
+  turnover-weighted variant), certified cumulative-diversity rate fitting with
+  convergence diagnostics, posterior-tree uncertainty quantification, spatial
+  adjacency helpers, and a command-line interface. Cross-validated against
+  treesliceR v1.1.0.
+authors:
+  - family-names: Zeng
+    given-names: Zichao
+    email: zengzichao@sjtu.edu.cn
+    orcid: https://orcid.org/0000-0001-6553-970X
+    affiliation:
+      name: School of Life Sciences and Biotechnology, Shanghai Jiao Tong University
+      address: Shanghai
+      country: CN
+version: 0.1.0
+date-released: 2026-09-29
+license: BSD-3-Clause
+type: software
+repository-code: "https://github.com/ZengZichao/PhyloSlicer"
+keywords:
+  - phylogenetics
+  - macroecology
+  - biogeography
+  - diversification
+  - spatial phylogenetics
+  - phylogenetic diversity
+  - time slicing
+# No DOI is recorded here on purpose: PhyloSlicer is cited by repository URL and
+# version until Zenodo indexes a release (RELEASE.md, step 4), and a reserved
+# placeholder DOI would resolve to nothing for anyone who cites it.
+references:
+  - type: article
+    title: "'treesliceR': a package for slicing phylogenies and inferring phylogenetic patterns over evolutionary time"
+    authors:
+      - family-names: Araujo
+        given-names: M. L.
+      - family-names: Ferreira
+        given-names: L. G. S. S.
+      - family-names: Nakamura
+        given-names: G.
+      - family-names: Coelho
+        given-names: M. T. P.
+      - family-names: Rangel
+        given-names: T. F.
+    year: 2025
+    journal: Ecography
+    volume: 2025
+    number: e07364
+    doi: 10.1111/ecog.07364
+    notes: >-
+      The methodological source of the slicing paradigm. First published online
+      2024-10-28 and gathered into the 2025 volume as article e07364; cite 2024
+      if your style follows the online-first date - the DOI is unchanged.

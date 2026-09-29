@@ -1,0 +1,109 @@
+name: tests
+
+on:
+  push:
+  pull_request:
+  schedule:
+    - cron: "17 3 * * 1"
+
+jobs:
+  suite:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        # every Python version pyproject.toml claims to support (3.10 - 3.13)
+        python-version: ["3.10", "3.11", "3.12", "3.13"]
+        # the accelerated and the pure kernel must agree, so test both
+        accel: ["with-accel", "no-accel"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install the project with its optional extras
+        # installing the *project* (not a hand-written dependency list) is what
+        # makes the [io] adapters and the [spatial] geopandas path, and their
+        # importorskip-guarded tests, actually run here
+        run: |
+          python -m pip install --upgrade pip
+          if [ "${{ matrix.accel }}" = "with-accel" ]; then
+            python -m pip install -e ".[dev,io,spatial,accel]"
+          else
+            python -m pip install -e ".[dev,io,spatial]"
+          fi
+      - name: Check the environment matches the matrix
+        run: |
+          python - <<'PY'
+          import importlib
+          import importlib.util
+          import sys
+
+          want_numba = "${{ matrix.accel }}" == "with-accel"
+          required = ["numpy", "scipy", "pandas", "matplotlib", "pytest",
+                      "dendropy", "Bio", "geopandas"]
+          missing = []
+          for module in required:
+              try:
+                  importlib.import_module(module)
+              except ImportError:
+                  missing.append(module)
+          if missing:
+              sys.exit(f"extras are not installed, so their tests would be "
+                       f"silently skipped: missing {missing}")
+          from phyloslicer._accel import HAS_NUMBA
+
+          has_numba = importlib.util.find_spec("numba") is not None
+          if has_numba != want_numba or HAS_NUMBA != want_numba:
+              sys.exit(f"accel axis says {want_numba}, but numba is importable="
+                       f"{has_numba} and phyloslicer._accel.HAS_NUMBA={HAS_NUMBA}")
+          PY
+      - name: Lint and format
+        # every directory that ships in the release is gated, not just src
+        run: |
+          ruff check src tests benchmarks examples testing_suite validation
+          ruff format --check src tests benchmarks examples testing_suite validation
+      - name: Test
+        run: python -m pytest -q --durations=10
+      - name: Run the end-to-end test harness
+        # every case the test plan defines, including the CLI and performance
+        # budgets; the harness exits nonzero if any of them fails
+        run: python testing_suite/scripts/run_all_tests.py
+      - name: Run the documented out-of-the-box example
+        # a reader must be able to run the example without acquiring anything
+        # from outside the repository; this step fails if the example and the
+        # docs drift apart
+        run: python examples/quickstart.py --sites 24 --species 60 --trees 3
+      - name: Re-run the cross-validation and check its provenance
+        run: |
+          python validation/compare.py
+          python - <<'PY'
+          import hashlib, re, sys
+          from pathlib import Path
+          man = Path("validation/reference/manifest.txt").read_text(encoding="utf-8")
+          entries = re.findall(r"\[file ([^\]]+)\]\nsha256 = ([0-9a-f]{64})", man)
+          bad = [n for n, h in entries
+                 if hashlib.sha256((Path("validation/reference") / n).read_bytes()).hexdigest() != h]
+          print(f"manifest: {len(entries)} registered references, {len(bad)} hash mismatches")
+          sys.exit(1 if bad or not entries else 0)
+          PY
+      - name: Recompute every documented speed-up ratio from the archived tables
+        # the documentation quotes ranges, not raw timings; this fails if a
+        # quoted range no longer follows from the CSVs it is said to come from
+        run: python benchmarks/recompute_ratios.py
+      - name: Check the release metadata is consistent
+        run: |
+          python - <<'PY'
+          import re, sys
+          from pathlib import Path
+          import phyloslicer
+
+          version = phyloslicer.__version__
+          for name in ("CITATION.cff", ".zenodo.json", "README.md", "README_CN.md"):
+              text = Path(name).read_text(encoding="utf-8")
+              assert version in text, f"{name} does not mention {version}"
+          assert re.search(rf'^version: {re.escape(version)}$',
+                           Path("CITATION.cff").read_text(encoding="utf-8"), re.M)
+          print(f"release metadata consistent at {version}")
+          PY

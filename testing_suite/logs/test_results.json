@@ -1,0 +1,955 @@
+{
+  "version": "0.1.0",
+  "timestamp": "2026-09-29T22:32:02",
+  "total": 118,
+  "passed": 118,
+  "failed": 0,
+  "pass_rate": 1.0,
+  "elapsed_s": 4.1858414999442175,
+  "results": [
+    {
+      "test_id": "T-INSTALL-01",
+      "category": "Install",
+      "description": "import phyloslicer",
+      "passed": true,
+      "elapsed_s": 5.830079317092896e-07,
+      "error": ""
+    },
+    {
+      "test_id": "T-INSTALL-02",
+      "category": "Install",
+      "description": "__version__ is a string",
+      "passed": true,
+      "elapsed_s": 5.830079317092896e-07,
+      "error": ""
+    },
+    {
+      "test_id": "T-INSTALL-03",
+      "category": "Install",
+      "description": "core dependencies importable",
+      "passed": true,
+      "elapsed_s": 9.160721674561501e-07,
+      "error": ""
+    },
+    {
+      "test_id": "T-INSTALL-04",
+      "category": "Install",
+      "description": "numba importable",
+      "passed": true,
+      "elapsed_s": 6.42499653622508e-05,
+      "error": ""
+    },
+    {
+      "test_id": "T-INSTALL-05",
+      "category": "Install",
+      "description": "dendropy importable",
+      "passed": true,
+      "elapsed_s": 0.044422624981962144,
+      "error": ""
+    },
+    {
+      "test_id": "T-INSTALL-06",
+      "category": "Install",
+      "description": "CLI --version works",
+      "passed": true,
+      "elapsed_s": 0.5025166670093313,
+      "error": ""
+    },
+    {
+      "test_id": "T-IO-01",
+      "category": "IO",
+      "description": "Newick string parsing",
+      "passed": true,
+      "elapsed_s": 0.0005456670187413692,
+      "error": ""
+    },
+    {
+      "test_id": "T-IO-02",
+      "category": "IO",
+      "description": "Newick file reading",
+      "passed": true,
+      "elapsed_s": 0.0007062089862301946,
+      "error": ""
+    },
+    {
+      "test_id": "T-IO-03",
+      "category": "IO",
+      "description": "NEXUS multi-tree reading",
+      "passed": true,
+      "elapsed_s": 0.0022830419475212693,
+      "error": ""
+    },
+    {
+      "test_id": "T-IO-04",
+      "category": "IO",
+      "description": "Bracket comments stripped",
+      "passed": true,
+      "elapsed_s": 4.0499959141016006e-05,
+      "error": ""
+    },
+    {
+      "test_id": "T-IO-05",
+      "category": "IO",
+      "description": "Quoted labels parsing",
+      "passed": true,
+      "elapsed_s": 4.1541061364114285e-05,
+      "error": ""
+    },
+    {
+      "test_id": "T-IO-06",
+      "category": "IO",
+      "description": "Newick round-trip",
+      "passed": true,
+      "elapsed_s": 0.00022008304949849844,
+      "error": ""
+    },
+    {
+      "test_id": "T-IO-07",
+      "category": "IO",
+      "description": "Long-to-wide matrix conversion",
+      "passed": true,
+      "elapsed_s": 0.0048704169457778335,
+      "error": ""
+    },
+    {
+      "test_id": "T-IO-08",
+      "category": "IO",
+      "description": "Wide table validation",
+      "passed": true,
+      "elapsed_s": 0.00020933407358825207,
+      "error": ""
+    },
+    {
+      "test_id": "T-IO-09",
+      "category": "IO",
+      "description": "align_tree_matrix",
+      "passed": true,
+      "elapsed_s": 0.0006824589800089598,
+      "error": ""
+    },
+    {
+      "test_id": "T-IO-10",
+      "category": "IO",
+      "description": "No shared species raises ValueError",
+      "passed": true,
+      "elapsed_s": 0.0002306249225512147,
+      "error": ""
+    },
+    {
+      "test_id": "T-CORE-01",
+      "category": "Core",
+      "description": "TreeArray construction",
+      "passed": true,
+      "elapsed_s": 6.96659553796053e-05,
+      "error": ""
+    },
+    {
+      "test_id": "T-CORE-02",
+      "category": "Core",
+      "description": "Node depth computation",
+      "passed": true,
+      "elapsed_s": 0.0001230000052601099,
+      "error": ""
+    },
+    {
+      "test_id": "T-CORE-03",
+      "category": "Core",
+      "description": "tip_intervals correctness",
+      "passed": true,
+      "elapsed_s": 8.333299774676561e-05,
+      "error": ""
+    },
+    {
+      "test_id": "T-CORE-04",
+      "category": "Core",
+      "description": "Contribution matrix",
+      "passed": true,
+      "elapsed_s": 0.00011962500866502523,
+      "error": ""
+    },
+    {
+      "test_id": "T-CORE-05",
+      "category": "Core",
+      "description": "Equal-time slice windows",
+      "passed": true,
+      "elapsed_s": 0.00018845894373953342,
+      "error": ""
+    },
+    {
+      "test_id": "T-CORE-06",
+      "category": "Core",
+      "description": "Equal-PD slice windows",
+      "passed": true,
+      "elapsed_s": 0.00029670807998627424,
+      "error": ""
+    },
+    {
+      "test_id": "T-CORE-07",
+      "category": "Core",
+      "description": "subarray pruning",
+      "passed": true,
+      "elapsed_s": 0.0003374579828232527,
+      "error": ""
+    },
+    {
+      "test_id": "T-CORE-08",
+      "category": "Core",
+      "description": "Ultrametric detection",
+      "passed": true,
+      "elapsed_s": 0.00011116592213511467,
+      "error": ""
+    },
+    {
+      "test_id": "T-CORE-09",
+      "category": "Core",
+      "description": "Non-ultrametric detection",
+      "passed": true,
+      "elapsed_s": 6.125005893409252e-05,
+      "error": ""
+    },
+    {
+      "test_id": "T-CORE-10",
+      "category": "Core",
+      "description": "total_pd computation",
+      "passed": true,
+      "elapsed_s": 4.5375083573162556e-05,
+      "error": ""
+    },
+    {
+      "test_id": "T-INDICES-01",
+      "category": "Indices",
+      "description": "pd() computation",
+      "passed": true,
+      "elapsed_s": 0.00027312501333653927,
+      "error": ""
+    },
+    {
+      "test_id": "T-INDICES-02",
+      "category": "Indices",
+      "description": "pe() computation",
+      "passed": true,
+      "elapsed_s": 0.00019829103257507086,
+      "error": ""
+    },
+    {
+      "test_id": "T-INDICES-03",
+      "category": "Indices",
+      "description": "pb() full-tree beta",
+      "passed": true,
+      "elapsed_s": 0.0011703330092132092,
+      "error": ""
+    },
+    {
+      "test_id": "T-INDICES-04",
+      "category": "Indices",
+      "description": "pd_per_slice row sums = total PD",
+      "passed": true,
+      "elapsed_s": 0.0005897500086575747,
+      "error": ""
+    },
+    {
+      "test_id": "T-INDICES-05",
+      "category": "Indices",
+      "description": "pe_per_slice shape",
+      "passed": true,
+      "elapsed_s": 0.0003859590506181121,
+      "error": ""
+    },
+    {
+      "test_id": "T-INDICES-06",
+      "category": "Indices",
+      "description": "pb_per_slice partition (sum=1)",
+      "passed": true,
+      "elapsed_s": 0.001026540994644165,
+      "error": ""
+    },
+    {
+      "test_id": "T-INDICES-07",
+      "category": "Indices",
+      "description": "All beta components",
+      "passed": true,
+      "elapsed_s": 0.002967791981063783,
+      "error": ""
+    },
+    {
+      "test_id": "T-INDICES-08",
+      "category": "Indices",
+      "description": "multisite & pairwise approaches",
+      "passed": true,
+      "elapsed_s": 0.0019331250805407763,
+      "error": ""
+    },
+    {
+      "test_id": "T-INDICES-09",
+      "category": "Indices",
+      "description": "multisite_domain mixed vs paired",
+      "passed": true,
+      "elapsed_s": 0.0015007919864729047,
+      "error": ""
+    },
+    {
+      "test_id": "T-INDICES-10",
+      "category": "Indices",
+      "description": "Degenerate neighbourhood handling",
+      "passed": true,
+      "elapsed_s": 0.0012865000171586871,
+      "error": ""
+    },
+    {
+      "test_id": "T-RATES-01",
+      "category": "Rates",
+      "description": "cpd_rate DataFrame",
+      "passed": true,
+      "elapsed_s": 0.0033731249859556556,
+      "error": ""
+    },
+    {
+      "test_id": "T-RATES-02",
+      "category": "Rates",
+      "description": "cpe_rate DataFrame",
+      "passed": true,
+      "elapsed_s": 0.002000542008318007,
+      "error": ""
+    },
+    {
+      "test_id": "T-RATES-03",
+      "category": "Rates",
+      "description": "cpb_rate DataFrame",
+      "passed": true,
+      "elapsed_s": 0.007900084019638598,
+      "error": ""
+    },
+    {
+      "test_id": "T-RATES-04",
+      "category": "Rates",
+      "description": "fit_rate parameter recovery",
+      "passed": true,
+      "elapsed_s": 0.007556707947514951,
+      "error": ""
+    },
+    {
+      "test_id": "T-RATES-05",
+      "category": "Rates",
+      "description": "origin_time computation",
+      "passed": true,
+      "elapsed_s": 3.0410010367631912e-06,
+      "error": ""
+    },
+    {
+      "test_id": "T-RATES-06",
+      "category": "Rates",
+      "description": "Empty site handling",
+      "passed": true,
+      "elapsed_s": 0.0031959170009940863,
+      "error": ""
+    },
+    {
+      "test_id": "T-RATES-07",
+      "category": "Rates",
+      "description": "Boundary fit flags",
+      "passed": true,
+      "elapsed_s": 0.0020874590845778584,
+      "error": ""
+    },
+    {
+      "test_id": "T-RATES-08",
+      "category": "Rates",
+      "description": "sensitivity analysis",
+      "passed": true,
+      "elapsed_s": 0.4617157079046592,
+      "error": ""
+    },
+    {
+      "test_id": "T-RATES-09",
+      "category": "Rates",
+      "description": "rate_profile normalized",
+      "passed": true,
+      "elapsed_s": 0.0007697920082136989,
+      "error": ""
+    },
+    {
+      "test_id": "T-RATES-10",
+      "category": "Rates",
+      "description": "rate_profile raw values",
+      "passed": true,
+      "elapsed_s": 0.0006859999848529696,
+      "error": ""
+    },
+    {
+      "test_id": "T-SLICING-01",
+      "category": "Slicing",
+      "description": "slice_rootward(0) = empty",
+      "passed": true,
+      "elapsed_s": 3.466696944087744e-05,
+      "error": ""
+    },
+    {
+      "test_id": "T-SLICING-02",
+      "category": "Slicing",
+      "description": "slice_rootward(T) = full tree",
+      "passed": true,
+      "elapsed_s": 1.6709091141819954e-05,
+      "error": ""
+    },
+    {
+      "test_id": "T-SLICING-03",
+      "category": "Slicing",
+      "description": "slice_tipward(0) = full tree",
+      "passed": true,
+      "elapsed_s": 1.3208016753196716e-05,
+      "error": ""
+    },
+    {
+      "test_id": "T-SLICING-04",
+      "category": "Slicing",
+      "description": "slice_tipward(T) = empty",
+      "passed": true,
+      "elapsed_s": 1.2457952834665775e-05,
+      "error": ""
+    },
+    {
+      "test_id": "T-SLICING-05",
+      "category": "Slicing",
+      "description": "slice_interval",
+      "passed": true,
+      "elapsed_s": 1.4208024367690086e-05,
+      "error": ""
+    },
+    {
+      "test_id": "T-SLICING-06",
+      "category": "Slicing",
+      "description": "slice_interval invert",
+      "passed": true,
+      "elapsed_s": 3.5542063415050507e-05,
+      "error": ""
+    },
+    {
+      "test_id": "T-SLICING-07",
+      "category": "Slicing",
+      "description": "slice_pieces(n=10)",
+      "passed": true,
+      "elapsed_s": 1.4832941815257072e-05,
+      "error": ""
+    },
+    {
+      "test_id": "T-SLICING-08",
+      "category": "Slicing",
+      "description": "slice_pieces(width=0.5)",
+      "passed": true,
+      "elapsed_s": 1.8583028577268124e-05,
+      "error": ""
+    },
+    {
+      "test_id": "T-SLICING-09",
+      "category": "Slicing",
+      "description": "slice_pieces criterion=pd",
+      "passed": true,
+      "elapsed_s": 0.00013862503692507744,
+      "error": ""
+    },
+    {
+      "test_id": "T-SLICING-10",
+      "category": "Slicing",
+      "description": "prune_tips",
+      "passed": true,
+      "elapsed_s": 0.00012366590090095997,
+      "error": ""
+    },
+    {
+      "test_id": "T-SLICING-11",
+      "category": "Slicing",
+      "description": "time > root_age raises",
+      "passed": true,
+      "elapsed_s": 1.0124989785254002e-05,
+      "error": ""
+    },
+    {
+      "test_id": "T-SLICING-12",
+      "category": "Slicing",
+      "description": "negative time raises",
+      "passed": true,
+      "elapsed_s": 5.790963768959045e-06,
+      "error": ""
+    },
+    {
+      "test_id": "T-UNC-01",
+      "category": "Uncertainty",
+      "description": "posterior_rate (list input)",
+      "passed": true,
+      "elapsed_s": 0.010796540998853743,
+      "error": ""
+    },
+    {
+      "test_id": "T-UNC-02",
+      "category": "Uncertainty",
+      "description": "posterior_rate (string input)",
+      "passed": true,
+      "elapsed_s": 0.012987874913960695,
+      "error": ""
+    },
+    {
+      "test_id": "T-UNC-03",
+      "category": "Uncertainty",
+      "description": "posterior_origin",
+      "passed": true,
+      "elapsed_s": 0.009952625026926398,
+      "error": ""
+    },
+    {
+      "test_id": "T-UNC-04",
+      "category": "Uncertainty",
+      "description": "bootstrap_sites",
+      "passed": true,
+      "elapsed_s": 0.36086170899216086,
+      "error": ""
+    },
+    {
+      "test_id": "T-UNC-05",
+      "category": "Uncertainty",
+      "description": "iter_trees (directory)",
+      "passed": true,
+      "elapsed_s": 0.0042819170048460364,
+      "error": ""
+    },
+    {
+      "test_id": "T-UNC-06",
+      "category": "Uncertainty",
+      "description": "Bad tree skipped with warning",
+      "passed": true,
+      "elapsed_s": 0.007198665989562869,
+      "error": ""
+    },
+    {
+      "test_id": "T-UNC-07",
+      "category": "Uncertainty",
+      "description": "HDI interval bounds",
+      "passed": true,
+      "elapsed_s": 0.008153749979101121,
+      "error": ""
+    },
+    {
+      "test_id": "T-UNC-08",
+      "category": "Uncertainty",
+      "description": "ESS proxy bounds",
+      "passed": true,
+      "elapsed_s": 0.009000791935250163,
+      "error": ""
+    },
+    {
+      "test_id": "T-SPATIAL-01",
+      "category": "Spatial",
+      "description": "adjacency_from_bounds queen",
+      "passed": true,
+      "elapsed_s": 8.78750579431653e-05,
+      "error": ""
+    },
+    {
+      "test_id": "T-SPATIAL-02",
+      "category": "Spatial",
+      "description": "adjacency_from_bounds rook",
+      "passed": true,
+      "elapsed_s": 2.8916983865201473e-05,
+      "error": ""
+    },
+    {
+      "test_id": "T-SPATIAL-03",
+      "category": "Spatial",
+      "description": "adjacency_from_coords knn",
+      "passed": true,
+      "elapsed_s": 2.3124972358345985e-05,
+      "error": ""
+    },
+    {
+      "test_id": "T-SPATIAL-04",
+      "category": "Spatial",
+      "description": "adjacency_from_coords radius",
+      "passed": true,
+      "elapsed_s": 6.375019438564777e-06,
+      "error": ""
+    },
+    {
+      "test_id": "T-SPATIAL-05",
+      "category": "Spatial",
+      "description": "to/from_adjacency_dict round-trip",
+      "passed": true,
+      "elapsed_s": 1.950003206729889e-05,
+      "error": ""
+    },
+    {
+      "test_id": "T-SPATIAL-06",
+      "category": "Spatial",
+      "description": "rate_map generates plot",
+      "passed": true,
+      "elapsed_s": 0.15144445898476988,
+      "error": ""
+    },
+    {
+      "test_id": "T-COMPAT-01",
+      "category": "Compat",
+      "description": "squeeze_root == slice_rootward",
+      "passed": true,
+      "elapsed_s": 5.216698627918959e-05,
+      "error": ""
+    },
+    {
+      "test_id": "T-COMPAT-02",
+      "category": "Compat",
+      "description": "squeeze_tips == slice_tipward",
+      "passed": true,
+      "elapsed_s": 2.6333029381930828e-05,
+      "error": ""
+    },
+    {
+      "test_id": "T-COMPAT-03",
+      "category": "Compat",
+      "description": "squeeze_int invert R-order",
+      "passed": true,
+      "elapsed_s": 3.13750933855772e-05,
+      "error": ""
+    },
+    {
+      "test_id": "T-COMPAT-04",
+      "category": "Compat",
+      "description": "phylo_pieces timeSteps",
+      "passed": true,
+      "elapsed_s": 0.00017412507440894842,
+      "error": ""
+    },
+    {
+      "test_id": "T-COMPAT-05",
+      "category": "Compat",
+      "description": "prune_tips method=1/2",
+      "passed": true,
+      "elapsed_s": 0.0006294159684330225,
+      "error": ""
+    },
+    {
+      "test_id": "T-SIM-01",
+      "category": "Sim",
+      "description": "yule_tree generation",
+      "passed": true,
+      "elapsed_s": 0.0012855830136686563,
+      "error": ""
+    },
+    {
+      "test_id": "T-SIM-02",
+      "category": "Sim",
+      "description": "birth_death_tree generation",
+      "passed": true,
+      "elapsed_s": 0.0004289590287953615,
+      "error": ""
+    },
+    {
+      "test_id": "T-SIM-03",
+      "category": "Sim",
+      "description": "make_dataset random",
+      "passed": true,
+      "elapsed_s": 0.0002008749870583415,
+      "error": ""
+    },
+    {
+      "test_id": "T-SIM-04",
+      "category": "Sim",
+      "description": "make_dataset clustered",
+      "passed": true,
+      "elapsed_s": 0.001300125033594668,
+      "error": ""
+    },
+    {
+      "test_id": "T-SIM-05",
+      "category": "Sim",
+      "description": "sim_passerines dataset",
+      "passed": true,
+      "elapsed_s": 0.002347207977436483,
+      "error": ""
+    },
+    {
+      "test_id": "T-SIM-06",
+      "category": "Sim",
+      "description": "Seed reproducibility",
+      "passed": true,
+      "elapsed_s": 0.000512458966113627,
+      "error": ""
+    },
+    {
+      "test_id": "T-VIZ-01",
+      "category": "Viz",
+      "description": "plot_rate_line",
+      "passed": true,
+      "elapsed_s": 0.010235417052172124,
+      "error": ""
+    },
+    {
+      "test_id": "T-VIZ-02",
+      "category": "Viz",
+      "description": "plot_sensitivity",
+      "passed": true,
+      "elapsed_s": 0.1838142080232501,
+      "error": ""
+    },
+    {
+      "test_id": "T-VIZ-03",
+      "category": "Viz",
+      "description": "plot_posterior",
+      "passed": true,
+      "elapsed_s": 0.004627082962542772,
+      "error": ""
+    },
+    {
+      "test_id": "T-CLI-01",
+      "category": "CLI",
+      "description": "slice --rootward writes Newick",
+      "passed": true,
+      "elapsed_s": 0.0033439589897170663,
+      "error": ""
+    },
+    {
+      "test_id": "T-CLI-02",
+      "category": "CLI",
+      "description": "slice --tipward writes Newick",
+      "passed": true,
+      "elapsed_s": 0.00111624994315207,
+      "error": ""
+    },
+    {
+      "test_id": "T-CLI-03",
+      "category": "CLI",
+      "description": "slice --n-slices writes one file per slice",
+      "passed": true,
+      "elapsed_s": 0.002509874990209937,
+      "error": ""
+    },
+    {
+      "test_id": "T-CLI-04",
+      "category": "CLI",
+      "description": "rates --rate cpd writes the CpD table",
+      "passed": true,
+      "elapsed_s": 0.006538292043842375,
+      "error": ""
+    },
+    {
+      "test_id": "T-CLI-05",
+      "category": "CLI",
+      "description": "rates --rate cpe writes the CpE table",
+      "passed": true,
+      "elapsed_s": 0.005241457954980433,
+      "error": ""
+    },
+    {
+      "test_id": "T-CLI-06",
+      "category": "CLI",
+      "description": "posterior writes the credible-interval table",
+      "passed": true,
+      "elapsed_s": 0.01783741603139788,
+      "error": ""
+    },
+    {
+      "test_id": "T-CLI-07",
+      "category": "CLI",
+      "description": "validate passes against a registered reference",
+      "passed": true,
+      "elapsed_s": 0.057251582969911397,
+      "error": ""
+    },
+    {
+      "test_id": "T-CLI-08",
+      "category": "CLI",
+      "description": "missing required argument exits 2",
+      "passed": true,
+      "elapsed_s": 0.0004207079764455557,
+      "error": ""
+    },
+    {
+      "test_id": "T-CLI-09",
+      "category": "CLI",
+      "description": "conflicting --rootward/--tipward exits 2",
+      "passed": true,
+      "elapsed_s": 0.0008413749746978283,
+      "error": ""
+    },
+    {
+      "test_id": "T-CLI-10",
+      "category": "CLI",
+      "description": "--log writes a JSON run summary",
+      "passed": true,
+      "elapsed_s": 0.0013292500516399741,
+      "error": ""
+    },
+    {
+      "test_id": "T-ERR-01",
+      "category": "Error",
+      "description": "1-tip tree raises",
+      "passed": true,
+      "elapsed_s": 7.08398874849081e-06,
+      "error": ""
+    },
+    {
+      "test_id": "T-ERR-02",
+      "category": "Error",
+      "description": "NaN branch length raises",
+      "passed": true,
+      "elapsed_s": 7.6249707490205765e-06,
+      "error": ""
+    },
+    {
+      "test_id": "T-ERR-03",
+      "category": "Error",
+      "description": "Negative branch length raises",
+      "passed": true,
+      "elapsed_s": 5.083042196929455e-06,
+      "error": ""
+    },
+    {
+      "test_id": "T-ERR-04",
+      "category": "Error",
+      "description": "Duplicate tip labels raise",
+      "passed": true,
+      "elapsed_s": 4.333909600973129e-06,
+      "error": ""
+    },
+    {
+      "test_id": "T-ERR-05",
+      "category": "Error",
+      "description": "Cycle in tree raises",
+      "passed": true,
+      "elapsed_s": 6.749993190169334e-06,
+      "error": ""
+    },
+    {
+      "test_id": "T-ERR-06",
+      "category": "Error",
+      "description": "Disconnected component raises",
+      "passed": true,
+      "elapsed_s": 3.6917044781148434e-05,
+      "error": ""
+    },
+    {
+      "test_id": "T-ERR-07",
+      "category": "Error",
+      "description": "n_slices < 1 raises",
+      "passed": true,
+      "elapsed_s": 0.0001831249101087451,
+      "error": ""
+    },
+    {
+      "test_id": "T-ERR-08",
+      "category": "Error",
+      "description": "percentile > 1 raises",
+      "passed": true,
+      "elapsed_s": 1.0420335456728935e-06,
+      "error": ""
+    },
+    {
+      "test_id": "T-ERR-09",
+      "category": "Error",
+      "description": "Invalid criterion raises",
+      "passed": true,
+      "elapsed_s": 6.39590434730053e-05,
+      "error": ""
+    },
+    {
+      "test_id": "T-ERR-10",
+      "category": "Error",
+      "description": "Both n and width raises",
+      "passed": true,
+      "elapsed_s": 5.4916017688810825e-05,
+      "error": ""
+    },
+    {
+      "test_id": "T-E2E-01",
+      "category": "E2E",
+      "description": "Full CpD workflow (API)",
+      "passed": true,
+      "elapsed_s": 0.0033946249168366194,
+      "error": ""
+    },
+    {
+      "test_id": "T-E2E-02",
+      "category": "E2E",
+      "description": "Full CpE workflow (API)",
+      "passed": true,
+      "elapsed_s": 0.003623457974754274,
+      "error": ""
+    },
+    {
+      "test_id": "T-E2E-03",
+      "category": "E2E",
+      "description": "Full CpB workflow (API)",
+      "passed": true,
+      "elapsed_s": 0.011842957930639386,
+      "error": ""
+    },
+    {
+      "test_id": "T-E2E-04",
+      "category": "E2E",
+      "description": "Full posterior workflow (API)",
+      "passed": true,
+      "elapsed_s": 0.01843324990477413,
+      "error": ""
+    },
+    {
+      "test_id": "T-E2E-05",
+      "category": "E2E",
+      "description": "Full CLI workflow",
+      "passed": true,
+      "elapsed_s": 1.08568670891691,
+      "error": ""
+    },
+    {
+      "test_id": "T-E2E-06",
+      "category": "E2E",
+      "description": "Cross-validation (validate)",
+      "passed": true,
+      "elapsed_s": 0.8372368339914829,
+      "error": ""
+    },
+    {
+      "test_id": "T-E2E-07",
+      "category": "E2E",
+      "description": "Visualization workflow",
+      "passed": true,
+      "elapsed_s": 0.1026218329789117,
+      "error": ""
+    },
+    {
+      "test_id": "T-PERF-01",
+      "category": "Perf",
+      "description": "CpD on a 100-tip tree under 5s",
+      "passed": true,
+      "elapsed_s": 0.006778832990676165,
+      "error": ""
+    },
+    {
+      "test_id": "T-PERF-02",
+      "category": "Perf",
+      "description": "CpD on a 1000-tip tree under 60s",
+      "passed": true,
+      "elapsed_s": 0.08603316696826369,
+      "error": ""
+    },
+    {
+      "test_id": "T-PERF-03",
+      "category": "Perf",
+      "description": "slice count scaling stays linear",
+      "passed": true,
+      "elapsed_s": 0.020475458004511893,
+      "error": ""
+    },
+    {
+      "test_id": "T-PERF-04",
+      "category": "Perf",
+      "description": "memory stays bounded across repeats",
+      "passed": true,
+      "elapsed_s": 0.023472958942875266,
+      "error": ""
+    },
+    {
+      "test_id": "T-PERF-05",
+      "category": "Perf",
+      "description": "benchmark tables reproduce the quoted ranges",
+      "passed": true,
+      "elapsed_s": 0.032097167102620006,
+      "error": ""
+    }
+  ]
+}

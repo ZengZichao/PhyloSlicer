@@ -1,0 +1,18 @@
+# Files that a source distribution must carry beyond the package modules.
+include CITATION.cff
+include README.md
+include README_CN.md
+include CHANGELOG.md
+include CHANGELOG_CN.md
+include CONTRIBUTING.md
+include CONTRIBUTING_CN.md
+include RELEASE.md
+include RELEASE_CN.md
+include LICENSE
+include NOTICE.md
+include NOTICE_CN.md
+include .zenodo.json
+include docs/USER_GUIDE.md
+include docs/USER_GUIDE_CN.md
+recursive-include validation/reference *.csv *.tre *.txt
+recursive-include benchmarks *.py *.R *.csv README.md README_CN.md
