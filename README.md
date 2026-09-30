@@ -118,21 +118,14 @@ the CSVs and is run by CI.
 ## Citation
 
 If you use PhyloSlicer, please cite both this package and the methodological
-source. The package citation is in [`CITATION.cff`](CITATION.cff); the Zenodo
-DOI is minted at the first tagged release (see [`RELEASE.md`](RELEASE.md)), so
-until then cite the repository URL and the version.
+source. The package citation is in [`CITATION.cff`](CITATION.cff); the
+version-agnostic Zenodo concept DOI for all releases is
+[10.5281/zenodo.23057620](https://doi.org/10.5281/zenodo.23057620).
 
 > Araujo, M.L., Ferreira, L.G.S.S., Nakamura, G., Coelho, M.T.P., Rangel, T.F.
 > (2025) 'treesliceR': a package for slicing phylogenies and inferring
 > phylogenetic patterns over evolutionary time. *Ecography* 2025, e07364.
 > https://doi.org/10.1111/ecog.07364
->
-> The article was first published online on 28 October 2024 and forms part of
-> the 2025 volume of *Ecography* as article e07364. Verified against the
-> Crossref record for doi:10.1111/ecog.07364 on 26 September 2026
-> (journal-article, Wiley, volume 2025, article-number e07364, issued
-> 2024-10-28, print 2025-01). If your citation style follows the online-first
-> date, cite 2024 instead — the DOI is unchanged.
 
 ## License
 
