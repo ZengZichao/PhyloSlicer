@@ -28,14 +28,12 @@
     {
       "scheme": "url",
       "identifier": "https://github.com/ZengZichao/PhyloSlicer",
-      "relation": "isSupplementTo",
-      "resource_type": "software"
+      "relation": "isSupplementTo"
     },
     {
       "scheme": "doi",
       "identifier": "10.1111/ecog.07364",
-      "relation": "isDerivativeOf",
-      "resource_type": "text"
+      "relation": "isDerivativeOf"
     }
   ],
   "references": [
