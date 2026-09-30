@@ -20,6 +20,7 @@ authors:
       address: Shanghai
       country: CN
 version: 0.1.0
+doi: 10.5281/zenodo.23057620
 date-released: 2026-09-29
 license: BSD-3-Clause
 type: software
@@ -32,9 +33,6 @@ keywords:
   - spatial phylogenetics
   - phylogenetic diversity
   - time slicing
-# No DOI is recorded here on purpose: PhyloSlicer is cited by repository URL and
-# version until Zenodo indexes a release (RELEASE.md, step 4), and a reserved
-# placeholder DOI would resolve to nothing for anyone who cites it.
 references:
   - type: article
     title: "'treesliceR': a package for slicing phylogenies and inferring phylogenetic patterns over evolutionary time"
