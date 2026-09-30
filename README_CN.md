@@ -108,18 +108,13 @@ treesliceR 1.1.0 做数值交叉核对。完整缺口清单与容差依据见
 ## 引用
 
 使用 PhyloSlicer 时请同时引用本软件与方法学来源。本包的引用信息见
-[`CITATION.cff`](CITATION.cff)；Zenodo DOI 在首个打标签的版本发布时生成
-（见 [`RELEASE_CN.md`](RELEASE_CN.md)），在此之前请引用仓库地址与版本号。
+[`CITATION.cff`](CITATION.cff)；全部版本通用的 Zenodo 概念 DOI 为
+[10.5281/zenodo.23057620](https://doi.org/10.5281/zenodo.23057620)。
 
 > Araujo, M.L., Ferreira, L.G.S.S., Nakamura, G., Coelho, M.T.P., Rangel, T.F.
 > (2025) 'treesliceR': a package for slicing phylogenies and inferring
 > phylogenetic patterns over evolutionary time. *Ecography* 2025, e07364.
 > https://doi.org/10.1111/ecog.07364
->
-> 该文于 2024-10-28 网络首发，正式归入 *Ecography* 2025 卷（文章号 e07364）。
-> 已于 2026-09-26 依据 doi:10.1111/ecog.07364 的 Crossref 记录核验
-> （journal-article、Wiley、2025 卷、文章号 e07364、2024-10-28 上线、
-> 2025-01 印刷）。若你的引用格式以网络首发日期为准，请改引 2024——DOI 不变。
 
 ## 许可
 
