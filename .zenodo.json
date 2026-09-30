@@ -10,7 +10,7 @@
   "creators": [
     {
       "orcid": "0000-0001-6553-970X",
-      "name": "Zichao Zeng",
+      "name": "Zeng, Zichao",
       "affiliation": "School of Life Sciences and Biotechnology, Shanghai Jiao Tong University, Shanghai, China"
     }
   ],
@@ -33,14 +33,12 @@
     {
       "scheme": "doi",
       "identifier": "10.1111/ecog.07364",
-      "relation": "isDerivativeOf"
+      "relation": "isDerivedFrom"
     }
   ],
   "references": [
     {
-      "scheme": "doi",
-      "identifier": "10.1111/ecog.07364",
-      "title": "'treesliceR': a package for slicing phylogenies and inferring phylogenetic patterns over evolutionary time"
+      "raw_reference": "'treesliceR': a package for slicing phylogenies and inferring phylogenetic patterns over evolutionary time. Araujo et al. 2025, Ecography 2025:e07364, doi:10.1111/ecog.07364"
     }
   ]
 }
