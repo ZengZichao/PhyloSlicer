@@ -42,7 +42,7 @@ dev = [
     # no `hypothesis`: the property tests in tests/test_invariants.py randomise
     # over seeded numpy generators (Yule and birth-death trees), so declaring an
     # extra that no test imports would leave a dangling dependency claim
-    "ruff==0.15.5",  # pinned: the lint gate must mean the same thing
+    "ruff==0.16.9",  # pinned: the lint gate must mean the same thing
     # locally and in CI, and ruff 0.16 changes rulesets between minor versions
     "mypy",
     "pre-commit",
