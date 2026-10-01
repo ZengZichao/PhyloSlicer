@@ -1,10 +1,21 @@
 name: tests
 
 on:
+  # 只在落上 main 时跑 push 事件：Dependabot/功能分支由 pull_request 覆盖，
+  # 避免同一个 PR 的分支被 push 和 pull_request 各跑一遍全矩阵。
   push:
+    branches: [main]
   pull_request:
   schedule:
     - cron: "17 3 * * 1"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: tests-${{ github.ref }}
+  # 同一分支连续推送时取消已被超越的旧跑，省 16 个矩阵 job 的排队时间
+  cancel-in-progress: true
 
 jobs:
   suite:
