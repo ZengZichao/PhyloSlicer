@@ -10,6 +10,9 @@ updates:
     # pip 生态的 ignore/update-types 必须显式给出 dependency-name，
     # 否则 Dependabot 报 "did not contain a required property of 'dependency-name'"。
     ignore:
+      # ruff 在 pyproject.toml 中被刻意钉版（lint 门禁必须本地与 CI 同义，
+      # 且 ruff 0.16 起规则集跨 minor 变动）；升级必须走人工评估的 PR。
+      - dependency-name: "ruff"
       - dependency-name: "*"
         update-types: ["version-update:semver-major"]
     groups:
