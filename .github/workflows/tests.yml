@@ -18,7 +18,7 @@ jobs:
         # the accelerated and the pure kernel must agree, so test both
         accel: ["with-accel", "no-accel"]
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
