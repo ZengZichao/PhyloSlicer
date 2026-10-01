@@ -1,5 +1,10 @@
 # PhyloSlicer
 
+[![tests](https://github.com/ZengZichao/PhyloSlicer/actions/workflows/tests.yml/badge.svg)](https://github.com/ZengZichao/PhyloSlicer/actions/workflows/tests.yml)
+[![CodeQL](https://github.com/ZengZichao/PhyloSlicer/actions/workflows/codeql.yml/badge.svg)](https://github.com/ZengZichao/PhyloSlicer/actions/workflows/codeql.yml)
+[![build](https://github.com/ZengZichao/PhyloSlicer/actions/workflows/build.yml/badge.svg)](https://github.com/ZengZichao/PhyloSlicer/actions/workflows/build.yml)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23057620.svg)](https://doi.org/10.5281/zenodo.23057620)
+
 **Temporal slicing of phylogenies and cumulative-diversity rate analysis for macroecology in Python.**
 
 Version 0.1.0 · BSD-3-Clause · Python ≥ 3.10

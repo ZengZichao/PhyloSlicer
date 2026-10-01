@@ -1,0 +1,49 @@
+name: Bug report / 缺陷报告
+description: Report incorrect behavior in PhyloSlicer / 报告 PhyloSlicer 的错误行为
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        感谢反馈。为了能复现问题，请尽量给出完整命令与最小输入数据。
+        Thanks for filing — exact commands and a minimal input help a lot.
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: 发生了什么 / What happened?
+      description: 期望行为与实际行为，附完整报错栈。/ Expected vs actual, with the full traceback.
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: 复现步骤 / Reproduction
+      description: 最小可复现命令与输入（能直接跑通的最好）。/ Minimal runnable command and input.
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: PhyloSlicer 版本 / Version
+      description: "`python -c \"import phyloslicer; print(phyloslicer.__version__)\"`"
+      placeholder: "0.1.0"
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Python 与系统 / Python & OS
+      placeholder: "Python 3.12, macOS 15 (arm64)"
+    validations:
+      required: true
+  - type: checkboxes
+    id: backend
+    attributes:
+      label: 使用的内核 / Kernel in use
+      options:
+        - label: numba 加速（安装了 `[accel]`）
+        - label: 纯 Python（未装 numba）
+  - type: textarea
+    id: extra
+    attributes:
+      label: 补充信息 / Additional context

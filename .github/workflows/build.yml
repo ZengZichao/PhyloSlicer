@@ -1,0 +1,43 @@
+name: build
+
+# 构建门禁：sdist 与 wheel 必须能从干净检出构建，且元数据通过
+# twine check。打 v* 标签时把产物直接挂到对应 GitHub Release，
+# 发布不再依赖本地手动 build。
+
+on:
+  push:
+    branches: [main]
+    tags: ["v*"]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: build-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  sdist-wheel:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Build sdist and wheel
+        run: |
+          python -m pip install --upgrade pip build twine
+          python -m build
+      - name: Check distribution metadata
+        run: python -m twine check dist/*
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+      - name: Attach distributions to the release
+        if: startsWith(github.ref, 'refs/tags/v')
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release upload "$GITHUB_REF_NAME" dist/* --clobber

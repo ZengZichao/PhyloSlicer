@@ -1,0 +1,27 @@
+name: Feature request / 功能建议
+description: Suggest an idea for PhyloSlicer / 为 PhyloSlicer 提出建议
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: 要解决的科研问题 / The research problem
+      description: 什么分析任务受阻？现状如何绕？/ What analysis is blocked, and what is the current workaround?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: 建议方案 / Proposed solution
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: 备选方案 / Alternatives considered
+  - type: checkboxes
+    id: scope
+    attributes:
+      label: 范围确认 / Scope
+      options:
+        - label: 我确认这不属于文档已声明不支持的范围 / This is not something the docs explicitly declare out of scope
