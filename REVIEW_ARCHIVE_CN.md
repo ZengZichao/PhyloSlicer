@@ -54,11 +54,11 @@ python -m pytest -q tests/test_review_archive.py
 
 | 存档 | SHA-256 |
 | --- | --- |
-| `PhyloSlicer_review_0.1.0.zip` | `6f0d0c038f8e8b5a34c498c9d3996381dbb07bdcd7ecdd5d1f957a2465546370` |
-| `PhyloSlicer_review_0.1.0.tar.gz` | `c6a5dca42102eba6e99247e75600742cf376b0d5542c406c2b07ffac25a69ef3` |
+| `PhyloSlicer_review_0.1.0.zip` | `d3750aa2e2abd553cf19fc3343a9440d270b953d01dea7dfa8e22a61b81d1e79` |
+| `PhyloSlicer_review_0.1.0.tar.gz` | `0af47241b70ed8069f895fc774870495d3806a2181a6fd1004f3b7e1198dd59a` |
 
-（均由 CPython 3.11 基于提交 `bba4fc1` 各构建两次、成对逐字节相同；仓库仍在被并行编辑，
-请自行重建后比对，不要直接信任这两个字节。`SOURCE_DATE_EPOCH` 会被采用，也是唯一
+（均基于提交 `0cba60f`、工作树干净时用 CPython 3.11 构建三次，三份产物逐字节相同；存档含 263 个条目。
+仍欢迎自行重建后比对——印出哈希的意义就在于它必须能被复现。）`SOURCE_DATE_EPOCH` 会被采用，也是唯一
 改变时间戳的开关。）
 
 解包后即是一份可直接工作的检出：

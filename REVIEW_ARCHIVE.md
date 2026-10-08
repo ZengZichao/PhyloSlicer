@@ -60,12 +60,12 @@ the recorded hashes are:
 
 | archive | SHA-256 |
 | --- | --- |
-| `PhyloSlicer_review_0.1.0.zip` | `6f0d0c038f8e8b5a34c498c9d3996381dbb07bdcd7ecdd5d1f957a2465546370` |
-| `PhyloSlicer_review_0.1.0.tar.gz` | `c6a5dca42102eba6e99247e75600742cf376b0d5542c406c2b07ffac25a69ef3` |
+| `PhyloSlicer_review_0.1.0.zip` | `d3750aa2e2abd553cf19fc3343a9440d270b953d01dea7dfa8e22a61b81d1e79` |
+| `PhyloSlicer_review_0.1.0.tar.gz` | `0af47241b70ed8069f895fc774870495d3806a2181a6fd1004f3b7e1198dd59a` |
 
-(Both built twice from commit `bba4fc1` with CPython 3.11, each pair identical;
-the tree is under active edit, so rebuild and compare rather than trusting these
-bytes.  `SOURCE_DATE_EPOCH` is honoured and is the only knob that moves the
+(Built from commit `0cba60f` with the worktree clean, three times with CPython 3.11;
+all three builds are byte-identical, and the archive holds 263 entries. Rebuild and
+compare if you need to - the point of printing the digests is that they must match.  `SOURCE_DATE_EPOCH` is honoured and is the only knob that moves the
 timestamps.)
 
 Unpack it and it is a working checkout:
