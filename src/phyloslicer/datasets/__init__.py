@@ -2,11 +2,12 @@
 
 There is **no** download facility in this release.  The real treesliceR
 tutorial data (Australian passerines, MIT licensed) can be exported from R
-with a custom export script; :func:`fetch_tutorial_data` exists only to say so
-loudly, because a placeholder that raises ``RuntimeError`` while the prose
-promises "fetched on demand" is worse than an explicit
-``NotImplementedError``.  Everything here runs offline and is reproducible from
-the seed.
+with a custom export script: ``data(pass_mat)``, ``data(pass_trees)``,
+``data(AU_grid)``, ``data(AU_adj)``.  No archive of it has been deposited and
+no DOI minted, so this package offers nothing that could be fetched, and it
+ships no download function that could fail at the call.  Everything here runs
+offline and is reproducible from the seed; :func:`sim_passerines` is the
+offline stand-in for that case study.
 """
 
 from __future__ import annotations
@@ -17,7 +18,7 @@ import pandas as pd
 from ..simulate import make_dataset, yule_tree
 from ..spatial import adjacency_from_bounds
 
-__all__ = ["sim_passerines", "fetch_tutorial_data"]
+__all__ = ["sim_passerines"]
 
 
 def sim_passerines(
@@ -58,21 +59,3 @@ def sim_passerines(
         for i in range(n_trees - 1)
     ]
     return {"trees": trees, "mat": mat, "coords": coords, "bounds": bounds, "adj": adj}
-
-
-def fetch_tutorial_data(dest: str = ".", confirm: bool = True) -> None:
-    """Not implemented: PhyloSlicer bundles no remote tutorial data.
-
-    Always raises :class:`NotImplementedError`.  No archive has been deposited
-    and no DOI minted, so nothing could be fetched even if this function did
-    something; :func:`sim_passerines` provides the offline stand-in.  This stub
-    is kept (instead of silently deleted) so that any call tells the user the
-    truth rather than returning the wrong data.
-    """
-    raise NotImplementedError(
-        "phyloslicer.datasets ships no remote tutorial bundle and "
-        "fetch_tutorial_data is not implemented; use "
-        "sim_passerines() for a deterministic offline example, or export the "
-        "treesliceR data from R yourself (data(pass_mat), data(pass_trees), "
-        "data(AU_grid), data(AU_adj))"
-    )

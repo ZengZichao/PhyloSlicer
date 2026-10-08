@@ -5,6 +5,19 @@ derived from any other package, and it does not vendor, redistribute or link
 against any third-party code. What it does carry are files that were produced
 *with* third-party software, and those are recorded here.
 
+## Copyright holder
+
+The copyright in the PhyloSlicer code is held jointly by its two authors, in exactly
+the words `LICENSE` carries:
+
+> BSD 3-Clause License — Copyright (c) 2026, Zichao Zeng and Yinzhao Wang
+
+This file states the holder in the same words as `LICENSE`; neither document splits
+the work up or assigns it to an institution. In the review archive both names are
+replaced by the neutral tokens `REVIEW_ARCHIVE.md` documents, so the archived
+`LICENSE` reads `Copyright (c) 2026, Author One Withheld and Author Two Withheld`
+while the public and deposited copies carry the names verbatim.
+
 ## treesliceR
 
 `validation/reference/*.csv` and `validation/reference/*.tre` are the outputs of

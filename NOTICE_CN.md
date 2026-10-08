@@ -6,6 +6,17 @@ PhyloSlicer 是一份独立实现：仓库内不含任何派生自其他软件�
 
 本文件是 [`NOTICE.md`](NOTICE.md) 的中文译文，正文以英文文件为准。
 
+## 版权持有人
+
+PhyloSlicer 代码的版权由本包两位作者共同持有，措辞与 `LICENSE` 完全一致：
+
+> BSD 3-Clause License — Copyright (c) 2026, Zichao Zeng and Yinzhao Wang
+
+本文件以与 `LICENSE` 相同的措辞写明持有人：两份文件都不拆分作品，也不把版权划给某
+个机构。审稿包中这两个姓名会被 `REVIEW_ARCHIVE.md` 所记录的中性占位符替换，因此归档
+的 `LICENSE` 读作 `Copyright (c) 2026, Author One Withheld and Author Two Withheld`，
+而公开与存档副本仍逐字保留姓名。
+
 ## treesliceR
 
 `validation/reference/*.csv` 与 `validation/reference/*.tre` 是参考实现

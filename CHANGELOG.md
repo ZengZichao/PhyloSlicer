@@ -1,11 +1,14 @@
 # Changelog
 
 All notable changes to PhyloSlicer are documented here. The version of record
-is `phyloslicer.__version__`; the date below is the date that entry was tagged.
+is `phyloslicer.__version__`; the date below is the date that version was made
+public, and an entry records an earlier source-finalisation date in its own body.
 
-## 0.1.0 — 2026-09-29
+## 0.1.0 — 2026-09-30
 
-Initial implementation.
+Initial implementation.  The 0.1.0 source was finalised on 2026-09-29; the public
+GitHub release and the Zenodo deposit were both made on 2026-09-30, which is the
+release date of the version and the date the Software Notes rules ask for.
 
 ### Added
 
@@ -38,3 +41,10 @@ Initial implementation.
   the archived tables.
 - Test suite (`tests/`) and end-to-end test plan/report (`testing_suite/`).
 - `.pre-commit-config.yaml` (ruff check, ruff format) matching the `dev` extra.
+- A release-documentation set beyond the manuals: `docs/CI_WORKFLOWS*.md` (a
+  verbatim mirror of the CI workflow definitions, since `.github/` and `tools/`
+  cannot ship in a review archive), `docs/WORD_COUNT*.md` (the counting rule that
+  makes the manuscript's length statistics re-derivable) and
+  `docs/ZENODO_DEPOSIT_CHECKLIST*.md` (the field-by-field correction of the
+  deposited record). Every English document ships a Chinese counterpart, which
+  `tests/test_release_hygiene.py` enforces.

@@ -37,3 +37,9 @@ htmlcov/
 # Logs / temp
 *.log
 tmp/
+
+# Anonymised peer-review archive (tools/make_review_archive.py)
+# The default --out lives under dist/, which is already ignored above; the
+# explicit entry below also covers a custom --out review_archive.
+dist/review_archive/
+review_archive/

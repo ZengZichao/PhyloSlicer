@@ -1,11 +1,13 @@
 # 变更日志
 
 本文档记录 PhyloSlicer 的所有重要改动。版本记录以 `phyloslicer.__version__`
-为准；下面的日期是该条目被打标签的日期。
+为准；下面的日期是该版本公开的日期，更早的源码定稿日期写在条目正文里。
 
-## 0.1.0 — 2026-09-29
+## 0.1.0 — 2026-09-30
 
-首个实现版本。
+首次实现。0.1.0 源码于 2026-09-29 定稿；公开的 GitHub Release 与 Zenodo
+存档均于 2026-09-30 建立，这一天才是该版本的发布日期，也是 Software Notes
+规则所要求记录的日期。
 
 ### 新增
 
@@ -32,3 +34,8 @@
   内存，以及 `benchmarks/recompute_ratios.py` 从存档表格重算文档引用的每个加速比区间。
 - 测试套件（`tests/`）与端到端测试方案/报告（`testing_suite/`）。
 - `.pre-commit-config.yaml`（ruff check、ruff format），与 `dev` 可选依赖相匹配。
+- 手册之外的发布文档集：`docs/CI_WORKFLOWS*.md`（CI 工作流定义的逐字镜像——因为
+  `.github/` 与 `tools/` 无法进入审稿代码包）、`docs/WORD_COUNT*.md`（让稿件篇幅统计
+  可复现的计数口径），以及 `docs/ZENODO_DEPOSIT_CHECKLIST*.md`（存档记录的逐字段更正
+  清单）。每一份英文文档都配一份中文对应件，该规则由
+  `tests/test_release_hygiene.py` 强制校验。

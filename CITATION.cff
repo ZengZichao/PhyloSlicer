@@ -19,9 +19,26 @@ authors:
       name: School of Life Sciences and Biotechnology, Shanghai Jiao Tong University
       address: Shanghai
       country: CN
+  - family-names: Wang
+    given-names: Yinzhao
+    email: wyz@sjtu.edu.cn
+    orcid: https://orcid.org/0000-0001-8715-1386
+    affiliation:
+      name: School of Life Sciences and Biotechnology, Shanghai Jiao Tong University
+      address: Shanghai
+      country: CN
 version: 0.1.0
-doi: 10.5281/zenodo.23057620
-date-released: 2026-09-29
+doi: 10.5281/zenodo.23058460
+identifiers:
+  - type: doi
+    value: 10.5281/zenodo.23058460
+    description: The version DOI of the 0.1.0 deposit, which is the citable
+      identifier for this exact source.
+  - type: doi
+    value: 10.5281/zenodo.23057620
+    description: The concept DOI, which resolves to the newest version of the
+      series and therefore does not pin 0.1.0.
+date-released: 2026-09-30
 license: BSD-3-Clause
 type: software
 repository-code: "https://github.com/ZengZichao/PhyloSlicer"

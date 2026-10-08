@@ -57,6 +57,14 @@ keeps to the same qualification.
 - **Changelog:** [CHANGELOG.md](CHANGELOG.md) · Chinese: [CHANGELOG_CN.md](CHANGELOG_CN.md)
 - **Contributing:** [CONTRIBUTING.md](CONTRIBUTING.md) · Chinese: [CONTRIBUTING_CN.md](CONTRIBUTING_CN.md)
 - **Release procedure:** [RELEASE.md](RELEASE.md) · Chinese: [RELEASE_CN.md](RELEASE_CN.md)
+- **What CI runs, mirrored for reviewers:** [docs/CI_WORKFLOWS.md](docs/CI_WORKFLOWS.md) · Chinese: [docs/CI_WORKFLOWS_CN.md](docs/CI_WORKFLOWS_CN.md)
+- **Manuscript word-count rule (re-derivable):** [docs/WORD_COUNT.md](docs/WORD_COUNT.md) · Chinese: [docs/WORD_COUNT_CN.md](docs/WORD_COUNT_CN.md)
+- **Zenodo deposit checklist (author-only steps):** [docs/ZENODO_DEPOSIT_CHECKLIST.md](docs/ZENODO_DEPOSIT_CHECKLIST.md) · Chinese: [docs/ZENODO_DEPOSIT_CHECKLIST_CN.md](docs/ZENODO_DEPOSIT_CHECKLIST_CN.md)
+
+The English document in each pair is the version of record and the Chinese one is its
+translation, maintained to the same section list; `tests/test_release_hygiene.py` fails
+when the two heading structures drift apart, so the pair cannot quietly become a partial
+translation.
 
 ## Installation
 
@@ -137,6 +145,36 @@ version-agnostic Zenodo concept DOI for all releases is
 Code: BSD-3-Clause (see [LICENSE](LICENSE)). Documentation: CC-BY 4.0.
 Third-party attribution, including the origin of the `treesliceR` reference
 values: [NOTICE.md](NOTICE.md) · Chinese: [NOTICE_CN.md](NOTICE_CN.md).
+
+### Why BSD-3-Clause
+
+The *Ecography* Software Notes page recommends "fully open licenses (e.g., MIT)"
+and states that copyleft licences (e.g., GPL) are also accepted. BSD-3-Clause is
+neither exemplar, but it is squarely inside the recommendation: it is OSI-approved
+and permissive, carries no copyleft condition, and a BSD-3-Clause work can be
+combined into MIT- or GPL-licensed projects without re-licensing trouble. It is
+also the licence of the scientific stack this package extends — numpy, scipy and
+pandas are all BSD-3-Clause — while the reference implementation it cross-validates
+against, treesliceR, is MIT, likewise permissive and likewise compatible. The only
+substantive difference from MIT is the third clause, which asks users not to use
+the copyright holders' names to endorse derived products; that is a deliberate
+choice, not an obstacle, and it is why some venues prefer MIT. Nothing here
+restricts reuse: the package is free and open-source, and the shipped `LICENSE` is
+the BSD-3-Clause text verbatim.
+
+### Open access
+
+*Ecography* is fully open access: every article is published under a Creative
+Commons licence, all authors grant the Nordic Society Oikos a licence to publish,
+and an Article Publication Charge (APC) applies. This repository makes no claim
+about the amount or about anyone's eligibility — the corresponding author checks
+the current fee and any institutional agreement at acceptance, when the Wiley
+Author Licence is signed. Waivers and discounts do exist (Wiley's Research4Life
+programme for eligible countries, and NSO-funded waivers), so a group without a
+publication budget should ask the editorial office rather than assume the charge
+is unavoidable. Note the split: the Creative Commons licence covers the *article*
+once published; the software stays BSD-3-Clause, and the prose in this repository
+stays CC-BY 4.0 (see [NOTICE.md](NOTICE.md)).
 
 ## Author
 

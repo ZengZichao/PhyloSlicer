@@ -77,6 +77,21 @@ jobs:
           ruff format --check src tests benchmarks examples testing_suite validation
       - name: Test
         run: python -m pytest -q --durations=10
+      - name: Build the anonymised review archive and check no personal path or author identity survives
+        # the submission checklist tells the Ecography editors that CI packs the
+        # double-blind review archive through the packager and fails the job if any
+        # personal path or author identity survives.  This step is that guard: the
+        # packager scrubs, then re-reads its own bytes and exits non-zero on any
+        # surviving hit, and the test re-checks the archive and unpacks and runs it.
+        # No dependency setup is needed beyond the checkout above: the packager is
+        # stdlib-only (build-time tooling must not add a runtime dependency) and the
+        # test drives the interpreter that the matrix already installed.
+        run: |
+          python tools/make_review_archive.py --verbose
+          python tools/make_review_archive.py --format tar.gz
+          python -m ruff check tools tests
+          python -m ruff format --check tools tests
+          python -m pytest -q --durations=10 tests/test_review_archive.py
       - name: Run the end-to-end test harness
         # every case the test plan defines, including the CLI and performance
         # budgets; the harness exits nonzero if any of them fails

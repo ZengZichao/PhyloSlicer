@@ -11,6 +11,17 @@ args <- commandArgs(TRUE)
 in_dir <- if (length(args) >= 1) args[1] else "benchmarks/large"
 out_csv <- if (length(args) >= 2) args[2] else "benchmarks/results_r_large.csv"
 REPS <- 5L
+# NV-08: name the box these rows came from, in the table itself; read once, before any
+# timing loop.  Column names match machine_info.py (see benchmarks/machine_info.R).
+.mi_self <- grep("^--file=", commandArgs(FALSE), value = TRUE)
+.mi_dir <- if (length(.mi_self)) {
+  dirname(normalizePath(sub("^--file=", "", .mi_self[[1]])))
+} else {
+  getwd()
+}
+source(file.path(.mi_dir, "machine_info.R"))
+MI <- machine_fields()
+cat(describe_machine(MI), "\n")
 
 rows <- list()
 ri <- 1
@@ -39,12 +50,17 @@ for (tf in list.files(in_dir, pattern = "__tree\\.tre$", full.names = TRUE)) {
       t_cpd <- stats::median(tc)
       rows[[ri]] <- data.frame(tips = Ntip(tree), n_sites = nrow(mat),
                                n_slices = n_slices,
-                               slice_s = t_slice, cpd_s = t_cpd, cpe_s = NA)
+                               slice_s = t_slice, cpd_s = t_cpd, cpe_s = NA,
+                               source = tag, reps = REPS,
+                               repeat_slice_s = paste(sprintf("%.9g", ts), collapse = ";"),
+                               repeat_cpd_s = paste(sprintf("%.9g", tc), collapse = ";"))
       ri <- ri + 1
       cat(sprintf("%s tips=%d sites=%d k=%d: slice %.2fs cpd %.2fs\n",
                   tag, Ntip(tree), nrow(mat), n_slices, t_slice, t_cpd))
     }
   }
 }
-write.csv(do.call(rbind, rows), out_csv, row.names = FALSE)
+out <- do.call(rbind, rows)
+for (nm in names(MI)) out[[nm]] <- MI[[nm]]  # constant machine columns (NV-08)
+write.csv(out, out_csv, row.names = FALSE)
 cat("wrote", out_csv, "\n")
