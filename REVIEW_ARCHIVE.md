@@ -59,19 +59,29 @@ builds are byte-identical - `test_two_builds_are_byte_identical` asserts that -
 and three builds made by hand from a clean worktree were byte-identical to each
 other.
 
-No digest of this archive is printed in this document, because this document is
-inside the archive and no file can carry the hash of the container holding it: a
-digest quoted here could only ever describe some *other* build, which is exactly
-how the earlier revision of this file came to name a stale one.  The digest of the
-delivered file is recorded in the submission checklist the editors hold.  What can
-be checked from inside is stronger than a self-quote:
+This file deliberately prints no digest of the archive. A rebuild changes whenever
+the tree moves, because the sidecar embeds the commit and the build timestamp, so a
+digest written here could only ever describe some *other* build - which is exactly
+how the previous revision of this document came to name both a stale digest and a
+file count (263) that the packager, the sidecar and both archive formats had always
+disagreed with (260). The digest of the delivered file is recorded in the submission
+checklist the editors hold, outside the archive, where it can be true.
+
+This document is a maintainer note and the packager excludes it, together with its
+Chinese counterpart and `tools/` itself, from what reviewers receive: all three
+document the anonymisation and quote the very identity literals that are scrubbed,
+so shipping them would undo the scrub (the reasons are recorded in
+`EXCLUDED_TOPLEVEL`). What a reader gets instead is stronger than a self-quote.
 `REVIEW_ARCHIVE_PROVENANCE.json` names the commit the tree was built from
 (`source_control.commit`), the package and packager versions, the interpreter,
-whether the worktree was clean (`git_dirty_paths`), and a SHA-256 for each entry,
-with `summary.file_count` giving the number of entries; so
-`python tools/make_review_archive.py --check-only <archive>` re-derives every claim
-in this file from the bytes on disk.  `SOURCE_DATE_EPOCH` is honoured and is the
-only knob that moves the timestamps.
+whether the worktree was clean (`git_dirty_paths`), a SHA-256 for every one of the
+entries, and `summary.file_count` for their number, so integrity is checkable with
+any hashing tool, without trusting this prose. `tests/test_review_archive.py` ships
+and enforces all of it, but skips inside the archive precisely because it drives the
+packager to build one - hence the exclusion above; `--check-only` is the same
+assertions on the maintainer side, where the packager lives. `PEER_REVIEW_NOTICE.md`
+is the pointer that travels with the archive. `SOURCE_DATE_EPOCH` is honoured and is
+the only knob that moves the timestamps.
 
 Unpack it and it is a working checkout:
 

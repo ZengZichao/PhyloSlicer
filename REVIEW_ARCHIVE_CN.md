@@ -52,14 +52,21 @@ python -m pytest -q tests/test_review_archive.py
 `mtime=0` 写出。连续两次构建产物逐字节相同，`test_two_builds_are_byte_identical`
 对此作了断言；手工在干净工作树上另作的三次构建也逐字节相同。
 
-本文档不印本存档的 SHA-256：本文档就在存档之内，而任何文件都装不下那个容纳它自己的
-容器的哈希，此处印出的摘要只可能描述*另一次*构建——上一版本这份文件记下过期哈希，正是
-这么来的。交付文件的摘要记录在编辑持有的投稿检查清单里。能从内部核验的东西比自我
-引用更强：`REVIEW_ARCHIVE_PROVENANCE.json` 记下构建树所在的提交
-（`source_control.commit`）、包与打包器版本、解释器、工作树是否干净
-（`git_dirty_paths`），并为每个条目记下 SHA-256，`summary.file_count` 即条目数；
-因此 `python tools/make_review_archive.py --check-only <archive>` 能从磁盘字节
-重新推出本文档的每一句断言。`SOURCE_DATE_EPOCH` 会被采用，也是唯一改变时间戳的开关。
+本文档有意不印本存档的摘要。只要树一动，重建结果就会变，因为 sidecar 里嵌着提交号
+与构建时间戳，所以写在这里的摘要只可能描述*另一次*构建——上一版本这份文档同时记下
+过期的摘要和一个错误的条目数（263），而打包器、sidecar 与两种存档格式一贯给出 260，
+正是这个毛病。交付文件的摘要记在编辑持有的投稿检查清单里，那在存档之外，因此可以说真话。
+
+本文档是维护者说明，打包器把它与其中文对应件、以及 `tools/` 本身一起排除在评审所得
+之外：这三处都在讲匿名化，并且复述了被清除的身份字面量，一旦交付就会把清除再做反向
+破坏（理由记在 `EXCLUDED_TOPLEVEL`）。读者拿到的替代物比自我引用更强：
+`REVIEW_ARCHIVE_PROVENANCE.json` 记下构建树所在的提交（`source_control.commit`）、
+包与打包器版本、解释器、工作树是否干净（`git_dirty_paths`）、每一个条目的 SHA-256，
+以及条目总数 `summary.file_count`，因此完整性用任意哈希工具都能自行核验，不必相信
+本文的字句。`tests/test_review_archive.py` 随包交付并对上述各项作断言，但它在存档内
+会自我跳过，因为它要驱动打包器去构建一个存档——这正是上面那条排除的理由；
+`--check-only` 是同一套断言的维护者版本，运行在打包器所在的地方。随包交付的指路文件
+是 `PEER_REVIEW_NOTICE.md`。`SOURCE_DATE_EPOCH` 会被采用，也是唯一改变时间戳的开关。
 
 解包后即是一份可直接工作的检出：
 
