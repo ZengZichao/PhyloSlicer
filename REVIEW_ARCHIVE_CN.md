@@ -50,16 +50,16 @@ python -m pytest -q tests/test_review_archive.py
 确定性：条目排序、所有时间戳统一取 HEAD 的提交日期（可用 `SOURCE_DATE_EPOCH`
 覆盖）、归档元数据归一化（权限 0644、uid/gid 为 0、不写所有者名）、gzip 以
 `mtime=0` 写出。连续两次构建产物逐字节相同，`test_two_builds_are_byte_identical`
-对此作了断言，实测哈希为：
+对此作了断言；手工在干净工作树上另作的三次构建也逐字节相同。
 
-| 存档 | SHA-256 |
-| --- | --- |
-| `PhyloSlicer_review_0.1.0.zip` | `d3750aa2e2abd553cf19fc3343a9440d270b953d01dea7dfa8e22a61b81d1e79` |
-| `PhyloSlicer_review_0.1.0.tar.gz` | `0af47241b70ed8069f895fc774870495d3806a2181a6fd1004f3b7e1198dd59a` |
-
-（均基于提交 `0cba60f`、工作树干净时用 CPython 3.11 构建三次，三份产物逐字节相同；存档含 263 个条目。
-仍欢迎自行重建后比对——印出哈希的意义就在于它必须能被复现。）`SOURCE_DATE_EPOCH` 会被采用，也是唯一
-改变时间戳的开关。）
+本文档不印本存档的 SHA-256：本文档就在存档之内，而任何文件都装不下那个容纳它自己的
+容器的哈希，此处印出的摘要只可能描述*另一次*构建——上一版本这份文件记下过期哈希，正是
+这么来的。交付文件的摘要记录在编辑持有的投稿检查清单里。能从内部核验的东西比自我
+引用更强：`REVIEW_ARCHIVE_PROVENANCE.json` 记下构建树所在的提交
+（`source_control.commit`）、包与打包器版本、解释器、工作树是否干净
+（`git_dirty_paths`），并为每个条目记下 SHA-256，`summary.file_count` 即条目数；
+因此 `python tools/make_review_archive.py --check-only <archive>` 能从磁盘字节
+重新推出本文档的每一句断言。`SOURCE_DATE_EPOCH` 会被采用，也是唯一改变时间戳的开关。
 
 解包后即是一份可直接工作的检出：
 

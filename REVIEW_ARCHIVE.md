@@ -55,18 +55,23 @@ cannot fail is worth nothing.
 Reproducibility: entries are sorted, every timestamp is the commit date of HEAD
 (override with `SOURCE_DATE_EPOCH`), archive metadata is normalised (mode 0644,
 uid/gid 0, no owner names), and gzip is written with `mtime=0`.  Two consecutive
-builds are byte-identical; `test_two_builds_are_byte_identical` asserts it, and
-the recorded hashes are:
+builds are byte-identical - `test_two_builds_are_byte_identical` asserts that -
+and three builds made by hand from a clean worktree were byte-identical to each
+other.
 
-| archive | SHA-256 |
-| --- | --- |
-| `PhyloSlicer_review_0.1.0.zip` | `d3750aa2e2abd553cf19fc3343a9440d270b953d01dea7dfa8e22a61b81d1e79` |
-| `PhyloSlicer_review_0.1.0.tar.gz` | `0af47241b70ed8069f895fc774870495d3806a2181a6fd1004f3b7e1198dd59a` |
-
-(Built from commit `0cba60f` with the worktree clean, three times with CPython 3.11;
-all three builds are byte-identical, and the archive holds 263 entries. Rebuild and
-compare if you need to - the point of printing the digests is that they must match.  `SOURCE_DATE_EPOCH` is honoured and is the only knob that moves the
-timestamps.)
+No digest of this archive is printed in this document, because this document is
+inside the archive and no file can carry the hash of the container holding it: a
+digest quoted here could only ever describe some *other* build, which is exactly
+how the earlier revision of this file came to name a stale one.  The digest of the
+delivered file is recorded in the submission checklist the editors hold.  What can
+be checked from inside is stronger than a self-quote:
+`REVIEW_ARCHIVE_PROVENANCE.json` names the commit the tree was built from
+(`source_control.commit`), the package and packager versions, the interpreter,
+whether the worktree was clean (`git_dirty_paths`), and a SHA-256 for each entry,
+with `summary.file_count` giving the number of entries; so
+`python tools/make_review_archive.py --check-only <archive>` re-derives every claim
+in this file from the bytes on disk.  `SOURCE_DATE_EPOCH` is honoured and is the
+only knob that moves the timestamps.
 
 Unpack it and it is a working checkout:
 
