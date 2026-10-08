@@ -389,8 +389,10 @@ Implementation notes:
   `tests/test_regressions.py::TestBetaNormalisation::test_all_beta_profiles_partition_the_neighbourhood_beta`:
   the `bd20_random` fixture (the committed cross-validation inputs
   `bd20__tree.tre` + `bd20__random__mat.csv`, 20 tips / 30 sites, queen-grid
-  adjacency) sliced with `slice_pieces(tree, n=30, criterion="time")`, all six
-  component x approach combinations, checked with
+  adjacency) sliced both ways, `slice_pieces(tree, n=30, criterion="time")` and
+  `criterion="pd"`, over all twenty-four slice-criterion x component x approach x
+  weighting combinations - the range-weighted branch included, worst row-sum
+  deviation measured at 6.7e-16 - checked with
   `np.allclose(row_sums, 1.0, atol=1e-8)` and a stricter
   `max |row_sum - 1| < 1e-12`. It replaced a 6-site / 5-slice fixture that passed
   at `atol=0.05`. Two companions keep the claim honest:

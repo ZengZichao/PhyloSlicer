@@ -294,7 +294,7 @@ prof_pb = pb_per_slice(tree, mat, adj, stack,
   对 turnover 和 nestedness 而言，该性质是*新近*才成立的：`min(b, c)` 跨切片不可加（`sum_j min(b_j, c_j) <= min(sum_j b_j, sum_j c_j)`），所以若除以全树分母——A2 修复之前的代码如此，treesliceR 至今仍如此——在下面这份工作负载上，turnover 行的行和只会落在 0.96-0.98，nestedness 落在 1.05-1.40。
   支撑这一条的断言是
   `tests/test_regressions.py::TestBetaNormalisation::test_all_beta_profiles_partition_the_neighbourhood_beta`：
-  用 `bd20_random` fixture（已提交的交叉验证输入 `bd20__tree.tre` + `bd20__random__mat.csv`，20 尖 / 30 样区，queen 网格邻接）以 `slice_pieces(tree, n=30, criterion="time")` 切片，覆盖全部六个 分量 × 方法 组合，用
+  用 `bd20_random` fixture（已提交的交叉验证输入 `bd20__tree.tre` + `bd20__random__mat.csv`，20 尖 / 30 样区，queen 网格邻接）分别以 `slice_pieces(tree, n=30, criterion="time")` 和 `criterion="pd"` 切片，覆盖全部二十四个 切片判据 × 分量 × 方法 × 是否范围加权 组合——含范围加权那一支，实测最差行和偏差 6.7e-16——用
   `np.allclose(row_sums, 1.0, atol=1e-8)` 以及更严的
   `max |row_sum - 1| < 1e-12` 校验。它替换了此前一个在 `atol=0.05` 下通过的 6 样区 / 5 切片 fixture。
   另有两条配套断言让这一说法保持诚实：
