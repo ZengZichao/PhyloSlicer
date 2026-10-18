@@ -29,6 +29,9 @@ concurrency:
 jobs:
   sdist-wheel:
     runs-on: ubuntu-latest
+    permissions:
+      # 挂载产物到 GitHub Release 需要写权限；顶层保持 read，仅本作业放开
+      contents: write
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -50,6 +53,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: gh release upload "$GITHUB_REF_NAME" dist/* --clobber
+
 ```
 
 ## `.github/workflows/codeql.yml`
