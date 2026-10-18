@@ -54,6 +54,7 @@ phyloslicer = "phyloslicer.cli.main:main"
 
 [project.urls]
 Homepage = "https://github.com/ZengZichao/PhyloSlicer"
+PyPI = "https://pypi.org/project/phyloslicer/"
 Repository = "https://github.com/ZengZichao/PhyloSlicer"
 Documentation = "https://github.com/ZengZichao/PhyloSlicer/blob/main/docs/USER_GUIDE.md"
 Changelog = "https://github.com/ZengZichao/PhyloSlicer/blob/main/CHANGELOG.md"

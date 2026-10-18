@@ -55,6 +55,14 @@ Chinese documentation: [用户手册（中文版）](USER_GUIDE_CN.md).
 
 ## 1. Installation
 
+PhyloSlicer is on PyPI; this is all most readers need:
+
+```bash
+pip install phyloslicer
+```
+
+Working from a source checkout instead:
+
 ```bash
 # core package (numpy, scipy, pandas, matplotlib)
 pip install -e .
