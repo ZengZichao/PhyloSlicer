@@ -53,9 +53,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: gh release upload "$GITHUB_REF_NAME" dist/* --clobber
-
 ```
-
 ## `.github/workflows/codeql.yml`
 
 ```yaml
@@ -94,7 +92,6 @@ jobs:
         with:
           category: "/language:python"
 ```
-
 ## `.github/workflows/tests.yml`
 
 ```yaml
@@ -203,7 +200,7 @@ jobs:
         run: python examples/quickstart.py --sites 24 --species 60 --trees 3
       - name: Re-run the cross-validation and check its provenance
         run: |
-          python validation/compare.py
+          python validation/compare.py --in-place
           python - <<'PY'
           import hashlib, re, sys
           from pathlib import Path
@@ -234,8 +231,6 @@ jobs:
           print(f"release metadata consistent at {version}")
           PY
 ```
-
-
 ## `.github/workflows/publish.yml`
 
 ```yaml

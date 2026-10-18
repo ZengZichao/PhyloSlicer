@@ -27,7 +27,7 @@ ruff check src tests benchmarks examples testing_suite validation
 ruff format --check src tests benchmarks examples testing_suite validation
 python -m pytest -q
 python examples/quickstart.py --sites 24 --species 60 --trees 3
-python validation/compare.py
+python validation/compare.py --in-place
 python - <<'PY'
 import hashlib, re
 from pathlib import Path
@@ -41,10 +41,11 @@ PY
 python benchmarks/recompute_ratios.py
 ```
 
-`validation/compare.py` rewrites `validation/reference/equivalence_report.csv`.
-Commit that file only if the report is meant to move with this release; the
-pinned references themselves must never change without re-running the R
-generator in `validation/r/`.
+Bare, `validation/compare.py` refuses to overwrite the tracked
+`validation/reference/equivalence_report.csv`; the gate passes `--in-place`
+because the releaser does mean to rewrite it. Commit the report only if it is
+meant to move with this release; the pinned references themselves must never
+change without re-running the R generator in `validation/r/`.
 
 ## 3. Tag and publish
 

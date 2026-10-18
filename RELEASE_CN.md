@@ -28,7 +28,7 @@ ruff check src tests benchmarks examples testing_suite validation
 ruff format --check src tests benchmarks examples testing_suite validation
 python -m pytest -q
 python examples/quickstart.py --sites 24 --species 60 --trees 3
-python validation/compare.py
+python validation/compare.py --in-place
 python - <<'PY'
 import hashlib, re
 from pathlib import Path
@@ -42,9 +42,10 @@ PY
 python benchmarks/recompute_ratios.py
 ```
 
-`validation/compare.py` 会重写 `validation/reference/equivalence_report.csv`。
-只有当这份报告确实应随本次发布移动时才提交它；而被钉住的基准文件本身，在不重跑
-`validation/r/` 中 R 生成器的前提下绝不允许改动。
+裸跑 `validation/compare.py` 会拒绝覆写受版本控制的
+`validation/reference/equivalence_report.csv`；发布门禁传 `--in-place`，因为
+发布者确实要重写它。只有当报告确实应随本次发布移动时才提交它；而被钉住的
+基准文件本身，在不重跑 `validation/r/` 中 R 生成器的前提下绝不允许改动。
 
 ## 3. 打标签并发布
 
