@@ -14,5 +14,19 @@ include NOTICE_CN.md
 include .zenodo.json
 include docs/USER_GUIDE.md
 include docs/USER_GUIDE_CN.md
+recursive-include docs *.md
 recursive-include validation/reference *.csv *.tre *.txt
 recursive-include benchmarks *.py *.R *.csv README.md README_CN.md
+
+# The suite, the worked example and the internal testing scripts are the
+# artefacts a reviewer is told to run, so the source distribution has to carry them;
+# without these an sdist installs a package that cannot be tested or revalidated.
+recursive-include tests *.py
+recursive-include examples *.py *.md
+recursive-include testing_suite *.py *.md *.txt
+recursive-include validation *.py *.md
+recursive-include scripts *.py
+include SECURITY.md
+include SECURITY_CN.md
+include CODE_OF_CONDUCT.md
+include CODE_OF_CONDUCT_CN.md

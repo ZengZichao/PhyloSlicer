@@ -13,13 +13,13 @@ per point) while `results.csv` compares this package against *its own* naive
 implementation and is therefore *not* a cross-language benchmark. No timing figure
 is quoted here: the R columns are the archived benchmark outputs, and R timings
 on a laptop vary between sessions - the reference-package notes warn about a
-factor of two. The three R scripts were re-run here under R 4.5.3 (aarch64-apple-darwin20.0.0) with ape 5.8.1 and treesliceR 1.1.0 into
+factor of two. The three R scripts were re-run here under R 4.5.3 (aarch64-apple-darwin20.0.0) with ape 5.8-1 and treesliceR 1.1.0 into
 scratch files and reproduced the archived medians to within 6 % (median ratio
 1.06 on the validation scenarios, 1.02-1.08 on the 1000/2000-tip ones), but the
 committed CSVs were left in place so that the numbers the documentation quotes
 are the ones they were measured against.
 
-Version 0.1.0  ·  BSD-3-Clause  ·  Python ≥ 3.10
+Version 0.1.1  ·  BSD-3-Clause  ·  Python ≥ 3.10
 
 PhyloSlicer is an independent, vectorised Python implementation of the
 "slice phylogenies to infer phylogenetic patterns over evolutionary time"
@@ -357,7 +357,7 @@ prof_pe = pe_per_slice(tree, mat, stack)   # (n_sites, k)
 prof_pb = pb_per_slice(tree, mat, adj, stack,
                        component="sorensen",     # "sorensen"|"turnover"|"nestedness"
                        approach="multisite",     # "multisite"|"pairwise"
-                       weighted=False,           # True -> PB_RW (Laffan et al. 2018)
+                       weighted=False,           # True -> PB_RW (Laffan et al. 2016)
                        multisite_domain="mixed") # "paired" removes the drift, §6.1
 # prof_pb["values"]  (n_focal, k) per-slice values, summing to the total
 # prof_pb["total"]   (n_focal,) full-tree beta of the neighbourhood
@@ -370,7 +370,8 @@ Implementation notes:
   one binary search per site — no `(sites × tips)` intermediate.
 * All per-site, per-slice quantities are one sparse matrix product `A @ C`.
 * Range weights for endemism are `1 / (number of sites covering the edge)`,
-  matching treesliceR and Laffan et al. (2018).
+  matching treesliceR and Laffan et al. (2016, *Methods in Ecology and
+  Evolution* 7: 580-588, doi:10.1111/2041-210X.12513).
 * Every beta series **partitions the neighbourhood's total beta**: for every
   finite row, the per-slice values sum to 1. That is implemented behaviour, not
   an assumption - `pb_per_slice` divides each per-slice series by the sum of its
@@ -388,8 +389,10 @@ Implementation notes:
   `tests/test_regressions.py::TestBetaNormalisation::test_all_beta_profiles_partition_the_neighbourhood_beta`:
   the `bd20_random` fixture (the committed cross-validation inputs
   `bd20__tree.tre` + `bd20__random__mat.csv`, 20 tips / 30 sites, queen-grid
-  adjacency) sliced with `slice_pieces(tree, n=30, criterion="time")`, all six
-  component x approach combinations, checked with
+  adjacency) sliced both ways, `slice_pieces(tree, n=30, criterion="time")` and
+  `criterion="pd"`, over all twenty-four slice-criterion x component x approach x
+  weighting combinations - the range-weighted branch included, worst row-sum
+  deviation measured at 6.7e-16 - checked with
   `np.allclose(row_sums, 1.0, atol=1e-8)` and a stricter
   `max |row_sum - 1| < 1e-12`. It replaced a 6-site / 5-slice fixture that passed
   at `atol=0.05`. Two companions keep the claim honest:
@@ -834,7 +837,7 @@ only the `CpD` and `CpE` files are genuinely validated against R today:
   slice-by-site with 30 slice columns, a layout the committed driver (50 slices,
   site-by-slice) cannot emit, so the manifest declared them `status = unverified`
   and `validation/compare.py` skipped them rather than silently transposing them.
-  Running `validation/r/generate_reference.R` under R 4.5.3 (aarch64-apple-darwin20.0.0) with ape 5.8.1 and treesliceR 1.1.0 settled it -
+  Running `validation/r/generate_reference.R` under R 4.5.3 (aarch64-apple-darwin20.0.0) with ape 5.8-1 and treesliceR 1.1.0 settled it -
   every other reference file came out byte-identical, and the profiles written by
   that run are registered now. The superseded copies are not shipped; the
   re-run itself is the evidence.
@@ -847,7 +850,7 @@ equivalence proof):
   Sorensen- and turnover-pairwise) — treesliceR 1.1.0 returns nothing comparable for them
   on these inputs, so there is no reference to score. The other 11 beta families
   **are** compared: 24 per-slice cumulative-β profile rows to 1.1e-9,
-  1260 whole-tree `PB`/`PB_RW` totals to 7.2e-13, and 540
+  the 1258 non-missing whole-tree `PB`/`PB_RW` totals (of 1260 nominal cells; the report's `n_finite` column carries the distinction) to 7.2e-13, and 540
   verified rate fits to 2.9e-6 at the optimiser tolerance.
 * **the turnover and nestedness beta *rates*** — compared, and diverging by up to
   196% in relative terms:

@@ -26,6 +26,38 @@ TEXT_SUFFIXES = {".py", ".md", ".toml", ".yml", ".yaml", ".R", ".csv", ".txt", "
 
 SELF = Path(__file__).name  # this file quotes the patterns it forbids
 
+# directories a tool writes into the working tree rather than source the release
+# ships: pytest drops a README.md inside its own cache, so a document sweep that
+# did not skip them would see a different tree after the first test run than
+# before it.  Mirrors the artefact entries .gitignore already promises to keep
+# out (see test_gitignore_excludes_artifacts_that_carry_absolute_paths), plus the
+# ``*.egg-info`` install-metadata directories, which are variable-name.
+GENERATED_DIRS = frozenset(
+    {
+        ".git",
+        "__pycache__",
+        ".pytest_cache",
+        ".ruff_cache",
+        ".mypy_cache",
+        ".tox",
+        ".venv",
+        "venv",
+        "node_modules",
+        "build",
+        "dist",
+        ".eggs",
+    }
+)
+
+
+def _is_generated(path: Path) -> bool:
+    """Is ``path`` inside a tool-generated directory rather than shipped source?"""
+    relative_parts = path.relative_to(ROOT).parts
+    return any(part in GENERATED_DIRS for part in relative_parts) or any(
+        part.endswith(".egg-info") for part in relative_parts
+    )
+
+
 # every file that advertises a version banner or a version field, and must
 # therefore name the version of record literally
 VERSION_BEARING = (
@@ -137,10 +169,16 @@ def test_no_document_advertises_a_stale_version():
 
 
 def test_every_english_document_ships_a_chinese_counterpart():
-    """``X.md`` is the version of record; ``X_CN.md`` must exist beside it."""
+    """``X.md`` is the version of record; ``X_CN.md`` must exist beside it.
+
+    Only the documents that ship with the release are checked; a tool cache
+    directory holds no document.  pytest itself writes ``.pytest_cache/README.md``
+    into the tree the first time the suite runs, so without ``_is_generated`` this
+    test passed on a clean checkout and failed on every run after it.
+    """
     missing = []
     for path in sorted(ROOT.rglob("*.md")):
-        if any(part in {".git", "__pycache__", ".venv", "node_modules"} for part in path.parts):
+        if _is_generated(path):
             continue
         if path.name.endswith("_CN.md"):
             continue
@@ -148,6 +186,59 @@ def test_every_english_document_ships_a_chinese_counterpart():
         if not counterpart.exists():
             missing.append(str(path.relative_to(ROOT)))
     assert not missing, f"documents without a Chinese counterpart: {missing}"
+
+
+_FENCE = re.compile(r"^(```|~~~)")
+_CJK = re.compile(r"[\u4e00-\u9fff]")
+_LATIN = re.compile(r"[A-Za-z]")
+
+
+def _heading_levels(path, english_side):
+    """Heading levels of a document, ignoring comment lines inside fenced code blocks.
+
+    CM-19 asked for a structural parity check: the English document is the version of
+    record and the Chinese one is maintained to the same section list.  Two things have
+    to be forgiven, and both are real features of this repository rather than escapes:
+    a line starting with ``#`` inside a code fence is a shell or Python comment, not a
+    heading; and a heading written *only* in the other language (``## 中文摘要`` at the
+    foot of an English file) is an appendix, not a section the counterpart must mirror.
+    Bilingual headings of the form ``## Security Policy / 安全策略`` contain Latin
+    letters, so they stay on both sides and are still compared.
+    """
+    levels, in_fence = [], False
+    for line in path.read_text(encoding="utf-8").splitlines():
+        if _FENCE.match(line.strip()):
+            in_fence = not in_fence
+            continue
+        if in_fence:
+            continue
+        m = re.match(r"^(#{1,6})\s+(\S.*)$", line)
+        if not m:
+            continue
+        text = m.group(2).strip()
+        if english_side and _CJK.search(text) and not _LATIN.search(text):
+            continue
+        levels.append(len(m.group(1)))
+    return levels
+
+
+def test_chinese_counterparts_keep_the_english_section_list():
+    """CM-19: a bilingual bundle is only credible if the translation tracks the original."""
+    drift = []
+    for path in sorted(ROOT.rglob("*.md")):
+        if _is_generated(path) or path.name.endswith("_CN.md"):
+            continue
+        counterpart = path.with_name(f"{path.stem}_CN.md")
+        if not counterpart.exists():
+            continue
+        english = _heading_levels(path, True)
+        chinese = _heading_levels(counterpart, False)
+        if english != chinese:
+            drift.append(
+                f"{path.relative_to(ROOT)}: {len(english)} headings vs "
+                f"{counterpart.relative_to(ROOT)}: {len(chinese)}"
+            )
+    assert not drift, f"section lists have drifted apart: {drift}"
 
 
 def test_metadata_names_the_public_repository_consistently():

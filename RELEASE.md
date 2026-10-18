@@ -1,6 +1,6 @@
 # Release procedure
 
-PhyloSlicer version 0.1.0 · BSD-3-Clause
+PhyloSlicer version 0.1.1 · BSD-3-Clause
 
 A release here is the version that the documentation, the citation metadata and
 the archived validation references all describe at the same time. Cut it in this
@@ -27,7 +27,7 @@ ruff check src tests benchmarks examples testing_suite validation
 ruff format --check src tests benchmarks examples testing_suite validation
 python -m pytest -q
 python examples/quickstart.py --sites 24 --species 60 --trees 3
-python validation/compare.py
+python validation/compare.py --in-place
 python - <<'PY'
 import hashlib, re
 from pathlib import Path
@@ -41,17 +41,27 @@ PY
 python benchmarks/recompute_ratios.py
 ```
 
-`validation/compare.py` rewrites `validation/reference/equivalence_report.csv`.
-Commit that file only if the report is meant to move with this release; the
-pinned references themselves must never change without re-running the R
-generator in `validation/r/`.
+Bare, `validation/compare.py` refuses to overwrite the tracked
+`validation/reference/equivalence_report.csv`; the gate passes `--in-place`
+because the releaser does mean to rewrite it. Commit the report only if it is
+meant to move with this release; the pinned references themselves must never
+change without re-running the R generator in `validation/r/`.
 
 ## 3. Tag and publish
 
 ```bash
-git tag -a "v0.1.0" -m "PhyloSlicer 0.1.0"
+git tag -a "v0.1.1" -m "PhyloSlicer 0.1.1"
 git push origin main --follow-tags
 ```
+
+The `v*` tag triggers two workflows. `build.yml` attaches the sdist and wheel
+to the GitHub release; `publish.yml` publishes the same distributions to PyPI
+through Trusted Publishing (OIDC), so the repository holds no API token. The
+first time only, register the publisher on PyPI (Account settings →
+Publishing): project name `phyloslicer`, owner `ZengZichao`, repository
+`PhyloSlicer`, workflow filename `publish.yml`, environment name `pypi`. If a
+tag is pushed before that registration, the `publish` workflow fails and can
+simply be re-run afterwards.
 
 Then create the GitHub release for the tag, using the matching `CHANGELOG.md`
 section as the notes.
@@ -82,7 +92,7 @@ concept DOI:
 
 ```bash
 python -m venv /tmp/phyloslicer-check && source /tmp/phyloslicer-check/bin/activate
-pip install "phyloslicer @ git+https://github.com/ZengZichao/PhyloSlicer@v0.1.0"
+pip install "phyloslicer==0.1.1"  # from PyPI; or append @ git+...@v0.1.1 for the tag
 python -c "import phyloslicer; print(phyloslicer.__version__)"
 phyloslicer --version
 ```

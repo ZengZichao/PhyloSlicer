@@ -7,7 +7,7 @@
 
 **面向宏生态学的系统发育树时间切片与多样性累积速率分析工具（Python）**
 
-版本 0.1.0 · BSD-3-Clause · Python ≥ 3.10
+版本 0.1.1 · BSD-3-Clause · Python ≥ 3.10
 
 仓库地址：<https://github.com/ZengZichao/PhyloSlicer>
 
@@ -51,6 +51,13 @@ PhyloSlicer 独立实现了 R 包 **treesliceR** 开创的"切片系统发育树
 - **变更日志：** [CHANGELOG_CN.md](CHANGELOG_CN.md) · 英文：[CHANGELOG.md](CHANGELOG.md)
 - **贡献指南：** [CONTRIBUTING_CN.md](CONTRIBUTING_CN.md) · 英文：[CONTRIBUTING.md](CONTRIBUTING.md)
 - **发布流程：** [RELEASE_CN.md](RELEASE_CN.md) · 英文：[RELEASE.md](RELEASE.md)
+- **CI 到底跑什么（审稿人可见镜像）：** [docs/CI_WORKFLOWS_CN.md](docs/CI_WORKFLOWS_CN.md) · 英文：[docs/CI_WORKFLOWS.md](docs/CI_WORKFLOWS.md)
+- **稿件字数统计口径（可复现）：** [docs/WORD_COUNT_CN.md](docs/WORD_COUNT_CN.md) · 英文：[docs/WORD_COUNT.md](docs/WORD_COUNT.md)
+- **Zenodo 存档核对清单（仅作者可执行）：** [docs/ZENODO_DEPOSIT_CHECKLIST_CN.md](docs/ZENODO_DEPOSIT_CHECKLIST_CN.md) · 英文：[docs/ZENODO_DEPOSIT_CHECKLIST.md](docs/ZENODO_DEPOSIT_CHECKLIST.md)
+
+每一对文档中，英文版是权威版本，中文版是它的翻译，两者保持同一份章节结构；
+`tests/test_release_hygiene.py` 会在两份标题结构出现偏离时让构建失败，因此中文版本
+不会悄悄退化成节译。
 
 ## 安装
 
@@ -126,6 +133,29 @@ treesliceR 1.1.0 做数值交叉核对。完整缺口清单与容差依据见
 代码：BSD-3-Clause（见 [LICENSE](LICENSE)）。文档：CC-BY 4.0。
 第三方署名，包括 `treesliceR` 参考值的来源说明：[NOTICE_CN.md](NOTICE_CN.md) ·
 英文：[NOTICE.md](NOTICE.md)。
+
+### 为什么是 BSD-3-Clause
+
+*Ecography* 的 Software Notes 页面推荐"完全开放的许可证（例如 MIT）"，同时说明
+copyleft 类许可证（例如 GPL）也接受。BSD-3-Clause 不是其中任一范例，但它确实在
+推荐范围之内：OSI 认证、宽松（permissive）、不含 copyleft 条件，BSD-3-Clause 的
+作品可以并入 MIT 或 GPL 项目而不产生再许可纠纷。它也是本包所依赖的科学计算栈的
+许可证——numpy、scipy 与 pandas 均为 BSD-3-Clause；用于交叉验证的参考实现
+treesliceR 是 MIT，同样宽松、同样兼容。与 MIT 唯一的实质差别是第三条：它要求使用者
+不得以版权持有人名义为衍生作品背书。这是有意选择而非障碍，也正是部分期刊更偏爱
+MIT 的原因。此处不存在任何使用限制：本软件自由且开源，随附的 `LICENSE` 是
+BSD-3-Clause 原文。
+
+### 开放获取
+
+*Ecography* 为完全开放获取期刊：每篇文章都在知识共享（Creative Commons）许可证下
+发表，所有作者都需向北欧生态学会（Nordic Society Oikos）授予出版权，并且需缴纳
+文章出版费（APC）。本仓库不对金额、也不对任何人的减免资格作任何主张：通讯作者应在
+录用、签署 Wiley 作者许可协议（WALS）时向编辑部核实当期费用与本机构的协议情况。
+减免与折扣确实存在（Wiley 面向符合条件国家的 Research4Life 计划，以及 NSO 资助的
+豁免），因此没有出版经费的团队应当主动询问，而不是默认这笔费用无法避免。请注意
+边界划分：知识共享许可证管的是*文章*本身；软件仍然是 BSD-3-Clause，本仓库的文字
+仍然是 CC-BY 4.0（见 [NOTICE_CN.md](NOTICE_CN.md)）。
 
 ## 作者
 

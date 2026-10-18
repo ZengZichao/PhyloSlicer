@@ -127,8 +127,9 @@ def cpd_rate(
 ) -> pd.DataFrame:
     """Rate of PD accumulation (mirrors treesliceR's ``CpD``) with fit diagnostics.
 
-    Returns a DataFrame: ``site_id, CpD, PD, pDO, converged, r_squared, reason,
-    at_lower_bound, at_upper_bound, ultrametric``.
+    Returns a DataFrame with the eleven columns ``site_id, CpD, PD, pDO,
+    converged, r_squared, reason, at_lower_bound, at_upper_bound, ultrametric,
+    origin_within_tree``.
     ``percentile=0.95`` (accumulated proportion) matches R's default
     ``pDO = 5``; ``pDO = -ln(1 - percentile) / CpD``.
 
@@ -139,6 +140,8 @@ def cpd_rate(
     treesliceR fits unconstrained, so widen the band before concluding that a
     fast rate is real.  Non-ultrametric trees raise unless
     ``allow_non_ultrametric=True``; the verdict is echoed in ``ultrametric``.
+    ``origin_within_tree=False`` marks a ``pDO`` the fit extrapolates past the
+    root, which ``reason`` spells out; the reported value is not clipped.
     """
     tree, mat = _validate_common(tree, mat, n_slices, percentile)
     slices = slice_pieces(
@@ -177,8 +180,12 @@ def cpe_rate(
 ) -> pd.DataFrame:
     """Rate of phylogenetic-endemism accumulation (mirrors ``CpE``).
 
-    See :func:`cpd_rate` for ``bounds``, the bound flags and the ultrametric
-    audit column; the returned columns are otherwise identical with
+    Returns a DataFrame with the eleven columns ``site_id, CpE, PE, pEO,
+    converged, r_squared, reason, at_lower_bound, at_upper_bound, ultrametric,
+    origin_within_tree``.
+
+    See :func:`cpd_rate` for ``bounds``, the bound flags and the two audit
+    columns; the returned columns are otherwise identical with
     ``CpE / PE / pEO`` in place of ``CpD / PD / pDO``.
     """
     tree, mat = _validate_common(tree, mat, n_slices, percentile)
@@ -221,10 +228,11 @@ def cpb_rate(
 ) -> pd.DataFrame:
     """Rate of phylogenetic beta-diversity accumulation (mirrors ``CpB``/``CpB_RW``).
 
-    ``weighted=True`` gives the range-weighted variant (``CpB_RW``;
-    Laffan et al. 2018).  Returns
+    ``weighted=True`` gives the range-weighted variant (``CpB_RW``; Laffan et
+    al. 2016, Methods in Ecology and Evolution 7: 580-588,
+    doi:10.1111/2041-210X.12513).  Returns a DataFrame with the eleven columns
     ``site_id, CpB (or CpB_RW), PB (or PB_RW), pBO, converged, r_squared,
-    reason, at_lower_bound, at_upper_bound, ultrametric``.
+    reason, at_lower_bound, at_upper_bound, ultrametric, origin_within_tree``.
     Neighbourhoods skipped by treesliceR (fewer than 2 sites, degenerate
     composition) are returned as ``converged=False`` rows with an explicit
     ``reason`` instead of silent ``c(NA, NA, NA)``.

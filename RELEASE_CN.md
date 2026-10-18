@@ -2,7 +2,7 @@
 
 本文件是 [`RELEASE.md`](RELEASE.md) 的中文译文，正文以英文文件为准。
 
-PhyloSlicer 版本 0.1.0 · BSD-3-Clause
+PhyloSlicer 版本 0.1.1 · BSD-3-Clause
 
 这里的"一次发布"指文档、引用元数据与存档验证基准在同一时刻描述的是同一个版本。
 请按下面的顺序切版。
@@ -28,7 +28,7 @@ ruff check src tests benchmarks examples testing_suite validation
 ruff format --check src tests benchmarks examples testing_suite validation
 python -m pytest -q
 python examples/quickstart.py --sites 24 --species 60 --trees 3
-python validation/compare.py
+python validation/compare.py --in-place
 python - <<'PY'
 import hashlib, re
 from pathlib import Path
@@ -42,16 +42,24 @@ PY
 python benchmarks/recompute_ratios.py
 ```
 
-`validation/compare.py` 会重写 `validation/reference/equivalence_report.csv`。
-只有当这份报告确实应随本次发布移动时才提交它；而被钉住的基准文件本身，在不重跑
-`validation/r/` 中 R 生成器的前提下绝不允许改动。
+裸跑 `validation/compare.py` 会拒绝覆写受版本控制的
+`validation/reference/equivalence_report.csv`；发布门禁传 `--in-place`，因为
+发布者确实要重写它。只有当报告确实应随本次发布移动时才提交它；而被钉住的
+基准文件本身，在不重跑 `validation/r/` 中 R 生成器的前提下绝不允许改动。
 
 ## 3. 打标签并发布
 
 ```bash
-git tag -a "v0.1.0" -m "PhyloSlicer 0.1.0"
+git tag -a "v0.1.1" -m "PhyloSlicer 0.1.1"
 git push origin main --follow-tags
 ```
+
+`v*` 标签会触发两个工作流：`build.yml` 把 sdist 与 wheel 挂到对应的 GitHub
+Release 上；`publish.yml` 通过 Trusted Publishing（OIDC）把同一批产物发布到
+PyPI，仓库中不保存任何 API token。首次发布前只需在 PyPI（Account settings →
+Publishing）登记一次发布者：项目名 `phyloslicer`、owner `ZengZichao`、仓库
+`PhyloSlicer`、工作流文件名 `publish.yml`、环境名 `pypi`。若标签先于登记被
+推送，`publish` 工作流会失败，事后重新运行即可。
 
 然后为该标签创建 GitHub Release，发布说明直接取 `CHANGELOG.md` 中对应小节。
 
@@ -77,7 +85,7 @@ git push origin main --follow-tags
 
 ```bash
 python -m venv /tmp/phyloslicer-check && source /tmp/phyloslicer-check/bin/activate
-pip install "phyloslicer @ git+https://github.com/ZengZichao/PhyloSlicer@v0.1.0"
+pip install "phyloslicer==0.1.1"  # 从 PyPI 安装；或改用 @ git+...@v0.1.1 从标签安装
 python -c "import phyloslicer; print(phyloslicer.__version__)"
 phyloslicer --version
 ```

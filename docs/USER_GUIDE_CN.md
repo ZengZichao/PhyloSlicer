@@ -2,9 +2,9 @@
 
 **面向宏生态学的系统发育时间切片与累积多样性速率分析（Python）**
 
-这里的"快"是结构性的结果，而不是宣传用语：切片只是一张 `E x k` 的区间相交贡献矩阵，而不是参考设计所物化出来的那 `k` 份完整树副本，因此运行时间与内存都不会被切片数量放大。这句话所支撑的就是这一主张；实测证据位于 `benchmarks/`，其中的跨语言加速比是从固定 k 的缩放表里读出的（`results_scaling_py.csv` 对 `results_scaling_r.csv`，仅含切片内核，输入树字节级相同，每个点取 15 次计时重复的中位数），而 `results.csv` 比较的是本包与*它自己的*朴素实现，因此它*不是*跨语言基准。此处不引用任何计时数字：R 的那几列是归档的基准输出，而笔记本电脑上的 R 计时在不同会话之间会浮动——参考包自己的说明就警告过两倍的幅度。三个 R 脚本已在 R 4.5.3（aarch64-apple-darwin20.0.0）配合 ape 5.8.1 与 treesliceR 1.1.0 的环境下重新运行到临时文件中，把归档中位数复现到 6 % 以内（验证场景上的中位数比值 1.06，1000/2000 尖场景上 1.02-1.08），但已提交的 CSV 保持原样，好让文档引用的数字正是当初测量它们时所对照的那一组。
+这里的"快"是结构性的结果，而不是宣传用语：切片只是一张 `E x k` 的区间相交贡献矩阵，而不是参考设计所物化出来的那 `k` 份完整树副本，因此运行时间与内存都不会被切片数量放大。这句话所支撑的就是这一主张；实测证据位于 `benchmarks/`，其中的跨语言加速比是从固定 k 的缩放表里读出的（`results_scaling_py.csv` 对 `results_scaling_r.csv`，仅含切片内核，输入树字节级相同，每个点取 15 次计时重复的中位数），而 `results.csv` 比较的是本包与*它自己的*朴素实现，因此它*不是*跨语言基准。此处不引用任何计时数字：R 的那几列是归档的基准输出，而笔记本电脑上的 R 计时在不同会话之间会浮动——参考包自己的说明就警告过两倍的幅度。三个 R 脚本已在 R 4.5.3（aarch64-apple-darwin20.0.0）配合 ape 5.8-1 与 treesliceR 1.1.0 的环境下重新运行到临时文件中，把归档中位数复现到 6 % 以内（验证场景上的中位数比值 1.06，1000/2000 尖场景上 1.02-1.08），但已提交的 CSV 保持原样，好让文档引用的数字正是当初测量它们时所对照的那一组。
 
-版本 0.1.0  ·  BSD-3-Clause  ·  Python ≥ 3.10
+版本 0.1.1  ·  BSD-3-Clause  ·  Python ≥ 3.10
 
 PhyloSlicer 是对**"切片系统发育树以推断进化时间维度上的系统发育格局"**这一范式的独立、向量化 Python 实现，该范式由 **treesliceR**（Araujo et al. 2025, *Ecography* 2025, e07364, doi:10.1111/ecog.07364；网络首发于 2024 年 10 月 28 日）提出；本包在此之上扩展了后验树不确定性量化、稳健拟合诊断、空间工作流辅助工具和命令行界面。英文文档：[USER_GUIDE.md](USER_GUIDE.md)，即本手册的记录版本/正文。
 
@@ -278,7 +278,7 @@ prof_pe = pe_per_slice(tree, mat, stack)   # (n_sites, k)
 prof_pb = pb_per_slice(tree, mat, adj, stack,
                        component="sorensen",     # "sorensen"|"turnover"|"nestedness"
                        approach="multisite",     # "multisite"|"pairwise"
-                       weighted=False,           # True -> PB_RW (Laffan et al. 2018)
+                       weighted=False,           # True -> PB_RW (Laffan et al. 2016)
                        multisite_domain="mixed") # "paired" removes the drift, §6.1
 # prof_pb["values"]  (n_focal, k) per-slice values, summing to the total
 # prof_pb["total"]   (n_focal,) full-tree beta of the neighbourhood
@@ -289,12 +289,12 @@ prof_pb = pb_per_slice(tree, mat, adj, stack,
 
 * 样区对边的隶属关系由枝端区间表构建，每个样区一次二分查找——没有 `(样区 × 枝端)` 中间矩阵。
 * 所有逐样区、逐切片的量都是一次稀疏矩阵乘 `A @ C`。
-* 特有性的范围权重为 `1 /（覆盖该边的样区数）`，与 treesliceR 及 Laffan et al. (2018) 一致。
+* 特有性的范围权重为 `1 /（覆盖该边的样区数）`，与 treesliceR 及 Laffan et al. (2016, *Methods in Ecology and Evolution* 7: 580-588, doi:10.1111/2041-210X.12513) 一致。
 * 每条 β 序列都**划分邻域的总 β**：对每一个有限行，逐切片值之和为 1。这是已实现的行为，不是假设——`pb_per_slice` 把每条逐切片序列除以**它自身**各份额之和，返回的 `normalisation` 列记录每一行走的是哪条路径：当切片的份额本来就把全树指数加总干净时为 `"full_tree"`（`sorensen` 属于此类，因为它的 `b + c` 分子对切片可加；以及两个分母在数值上恰好重合的邻域），当分母必须由 `sum_j series_j` 重建时为 `"profile"`。
   对 turnover 和 nestedness 而言，该性质是*新近*才成立的：`min(b, c)` 跨切片不可加（`sum_j min(b_j, c_j) <= min(sum_j b_j, sum_j c_j)`），所以若除以全树分母——A2 修复之前的代码如此，treesliceR 至今仍如此——在下面这份工作负载上，turnover 行的行和只会落在 0.96-0.98，nestedness 落在 1.05-1.40。
   支撑这一条的断言是
   `tests/test_regressions.py::TestBetaNormalisation::test_all_beta_profiles_partition_the_neighbourhood_beta`：
-  用 `bd20_random` fixture（已提交的交叉验证输入 `bd20__tree.tre` + `bd20__random__mat.csv`，20 尖 / 30 样区，queen 网格邻接）以 `slice_pieces(tree, n=30, criterion="time")` 切片，覆盖全部六个 分量 × 方法 组合，用
+  用 `bd20_random` fixture（已提交的交叉验证输入 `bd20__tree.tre` + `bd20__random__mat.csv`，20 尖 / 30 样区，queen 网格邻接）分别以 `slice_pieces(tree, n=30, criterion="time")` 和 `criterion="pd"` 切片，覆盖全部二十四个 切片判据 × 分量 × 方法 × 是否范围加权 组合——含范围加权那一支，实测最差行和偏差 6.7e-16——用
   `np.allclose(row_sums, 1.0, atol=1e-8)` 以及更严的
   `max |row_sum - 1| < 1e-12` 校验。它替换了此前一个在 `atol=0.05` 下通过的 6 样区 / 5 切片 fixture。
   另有两条配套断言让这一说法保持诚实：
@@ -615,11 +615,11 @@ complement = squeeze_int(tree, from_=7.0, to=1.0, invert=True)
 比对集是 `{PD, PE, CpD, CpE}`，外加参考实现在给定输入上能够返回的 β 多样性族，全程把 treesliceR 1.1.0 严格当作黑箱运行（R 脚本在 `validation/r/`，比对在 `validation/compare.py`，来源登记在 `validation/reference/manifest.txt`，容差依据与缺口清单在 `validation/NOTES.md`）。在这个集合内，今天真正与 R 对上的只有 `CpD` 与 `CpE` 两个文件：
 
 * CpD 与 CpE 速率：跨全部集合区的最大相对误差 ≈ 2 × 10⁻⁶（容差 10⁻⁴；残余差距是优化器容差）；同一文件里的 PD 与 PE *总量* 相符到 ≈ 4 × 10⁻¹³。这是本项目目前能做出的唯二真正外部比对。
-* 逐切片 PD 与 PE 剖面（`*__rPD.csv` / `*__rPE.csv`）：在 18000 次比较中相符到 ≈ 3.4 × 10⁻¹¹，而且这是真正的 Python 对 R 的比较。它们曾经是例外：归档副本以 slice-by-site、30 个切片列的布局存储，而这种布局是已提交的驱动（50 切片、site-by-slice）不可能产出的，于是清单把它们声明为 `status = unverified`，`validation/compare.py` 跳过它们而不是静默转置。在 R 4.5.3（aarch64-apple-darwin20.0.0）配合 ape 5.8.1 与 treesliceR 1.1.0 的环境下运行 `validation/r/generate_reference.R` 了结了这件事——其余每个参考文件都逐字节一致，而该次运行写出的剖面现已登记。被替换的旧副本不随仓库分发，证据就是上面这次重跑本身。
+* 逐切片 PD 与 PE 剖面（`*__rPD.csv` / `*__rPE.csv`）：在 18000 次比较中相符到 ≈ 3.4 × 10⁻¹¹，而且这是真正的 Python 对 R 的比较。它们曾经是例外：归档副本以 slice-by-site、30 个切片列的布局存储，而这种布局是已提交的驱动（50 切片、site-by-slice）不可能产出的，于是清单把它们声明为 `status = unverified`，`validation/compare.py` 跳过它们而不是静默转置。在 R 4.5.3（aarch64-apple-darwin20.0.0）配合 ape 5.8-1 与 treesliceR 1.1.0 的环境下运行 `validation/r/generate_reference.R` 了结了这件事——其余每个参考文件都逐字节一致，而该次运行写出的剖面现已登记。被替换的旧副本不随仓库分发，证据就是上面这次重跑本身。
 
 本比对**不**覆盖以下内容（全部细节见 `validation/NOTES.md`；不要把上面四个数字读作广义的等价证明）：
 
-* **3 个 β 指标族**（`CpB` Sorensen/pairwise，以及 `r_phylo(index = "PB")` 的 Sorensen- 与 turnover-pairwise）——treesliceR 1.1.0 在这些输入上对它们给不出可比结果，因此没有参考值可评分。其余 11 个 β 指标族**已**比对：24 条逐切片累积 β 剖面行到 1.1e-9，1260 个整树 `PB`/`PB_RW` 总量到 7.2e-13，540 个通过校验的速率拟合在优化器容差下到 2.9e-6。
+* **3 个 β 指标族**（`CpB` Sorensen/pairwise，以及 `r_phylo(index = "PB")` 的 Sorensen- 与 turnover-pairwise）——treesliceR 1.1.0 在这些输入上对它们给不出可比结果，因此没有参考值可评分。其余 11 个 β 指标族**已**比对：24 条逐切片累积 β 剖面行到 1.1e-9，1258 个非缺失整树 `PB`/`PB_RW` 总量（名义 1260 格，报告中由 `n_finite` 列区分）到 7.2e-13，540 个通过校验的速率拟合在优化器容差下到 2.9e-6。
 * **turnover 与 nestedness 的 β *速率***——已比对，并且相对误差最大达 196%：本包把剖面重新归一化为和 1，而参考实现拟合的是 `cumsum(profile) / PB_whole_tree`。每一这样的行都按两条曲线同时评分，而按参考约定重新拟合即可复现 R，所以这一差距是被钉住的归一化选择（见 validation/NOTES.md），不是算术；同一文件里的整树 `PB` 仍相符到 7.2e-13。
 * **等 `"PD"` 切片**——每个场景都以 `criterion = "my"` 运行。`"PD"` 判据有意偏离 R（§13.1），且从未被比对过。
 * **枝端修剪路径**——生成器保证每个物种至少出现一次，因此 `align_tree_matrix` 从不剪枝，该分支未被演练。

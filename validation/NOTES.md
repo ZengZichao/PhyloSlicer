@@ -28,7 +28,7 @@ slice. PhyloSlicer adopts the pairwise mean for every component/approach
 combination (single code path, documented in the docstring of
 `indices.api._pb_series`).
 
-That reading of the source is now a measurement: in the 2026-09-21 run under R 4.5.3 / ape 5.8.1 / treesliceR 1.1.0 the Sorensen
+That reading of the source is now a measurement: in the 2026-09-21 run under R 4.5.3 / ape 5.8-1 / treesliceR 1.1.0 the Sorensen
 pairwise branch fails inside its own optimiser with `task 1 failed - "'qr' and
 'y' must have the same number of rows"` (the per-pair vector at `CpB.R:479`
 recycled against the slice vector at `CpB.R:525`), and the pairwise
@@ -63,7 +63,7 @@ and append the printed summary here, together with the scenario list used.
 
 ### Current status
 
-- **PD/PE per-slice profiles** (rPD/rPE): **validated.** Ran on 2026-09-21 under `micromamba env r-4.5.3`: R 4.5.3 (aarch64-apple-darwin20.0.0), ape 5.8.1, treesliceR 1.1.0. The
+- **PD/PE per-slice profiles** (rPD/rPE): **validated.** Ran on 2026-09-21 under `micromamba env r-4.5.3`: R 4.5.3 (aarch64-apple-darwin20.0.0), ape 5.8-1, treesliceR 1.1.0. The
   profiles that run writes are registered in
   `validation/reference/manifest.txt` (`site-by-slice`, 30 rows x 50 slice
   columns, sha256 pinned) and `compare.py` scores them: max relative error
@@ -84,7 +84,12 @@ and append the printed summary here, together with the scenario list used.
   profile rows agree to **1.08e-09 over 36000 values** (tolerance 1e-8; 10244 of
   those cells bit-for-bit identical, most of them the numerically-zero oldest slices),
   the 42
-  whole-tree `PB`/`PB_RW` rows to **7.2e-13 over 1260**, and the 18 verified rate
+  whole-tree `PB`/`PB_RW` rows to **7.2e-13 over the 1258 non-missing values of
+  1260 nominal cells** (`n` in the report is nominal; its `n_finite` column counts
+  the cells finite on both sides, and the two exceptions are the `NA` `PB` entries
+  at site 6 of `bd20__clustered__CpB__turnover_multisite.csv` and of
+  `bd20__clustered__CpB__turnover_pairwise.csv`, NA on both sides and so never
+  scored), and the 18 verified rate
   rows to **2.88e-06 over 540 assemblage fits** (tolerance 1e-4).  Twenty-four
   further rate rows - turnover and nestedness, both approaches - are recorded as
   `documented divergence` for the normalisation reason above, and eighteen rows
@@ -92,14 +97,14 @@ and append the printed summary here, together with the scenario list used.
   returns nothing comparable.  None of the three is counted as a pass, and
   `compare.py --strict` fails on all of them.
 - **`r_phylo` raw PD/PE/PB profiles**: these *are* the `:PD` / `:PE` rows of
-  the equivalence report, and after the 2026-09-21 run under R 4.5.3 / ape 5.8.1 / treesliceR 1.1.0 they are
+  the equivalence report, and after the 2026-09-21 run under R 4.5.3 / ape 5.8-1 / treesliceR 1.1.0 they are
   genuine Python-vs-R comparisons (3.396e-11 max relative error), not
   Python-vs-a-file-of-unknown origin - item 4 records what changed.
   `r_phylo(index = "PB")` is compared too, wherever the reference returns one
   curve per assemblage (see the beta bullet above and item 2).
 - **`criterion="PD"` (equal-PD slicing)**: **still not cross-validated**, and
   now for a demonstrated reason rather than an absence of tooling. The
-  generator's guarded `criterion = "PD"` block *was* run (the 2026-09-21 run under R 4.5.3 / ape 5.8.1 / treesliceR 1.1.0) and
+  generator's guarded `criterion = "PD"` block *was* run (the 2026-09-21 run under R 4.5.3 / ape 5.8-1 / treesliceR 1.1.0) and
   failed on all six scenarios (18 warnings, no `*__PD.csv` written).  The failure
   is `Error: object 'cutted_tree' not found`, not the
   `length of 'dimnames' [2] not equal to array extent` an earlier revision of
@@ -149,7 +154,7 @@ and append the printed summary here, together with the scenario list used.
    reference cut points accumulate 13 while PhyloSlicer accumulates 23.
    `validation/r/generate_reference.R` *attempts* `CpD`/`CpE`/`r_phylo`
    references under `criterion = "PD"` (files suffixed `__PD.csv`). **They could
-   not be produced**: the block was run (the 2026-09-21 run under R 4.5.3 / ape 5.8.1 / treesliceR 1.1.0) and every call failed
+   not be produced**: the block was run (the 2026-09-21 run under R 4.5.3 / ape 5.8-1 / treesliceR 1.1.0) and every call failed
    inside treesliceR with `object 'cutted_tree' not found` (the lower-case
    `criterion == "pd"` branch problem described under *Verdict*), so no
    `*__PD.csv` exists in `validation/reference/` and none may be added to the
@@ -158,7 +163,7 @@ and append the printed summary here, together with the scenario list used.
    archived scenario trees are binary, so agreement there would not validate
    the multifurcating case where the two implementations diverge.
 4. **Provenance of `*__rPD.csv` and `*__rPE.csv`: RESOLVED on 2026-09-21 by
-   running the generator.** Ran on 2026-09-21 under `micromamba env r-4.5.3`: R 4.5.3 (aarch64-apple-darwin20.0.0), ape 5.8.1, treesliceR 1.1.0. `Rscript
+   running the generator.** Ran on 2026-09-21 under `micromamba env r-4.5.3`: R 4.5.3 (aarch64-apple-darwin20.0.0), ape 5.8-1, treesliceR 1.1.0. `Rscript
    validation/r/generate_reference.R <dir>` reproduced **21 of the 21** time-criterion files it
    shares with `validation/reference/` byte-for-byte - the three Newick trees,
    the six presence matrices and all twelve `*__CpD.csv` / `*__CpE.csv`
@@ -207,7 +212,7 @@ and append the printed summary here, together with the scenario list used.
 7. **The R and package versions are now recorded, but not checked.**
    `validation/reference/manifest.txt` carries `written_in`, `r_available` and
    `generator_sha256`, and each regenerated profile's `note` names
-   `R 4.5.3 / ape 5.8.1 / treesliceR 1.1.0`; the vendored copy's `DESCRIPTION`
+   `R 4.5.3 / ape 5.8-1 / treesliceR 1.1.0`; the vendored copy's `DESCRIPTION`
    says `Version: 1.1.0`. Nothing *asserts* those versions at run time, so
    "validated against treesliceR 1.1.0" is a documented property of the
    reference set rather than an enforced precondition of the comparator - a
@@ -229,7 +234,7 @@ as passes.
 `validation/reference/equivalence_report.csv` is a byte function of the reference
 directory plus the two Newick/matrix inputs per scenario, and nothing else:
 
-- re-running `Rscript validation/r/generate_reference.R <dir>` (the 2026-09-21 run under R 4.5.3 / ape 5.8.1 / treesliceR 1.1.0)
+- re-running `Rscript validation/r/generate_reference.R <dir>` (the 2026-09-21 run under R 4.5.3 / ape 5.8-1 / treesliceR 1.1.0)
   rewrites all **105** data files of `validation/reference/` byte-for-byte - the
   three trees, six matrices, six adjacencies, twelve CpD/CpE rates, twelve rPD/rPE
   profiles, and the whole beta block (CpB, CpB_RW, rPB).  That is what makes the

@@ -55,7 +55,8 @@ def main(argv: list[str] | None = None) -> int:
         )
 
     post = posterior_rate(d["trees"], mat, rate="cpd", n_slices=args.slices)
-    print("\nPosterior across the 12 pseudo-posterior trees:")
+    n_pool = len(d["trees"])
+    print(f"\nPosterior across the {n_pool} pseudo-posterior trees:")
     print(
         post[["site_id", "rate_median", "hdi_low", "hdi_high", "n_trees"]]
         .head(3)

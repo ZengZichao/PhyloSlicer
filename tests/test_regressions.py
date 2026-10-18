@@ -161,7 +161,7 @@ class TestBetaNormalisation:
         assert np.nanmax(np.abs(out["values"][finite])) <= 1.0 + 1e-12
 
     def test_all_beta_profiles_partition_the_neighbourhood_beta(self, bd20_random):
-        """All six component x approach profiles sum to 1 to 1e-8 (review, A2).
+        """Every slice criterion x component x approach x weighting profile sums to 1.
 
         ``min(b, c)`` is not additive over slices, so the relative profile has to
         be normalised by the sum of its own shares rather than by the whole-tree
@@ -170,20 +170,29 @@ class TestBetaNormalisation:
         version ran on a 6-site / 5-slice toy stack where the deviation happened
         to be small; measured on the committed ``bd20__random`` scenario at 30
         slices the row sums are 1 within 4.5e-16 for every combination.
+
+        The supporting information states the normalisation holds for both slice
+        criteria and for the range-weighted branch, so both dimensions are swept
+        here rather than only the ``criterion="time"`` unweighted default.
         """
         tree, mat, adj = bd20_random
-        stack = slice_pieces(tree, n=30, criterion="time")
         checked = 0
-        for component in ("sorensen", "turnover", "nestedness"):
-            for approach in ("multisite", "pairwise"):
-                res = pb_per_slice(tree, mat, adj, stack, component, approach)
-                finite = np.isfinite(res["total"]) & np.isfinite(res["values"]).all(axis=1)
-                assert finite.sum() == mat.shape[0], (component, approach, res["status"][:3])
-                sums = res["values"][finite].sum(axis=1)
-                assert np.allclose(sums, 1.0, atol=1e-8), (component, approach)
-                assert np.abs(sums - 1.0).max() < 1e-12, (component, approach)
-                checked += 1
-        assert checked == 6
+        for criterion in ("time", "pd"):
+            stack = slice_pieces(tree, n=30, criterion=criterion)
+            for weighted in (False, True):
+                for component in ("sorensen", "turnover", "nestedness"):
+                    for approach in ("multisite", "pairwise"):
+                        res = pb_per_slice(
+                            tree, mat, adj, stack, component, approach, weighted=weighted
+                        )
+                        key = (criterion, weighted, component, approach)
+                        finite = np.isfinite(res["total"]) & np.isfinite(res["values"]).all(axis=1)
+                        assert finite.sum() == mat.shape[0], (key, res["status"][:3])
+                        sums = res["values"][finite].sum(axis=1)
+                        assert np.allclose(sums, 1.0, atol=1e-8), key
+                        assert np.abs(sums - 1.0).max() < 1e-12, key
+                        checked += 1
+        assert checked == 24
 
     def test_profile_and_total_share_the_same_quantities(self, bd20_random):
         """``total`` must stay the whole-tree index, identical to :func:`pb`.

@@ -12,15 +12,23 @@ Writes benchmarks/results.csv and prints a summary table.
 
 from __future__ import annotations
 
+import sys
 import time
 from pathlib import Path
 
 import numpy as np
 import pandas as pd
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+
+from machine_info import describe, machine_fields  # noqa: E402
+
 from phyloslicer.rates.api import cpd_rate
 from phyloslicer.simulate import make_dataset, yule_tree
 from phyloslicer.slicing import slice_pieces
+
+#: NV-08: read once, before any timing loop, and merged into every row this driver writes.
+MACHINE = machine_fields()
 
 
 def naive_slice_pieces(tree, k):
@@ -63,6 +71,7 @@ def bench(fn, *args, repeat=3):
 
 
 def main():
+    print(describe(MACHINE))
     rows = []
     for n_tips in (100, 1_000):
         for n_sites in (100, 1_000):
@@ -88,6 +97,7 @@ def main():
                     "cpd_vectorized_s": t_cpd,
                     "cpd_naive_s": t_cpd_naive,
                     "cpd_speedup": t_cpd_naive / t_cpd,
+                    **MACHINE,
                 }
             )
             print(

@@ -34,12 +34,22 @@ its row/column counts, its column-name pattern and its orientation:
   the reference ``PD`` / ``PE`` / ``PB`` columns are compared numerically - the
   old code only counted non-finite values on each side, which any two files pass.
 
-Files the manifest marks ``status = unverified`` (the committed per-slice PD/PE
-profiles, whose layout contradicts the generator that was supposed to have
-written them - see the manifest header) are hash- and shape-checked but *not*
-numerically cross-checked; the skipped rows are reported as such.  With
-``--strict`` they fail the run instead, along with every ``documented divergence``
-and every family for which the reference implementation produces no file.
+Every reference file is registered ``status = registered``, the per-slice PD/PE
+profiles included: what was once a layout contradiction is settled (the
+committed generator reproduces them byte-for-byte; see the manifest ``limitations``
+block), so they are hash-, shape- *and* numerically-checked and no row of the
+shipped report is ``not evaluated``.  The ``status = unverified`` branch is kept
+as a safety net - such a file would still be hash- and shape-checked but *not*
+cross-checked, and its row reported as ``not evaluated`` - but nothing in
+``reference/manifest.txt`` uses it today.  With ``--strict`` a ``not evaluated``
+row fails the run, along with every ``documented divergence`` and every family
+for which the reference implementation produces no file.
+
+Run it from the project root with ``python validation/compare.py``: the source
+tree is put on ``sys.path`` below, so no ``PYTHONPATH`` and no environment setup
+is needed (``PYTHONPATH=src python validation/compare.py validation/reference``
+works the same way).  The report goes to ``reference/equivalence_report.csv``
+unless ``--out`` names another destination.
 """
 
 # The thread pin below is a statement, so every import after it is "not at the
@@ -79,6 +89,12 @@ import numpy as np
 import pandas as pd
 from scipy.optimize import minimize_scalar
 
+# A reviewer who follows the documented command runs `python validation/compare.py`
+# from a source checkout: no install step, no PYTHONPATH.  Put the source tree on
+# the path before importing phyloslicer, the same bootstrap the examples and
+# benchmarks use.
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
+
 from phyloslicer.cli.main import (
     MANIFEST_NAME,
     ReferenceProvenanceError,
@@ -104,6 +120,30 @@ TOL_RATE = 1e-4
 #: scoring those cells as failures would mark a bit-for-bit agreement as a
 #: mismatch.  At such entries the comparison falls back to absolute error.
 ZERO_FLOOR = 1e-12
+
+#: The tracked comparison table the manuscript quotes.  Overwriting it is a release
+#: action, not a side effect of running a script, so it needs --in-place.  The rule is
+#: "is this file under version control", not "is this next to compare.py": a reviewer
+#: who unpacks the archive and runs the documented command has no git here, and their
+#: rerun is exactly what the reproducibility claim promises.
+SHIPPED_REPORT = Path(__file__).resolve().parent / "reference" / "equivalence_report.csv"
+
+
+def _under_version_control(path: Path) -> bool:
+    import subprocess
+
+    try:
+        return (
+            subprocess.run(
+                ["git", "ls-files", "--error-unmatch", str(path.resolve())],
+                cwd=str(path.resolve().parent),
+                capture_output=True,
+            ).returncode
+            == 0
+        )
+    except OSError:
+        return False
+
 
 BETA_COMPONENTS = ("sorensen", "turnover", "nestedness")
 BETA_APPROACHES = ("multisite", "pairwise")
@@ -149,7 +189,7 @@ CURVE_CONTROL = {"CpB__turnover_pairwise": "multisite"}
 BETA_LABELS = tuple([f[0] for f in BETA_RATE_FAMILIES] + [f[0] for f in BETA_PROFILE_FAMILIES])
 
 #: Families for which the *reference implementation* produces no file, with the
-#: failure measured by ``validation/r/generate_reference.R`` (R 4.5.3 / ape 5.8.1
+#: failure measured by ``validation/r/generate_reference.R`` (R 4.5.3 / ape 5.8-1
 #: / treesliceR 1.1.0, 2026-09-21).  They are reported as ``no reference`` and
 #: must never be counted towards an equivalence claim.
 NO_REFERENCE = {
@@ -176,6 +216,31 @@ def rel_err(mine: np.ndarray, ref: np.ndarray) -> np.ndarray:
     with np.errstate(divide="ignore", invalid="ignore"):
         out = np.abs(mine - ref) / np.abs(ref)
     return np.where(np.isfinite(out), out, np.nan)
+
+
+def finite_cells(*arrays: np.ndarray) -> int:
+    """Cells that are finite on every side, i.e. the cells a row actually scored.
+
+    ``n`` is the *nominal* cell count of the arrays involved (a 30-site column
+    reports 30 even when the reference holds an NA), because that is the number
+    the shipped report has always printed and downstream readers quote.  It says
+    nothing about how much of those cells were comparable, which matters where a
+    whole-tree beta index is NA for one site: the documentation's "1258 finite
+    values out of 1260 nominal" is exactly that distinction, and without a column
+    of its own it cannot be re-derived from Table S1.  ``compare_pair`` restricts
+    itself to ``isfinite(a) & isfinite(b)``, so this counts on the same rule.
+
+    A row that compared nothing - a provenance failure, a declared-unverified
+    reference, a family with no reference - reports 0, and a row whose two sides
+    have different shapes reports the smaller of the two finite counts rather
+    than broadcasting them into a nonsense intersection.
+    """
+    masks = [np.isfinite(np.asarray(a, dtype=float)) for a in arrays if np.size(a)]
+    if not masks:
+        return 0
+    if any(m.shape != masks[0].shape for m in masks):
+        return int(min(m.sum() for m in masks))
+    return int(np.count_nonzero(np.logical_and.reduce(masks)))
 
 
 def count_identical(mine: np.ndarray, ref: np.ndarray) -> int:
@@ -323,8 +388,28 @@ def read_profile_reference(
     return frame.to_numpy(dtype=float), ""
 
 
-def main(ref_dir: str = "validation/reference", strict: bool = False, out=None) -> int:
+def main(
+    ref_dir: str = "validation/reference", strict: bool = False, out=None, in_place: bool = False
+) -> int:
     ref_dir = Path(ref_dir)
+    destination = Path(out) if out else ref_dir / "equivalence_report.csv"
+    if (
+        destination.resolve() == SHIPPED_REPORT
+        and _under_version_control(destination)
+        and not in_place
+    ):
+        # checked before any comparison runs, so a reader who follows the bare
+        # documented command is told the bad news in under a second instead of
+        # after the whole cross-validation.  A copy in a build directory is a
+        # different path and is written without complaint.
+        print(
+            f"refusing to overwrite the tracked report at {destination}: this run would "
+            "rewrite the comparison table every published count was read off, and its "
+            "last digits move between runs. Write elsewhere with --out PATH, or pass "
+            "--in-place if you mean to re-baseline it.",
+            file=sys.stderr,
+        )
+        return 2
     manifest_path = ref_dir / MANIFEST_NAME
     if not manifest_path.is_file():
         print(
@@ -420,6 +505,7 @@ def main(ref_dir: str = "validation/reference", strict: bool = False, out=None) 
                     {
                         "scenario": f"{scenario}:{index}",
                         "n": mine.size,
+                        "n_finite": finite_cells(mine, ref_arr),
                         "max_rel_err": worst,
                         "pass_rate": rate,
                         "tol": TOL_PROFILE,
@@ -500,6 +586,7 @@ def main(ref_dir: str = "validation/reference", strict: bool = False, out=None) 
                     {
                         "scenario": f"{scenario}:{kind}",
                         "n": a_r.size,
+                        "n_finite": finite_cells(a_r, b_r),
                         "max_rel_err": worst,
                         "pass_rate": rate if passed_all else min(rate, rate_t, rate_o),
                         "tol": TOL_RATE,
@@ -519,6 +606,7 @@ def main(ref_dir: str = "validation/reference", strict: bool = False, out=None) 
                     {
                         "scenario": f"{scenario}:{total_col}_total",
                         "n": a_t.size,
+                        "n_finite": finite_cells(a_t, b_t),
                         "max_rel_err": worst_t,
                         "pass_rate": rate_t,
                         "tol": TOL_PROFILE,
@@ -725,6 +813,7 @@ def main(ref_dir: str = "validation/reference", strict: bool = False, out=None) 
                     {
                         "scenario": label,
                         "n": a_r.size,
+                        "n_finite": finite_cells(a_r, b_r),
                         "max_rel_err": worst,
                         "pass_rate": rate,
                         "tol": TOL_RATE,
@@ -740,6 +829,7 @@ def main(ref_dir: str = "validation/reference", strict: bool = False, out=None) 
                     {
                         "scenario": f"{label}:{total_col}",
                         "n": a_t.size,
+                        "n_finite": finite_cells(a_t, b_t),
                         "max_rel_err": worst_t,
                         "pass_rate": rate_t,
                         "tol": TOL_PROFILE,
@@ -833,6 +923,7 @@ def main(ref_dir: str = "validation/reference", strict: bool = False, out=None) 
                     {
                         "scenario": label,
                         "n": mine.size,
+                        "n_finite": finite_cells(mine, ref_arr),
                         "max_rel_err": worst,
                         "pass_rate": rate,
                         "tol": TOL_PROFILE,
@@ -845,14 +936,23 @@ def main(ref_dir: str = "validation/reference", strict: bool = False, out=None) 
                 )
 
     report = pd.DataFrame(rows)
-    if "identical_cells" in report:
-        # an integer column, not the float pandas would infer from the rows that
-        # have no per-cell array to count (a 2.0 in a CSV reads like a rounding)
-        report["identical_cells"] = report["identical_cells"].astype("Int64")
+    # The column set is the union of the keys the rows carry, in first-seen order:
+    # a row type that never sets ``n_finite`` leaves the cell empty rather than
+    # dropping the column.  The rows that score nothing - a provenance failure, a
+    # reference declared unverified, a family the reference cannot produce - have
+    # no cell count to report, so they stay blank by design and must not be read
+    # as zeros.
+    for column in ("n_finite", "identical_cells"):
+        if column in report:
+            # an integer column, not the float pandas would infer from the rows that
+            # have no per-cell array to count (a 2.0 in a CSV reads like a rounding)
+            report[column] = report[column].astype("Int64")
     # the report is a build artefact of this run; writing it next to the pinned
     # references dirties a tracked file every time a reader follows the
-    # documented command, so the destination is selectable with --out
-    out = Path(out) if out else ref_dir / "equivalence_report.csv"
+    # documented command, so the destination is selectable with --out and the
+    # tracked default destination additionally needs an explicit --in-place
+    # the destination was validated at the top of main(); this is the same path
+    out = destination
     out.parent.mkdir(parents=True, exist_ok=True)
     report.to_csv(out, index=False)
     pd.set_option("display.max_colwidth", 60, "display.width", 200)
@@ -953,5 +1053,12 @@ if __name__ == "__main__":
         help="fail if any reference is declared unverified, any family has no "
         "reference, or any scored row is a documented divergence",
     )
+    parser.add_argument(
+        "--in-place",
+        action="store_true",
+        help="allow the run to overwrite validation/reference/equivalence_report.csv, "
+        "the tracked table every published count was read off. Without it the run "
+        "refuses, because last-digit values in that file move between runs.",
+    )
     args = parser.parse_args()
-    sys.exit(main(args.ref_dir, strict=args.strict, out=args.out))
+    sys.exit(main(args.ref_dir, strict=args.strict, out=args.out, in_place=args.in_place))

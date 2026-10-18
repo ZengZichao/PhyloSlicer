@@ -28,7 +28,7 @@ treesliceR 的 `CpB` pairwise 分支构造一个 k x P 的逐对相对值矩阵�
 对每一个组分／方法（component/approach）组合都采用逐对平均值（单一代码路径，
 记录在 `indices.api._pb_series` 的 docstring 中）。
 
-对源码的这一解读如今已经是一次测量：在 2026-09-21 于 R 4.5.3 / ape 5.8.1 /
+对源码的这一解读如今已经是一次测量：在 2026-09-21 于 R 4.5.3 / ape 5.8-1 /
 treesliceR 1.1.0 下的那次运行中，Sorensen 的 pairwise 分支在它自己的优化器
 内部失败，报 `task 1 failed - "'qr' and 'y' must have the same number of rows"`
 （`CpB.R:479` 处的逐对向量对 `CpB.R:525` 处的切片向量做了循环补齐），而
@@ -61,7 +61,7 @@ k x P 块，其元素长度为 300 / 750 / 1800，而不是每个群落组合一
 ### 当前状态
 
 - **PD/PE 逐切片剖面**（rPD/rPE）：**已验证。** 2026-09-21 在
-  `micromamba env r-4.5.3` 下运行：R 4.5.3 (aarch64-apple-darwin20.0.0), ape 5.8.1, treesliceR 1.1.0。那次运行
+  `micromamba env r-4.5.3` 下运行：R 4.5.3 (aarch64-apple-darwin20.0.0), ape 5.8-1, treesliceR 1.1.0。那次运行
   写出的剖面已登记在
   `validation/reference/manifest.txt`（`site-by-slice`，30 行 x 50 个切片列，sha256 已钉住），并由 `compare.py` 打分：相对于 1e-8 的确定性容差，
   **18000 次比较中最大相对误差 3.396e-11**，通过率 100%，其中 **157**
@@ -76,21 +76,25 @@ k x P 块，其元素长度为 300 / 750 / 1800，而不是每个群落组合一
   完成了交叉验证。** 14 个 β 族里有 11 个有已登记的参考并被打分：24 行
   逐切片累积 β 剖面相符至 **1.08e-09（36000 个数值）**（容差 1e-8；其中 10244 个单元格
   逐位相同，多数是数值上为零的最老切片），42
-  行整树 `PB`/`PB_RW` 相符至 **7.2e-13（1260 个数值）**，18 行已验证的速率相符至
+  行整树 `PB`/`PB_RW` 相符至 **7.2e-13（1260 个名义单元格中 1258
+  个非缺失数值）**——报告里的 `n` 记的是名义单元格数，`n_finite` 列记的是两侧都有限的
+  单元格数；缺的两个是 `bd20__clustered__CpB__turnover_multisite.csv` 与
+  `bd20__clustered__CpB__turnover_pairwise.csv` 第 6 个位点的 `PB` 值，两侧同为 NA，
+  本来就不参与打分——18 行已验证的速率相符至
   **2.88e-06（540 个群落组合拟合）**（容差 1e-4）。另有 24
   行速率——周转与嵌套，两种方法——由于上文的归一化原因被记为
   `documented divergence`，18 行（3 个族 x 6 个场景）因 treesliceR 1.1.0
   没有返回可比对象而被记为 `no reference`。这三类都不计入通过，
   `compare.py --strict` 对它们全部失败。
 - **`r_phylo` 原始 PD/PE/PB 剖面**：这些*就是*等价性报告中的 `:PD` / `:PE` 行，
-  而在 2026-09-21 于 R 4.5.3 / ape 5.8.1 / treesliceR 1.1.0 下的那次运行之后，它们是
+  而在 2026-09-21 于 R 4.5.3 / ape 5.8-1 / treesliceR 1.1.0 下的那次运行之后，它们是
   真正的 Python 对 R 的比较（最大相对误差 3.396e-11），不是
   "Python 对一份来源不明的 CSV 文件"——第 4 项记录了发生了什么变化。
   `r_phylo(index = "PB")` 同样被比较，只要参考为每个群落组合返回一条曲线
   （见上面 β 那一条与第 2 项）。
 - **`criterion="PD"`（等 PD 切片）**：**仍未交叉验证**，而现在的理由是一个
   被实证的原因，不是缺少工具。
-  生成器中受保护的 `criterion = "PD"` 代码块*确实*运行过（2026-09-21 于 R 4.5.3 / ape 5.8.1 / treesliceR 1.1.0 下的那次运行），并在全部六个场景上失败（18 条警告，未写出任何 `*__PD.csv`）。失败信息是 `Error: object 'cutted_tree' not found`，而不是
+  生成器中受保护的 `criterion = "PD"` 代码块*确实*运行过（2026-09-21 于 R 4.5.3 / ape 5.8-1 / treesliceR 1.1.0 下的那次运行），并在全部六个场景上失败（18 条警告，未写出任何 `*__PD.csv`）。失败信息是 `Error: object 'cutted_tree' not found`，而不是
   这些说明的早前一个版本记录的 `length of 'dimnames' [2] not equal to array extent`：`phylo_pieces.R:42` 和 `:152` 在小写的 `criterion ==
   "pd"` 上分支，而 `CpD`/`CpE`/`r_phylo` 文档写明并向下传递 `"PD"`，于是
   任何切片都不会被计算。因此被文档写明的拼写根本到不了任何比较。（是否*应该*
@@ -127,13 +131,13 @@ k x P 块，其元素长度为 300 / 750 / 1800，而不是每个群落组合一
    `(((A:2,B:2):1,C:3,D:3,E:3):1,(F:4,G:4):0);`（T = 4，PD 总量 = 23）上，参考
    的切点累加到 13，而 PhyloSlicer 累加到 23。
    `validation/r/generate_reference.R` *尝试*在 `criterion = "PD"` 下生成
-   `CpD`/`CpE`/`r_phylo` 参考（后缀为 `__PD.csv` 的文件）。**它们无法被产出**：该代码块被运行过（2026-09-21 于 R 4.5.3 / ape 5.8.1 / treesliceR 1.1.0 下的那次运行），每一次调用都在
+   `CpD`/`CpE`/`r_phylo` 参考（后缀为 `__PD.csv` 的文件）。**它们无法被产出**：该代码块被运行过（2026-09-21 于 R 4.5.3 / ape 5.8-1 / treesliceR 1.1.0 下的那次运行），每一次调用都在
    treesliceR 内部以 `object 'cutted_tree' not found` 失败（*结论*一节描述的
    小写 `criterion == "pd"` 分支问题），因此 `validation/reference/` 中不存在任何
    `*__PD.csv`，也不得把任何一个加入通过率表。即使未来的 treesliceR
    版本能产出它们，脚本中的警告代码块仍然适用：存档场景的树都是二分的，
    因此那里的一致并不能验证两个实现产生分歧的多叉树情形。
-4. **`*__rPD.csv` 与 `*__rPE.csv` 的来源：已于 2026-09-21 通过运行生成器解决。** 2026-09-21 在 `micromamba env r-4.5.3` 下运行：R 4.5.3 (aarch64-apple-darwin20.0.0), ape 5.8.1, treesliceR 1.1.0。`Rscript
+4. **`*__rPD.csv` 与 `*__rPE.csv` 的来源：已于 2026-09-21 通过运行生成器解决。** 2026-09-21 在 `micromamba env r-4.5.3` 下运行：R 4.5.3 (aarch64-apple-darwin20.0.0), ape 5.8-1, treesliceR 1.1.0。`Rscript
    validation/r/generate_reference.R <dir>` 逐字节复现了它与 `validation/reference/` 共有的 **21 个**时间准则文件中的 **21 个**——三棵 Newick 树、
    六个存在矩阵以及全部十二份 `*__CpD.csv` / `*__CpE.csv`
    参考——这就钉住了存档集背后的随机种子、RNG 流与包版本。唯一不同的输出是那十二个
@@ -162,7 +166,7 @@ k x P 块，其元素长度为 300 / 750 / 1800，而不是每个群落组合一
 7. **R 与包版本现在已被记录，但未被校验。**
    `validation/reference/manifest.txt` 带有 `written_in`、`r_available` 和
    `generator_sha256`，每份重新生成的剖面的 `note` 点名
-   `R 4.5.3 / ape 5.8.1 / treesliceR 1.1.0`；内置副本的 `DESCRIPTION`
+   `R 4.5.3 / ape 5.8-1 / treesliceR 1.1.0`；内置副本的 `DESCRIPTION`
    写着 `Version: 1.1.0`。运行时没有任何东西*断言*这些版本，所以
    "针对 treesliceR 1.1.0 验证过"是参考集的一个文档属性，而不是比较器被强制满足的
    前置条件——未来在一个不同的 treesliceR 下的一次运行可能与钉住的字节
@@ -178,7 +182,7 @@ k x P 块，其元素长度为 300 / 750 / 1800，而不是每个群落组合一
 `validation/reference/equivalence_report.csv` 是参考目录加上每个场景两份
 Newick 树／存在矩阵输入的字节函数，别无其他：
 
-- 重新运行 `Rscript validation/r/generate_reference.R <dir>`（2026-09-21 于 R 4.5.3 / ape 5.8.1 / treesliceR 1.1.0 下的那次运行）
+- 重新运行 `Rscript validation/r/generate_reference.R <dir>`（2026-09-21 于 R 4.5.3 / ape 5.8-1 / treesliceR 1.1.0 下的那次运行）
   逐字节重写 `validation/reference/` 的全部 **105** 个数据文件——三棵树、六个矩阵、六个邻接、十二份 CpD/CpE 速率、十二份 rPD/rPE
   剖面，以及整个 β 块（CpB、CpB_RW、rPB）。正是这一点使 β 比较成为与 treesliceR 的比较，而不是与这些 CSV 的比较。
 - `compare.py` 钉住它的 BLAS 线程数（`OMP_NUM_THREADS` 及同类变量，在 numpy 加载之前设置），因为不加钉住，报告并*不*是字节可复现的：

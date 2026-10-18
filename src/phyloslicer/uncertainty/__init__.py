@@ -203,10 +203,15 @@ def posterior_rate(
 ) -> pd.DataFrame:
     """Per-site rate summary across a posterior tree set.
 
-    Returns ``site_id, rate_mean, rate_median, hdi_low, hdi_high, ess_proxy,
-    ess_proxy_caveat, n_trees, n_converged``.  ``hdi_low``/``hdi_high`` are the
-    nearest-neighbour highest-density interval covering ``hdi`` of the draws,
-    and the applied level is recorded in ``df.attrs["hdi_level"]`` so that
+    Returns a DataFrame with the eleven columns ``site_id, rate_mean,
+    rate_median, hdi_low, hdi_high, ess_proxy, ess_proxy_caveat, n_trees,
+    n_converged, n_ultrametric_draws, origin_within_tree``.  The last two are
+    the per-draw audit carried over from the single-tree fitters: how many of
+    the ``n_trees`` usable draws were ultrametric, and whether every draw put
+    the fitted origin inside the time the tree covers.  ``hdi_low`` and
+    ``hdi_high`` are the nearest-neighbour highest-density interval covering
+    ``hdi`` of the draws; the applied level is recorded in
+    ``df.attrs["hdi_level"]`` so that
     :func:`phyloslicer.viz.plot_posterior` labels the figure with the level that
     was actually used (a DataFrame read back from CSV loses attrs, so pass
     ``hdi=`` there).  ``ess_proxy`` is a crude heuristic, not a convergence
@@ -240,7 +245,9 @@ def posterior_rate(
             stacklevel=2,
         )
     rates = np.vstack(per_tree)  # (n_trees, n_sites)
-    audit_flags = np.vstack(audit)  # (n_trees, 2): [ultrametric, origin_within_tree]
+    # one row per (draw, site): keep the draw axis ahead of the site axis so the
+    # audit columns below can be indexed by site
+    audit_flags = np.stack(audit)  # (n_draws, n_sites, 2): [ultrametric, origin_within_tree]
 
     rows = []
     for j, site in enumerate(mat.index):
@@ -257,8 +264,8 @@ def posterior_rate(
                 "ess_proxy_caveat": ESS_PROXY_CAVEAT,
                 "n_trees": int(col.size),
                 "n_converged": int(np.isfinite(col).sum()),
-                "n_ultrametric_draws": int(audit_flags[:, 0][: col.size].sum()),
-                "origin_within_tree": bool(audit_flags[:, 1][: col.size].all()),
+                "n_ultrametric_draws": int(audit_flags[:, j, 0].sum()),
+                "origin_within_tree": bool(audit_flags[:, j, 1].all()),
             }
         )
     out = pd.DataFrame(rows)
@@ -278,6 +285,9 @@ def posterior_origin(
 ) -> pd.DataFrame:
     """Credible interval of the diversity-origin time pXO across posterior trees.
 
+    Returns a DataFrame with the six columns ``site_id, origin_median, hdi_low,
+    hdi_high, n_ultrametric_draws, origin_within_tree``; the last two are the
+    per-draw audit described in :func:`posterior_rate`.
     ``hdi_low``/``hdi_high`` are computed at the requested ``hdi`` level and the
     level is recorded in ``df.attrs["hdi_level"]``.
     """
@@ -309,7 +319,7 @@ def posterior_origin(
             stacklevel=2,
         )
     origins = np.vstack(per_tree)
-    audit_flags = np.vstack(audit)
+    audit_flags = np.stack(audit)  # (n_draws, n_sites, 2): [ultrametric, origin_within_tree]
     rows = []
     for j, site in enumerate(mat.index):
         col = origins[:, j]
@@ -320,8 +330,8 @@ def posterior_origin(
                 "origin_median": float(np.nanmedian(col)),
                 "hdi_low": lo,
                 "hdi_high": hi,
-                "n_ultrametric_draws": int(audit_flags[:, 0][: col.size].sum()),
-                "origin_within_tree": bool(audit_flags[:, 1][: col.size].all()),
+                "n_ultrametric_draws": int(audit_flags[:, j, 0].sum()),
+                "origin_within_tree": bool(audit_flags[:, j, 1].all()),
             }
         )
     out = pd.DataFrame(rows)
@@ -341,7 +351,8 @@ def bootstrap_sites(
     """Stability of per-site rates under site resampling (with replacement).
 
     The rate model is refit on the *pooled* assemblage of each bootstrap
-    replicate; returns per-replicate pooled rates.
+    replicate; returns per-replicate pooled rates as a DataFrame with the two
+    columns ``replicate, rate``.
     """
     from ..indices.api import pd_per_slice, pe_per_slice
     from ..rates.fitting import fit_rate

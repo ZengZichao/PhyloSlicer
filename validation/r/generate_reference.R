@@ -8,7 +8,7 @@
 # r_phylo(index = "PB") - plus the criterion = "PD" variants queued for the
 # equal-PD criterion.
 #
-# RUN LOG.  R 4.5.3 (aarch64-apple-darwin20.0.0) with ape 5.8.1 and treesliceR
+# RUN LOG.  R 4.5.3 (aarch64-apple-darwin20.0.0) with ape 5.8-1 and treesliceR
 # 1.1.0, 2026-09-21.  Three facts came out of that run and all are load-bearing:
 #
 #   1. Every file this script writes for the *time* criterion reproduced the
@@ -314,7 +314,7 @@ for (tname in names(trees)) {
     # All trees above are ultrametric binary (rbdtree/rcoal rescaled), so on
     # THIS scenario set the two implementations may well agree; the
     # multifurcating case that actually separates them is not generated here.
-    # ANSWERED, 2026-09-21: the script was run under R 4.5.3 / ape 5.8.1 /
+    # ANSWERED, 2026-09-21: the script was run under R 4.5.3 / ape 5.8-1 /
     # treesliceR 1.1.0 and the criterion = "PD" call failed on all six
     # scenarios (18 warnings, no *_PD.csv written).  The message is
     # `object 'cutted_tree' not found`, not the `length of 'dimnames' [2] not
