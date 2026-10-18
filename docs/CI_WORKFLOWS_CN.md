@@ -2,7 +2,7 @@
 
 Ecography《软件简报》投稿要求"强烈建议使用持续集成服务，在源码每次修改时触发测试"。真正生效的定义位于 `.github/workflows/`；但审阅包无法原样收录该目录——其中的 `.github/CODEOWNERS` 会写出仓库所有者，从而破坏双盲评审，因此打包器把整个 `.github` 排除在外。本文件镜像工作流定义本身（其中不含任何作者身份信息），使审稿人能够读到持续集成究竟执行了什么。
 
-内容镜像自工作树，日期 2026-10-08。若工作流改动而未刷新本文件，`tests/test_ci_mirror.py` 将会失败。英文版见 `CI_WORKFLOWS.md`。
+内容镜像自工作树，日期 2026-10-18。若工作流改动而未刷新本文件，`tests/test_ci_mirror.py` 将会失败。英文版见 `CI_WORKFLOWS.md`。
 
 ## `.github/workflows/build.yml`
 
@@ -229,4 +229,64 @@ jobs:
                            Path("CITATION.cff").read_text(encoding="utf-8"), re.M)
           print(f"release metadata consistent at {version}")
           PY
+```
+
+
+## `.github/workflows/publish.yml`
+
+```yaml
+name: publish
+
+# PyPI 发布门禁：打 v* 标签时从干净检出构建 sdist 与 wheel，校验元数据后
+# 通过 Trusted Publishing（OIDC）上传 PyPI——仓库里不存任何 API token。
+# 首次使用前需在 PyPI（Account settings → Publishing）登记 pending
+# publisher：owner=ZengZichao、repository=PhyloSlicer、workflow=publish.yml、
+# environment=pypi；登记后重新运行本工作流即可。
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  pypi-publish:
+    name: Build and publish to PyPI
+    runs-on: ubuntu-latest
+    environment: pypi
+    permissions:
+      # OIDC claim for Trusted Publishing; PyPI rejects the upload without it
+      id-token: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Verify tag matches the package version
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: |
+          TAG_VERSION="${GITHUB_REF_NAME#v}"
+          PKG_VERSION="$(python - <<'EOF'
+          import pathlib
+          import re
+
+          text = pathlib.Path("src/phyloslicer/__init__.py").read_text(encoding="utf-8")
+          print(re.search(r'__version__ = "([^"]+)"', text).group(1))
+          EOF
+          )"
+          if [ "$TAG_VERSION" != "$PKG_VERSION" ]; then
+            echo "tag v$TAG_VERSION does not match package version $PKG_VERSION" >&2
+            exit 1
+          fi
+      - name: Build sdist and wheel
+        run: |
+          python -m pip install --upgrade pip build twine
+          python -m build
+      - name: Check distribution metadata
+        run: python -m twine check dist/*
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
 ```

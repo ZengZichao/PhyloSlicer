@@ -7,7 +7,7 @@
 
 **面向宏生态学的系统发育树时间切片与多样性累积速率分析工具（Python）**
 
-版本 0.1.0 · BSD-3-Clause · Python ≥ 3.10
+版本 0.1.1 · BSD-3-Clause · Python ≥ 3.10
 
 仓库地址：<https://github.com/ZengZichao/PhyloSlicer>
 

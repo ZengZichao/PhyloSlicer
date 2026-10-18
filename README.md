@@ -7,7 +7,7 @@
 
 **Temporal slicing of phylogenies and cumulative-diversity rate analysis for macroecology in Python.**
 
-Version 0.1.0 · BSD-3-Clause · Python ≥ 3.10
+Version 0.1.1 · BSD-3-Clause · Python ≥ 3.10
 
 Repository: <https://github.com/ZengZichao/PhyloSlicer>
 

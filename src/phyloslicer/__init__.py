@@ -35,7 +35,7 @@ from .slicing import (
 )
 from .uncertainty import bootstrap_sites, iter_trees, posterior_origin, posterior_rate
 
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 
 __all__ = [
     "__version__",

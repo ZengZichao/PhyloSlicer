@@ -5,7 +5,7 @@ bar for a change is that it stays *checkable*: every documented number must
 follow from a file in the repository, and every claim about agreement with the
 reference implementation must be reproducible.
 
-Version 0.1.0 · BSD-3-Clause · Python ≥ 3.10
+Version 0.1.1 · BSD-3-Clause · Python ≥ 3.10
 
 ## Setting up a development environment
 

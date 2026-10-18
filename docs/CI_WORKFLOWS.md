@@ -8,7 +8,7 @@ repository owner and would defeat double-blind review, so the whole directory is
 excluded by the packager. This file mirrors the workflow definitions themselves,
 which carry no author identity, so that a reviewer can read exactly what CI runs.
 
-Mirrored from the working tree on 2026-10-08. `tests/test_ci_mirror.py` fails if a workflow changes without refreshing this file.
+Mirrored from the working tree on 2026-10-18. `tests/test_ci_mirror.py` fails if a workflow changes without refreshing this file.
 
 ## `.github/workflows/build.yml`
 
@@ -235,4 +235,64 @@ jobs:
                            Path("CITATION.cff").read_text(encoding="utf-8"), re.M)
           print(f"release metadata consistent at {version}")
           PY
+```
+
+
+## `.github/workflows/publish.yml`
+
+```yaml
+name: publish
+
+# PyPI 发布门禁：打 v* 标签时从干净检出构建 sdist 与 wheel，校验元数据后
+# 通过 Trusted Publishing（OIDC）上传 PyPI——仓库里不存任何 API token。
+# 首次使用前需在 PyPI（Account settings → Publishing）登记 pending
+# publisher：owner=ZengZichao、repository=PhyloSlicer、workflow=publish.yml、
+# environment=pypi；登记后重新运行本工作流即可。
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  pypi-publish:
+    name: Build and publish to PyPI
+    runs-on: ubuntu-latest
+    environment: pypi
+    permissions:
+      # OIDC claim for Trusted Publishing; PyPI rejects the upload without it
+      id-token: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Verify tag matches the package version
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: |
+          TAG_VERSION="${GITHUB_REF_NAME#v}"
+          PKG_VERSION="$(python - <<'EOF'
+          import pathlib
+          import re
+
+          text = pathlib.Path("src/phyloslicer/__init__.py").read_text(encoding="utf-8")
+          print(re.search(r'__version__ = "([^"]+)"', text).group(1))
+          EOF
+          )"
+          if [ "$TAG_VERSION" != "$PKG_VERSION" ]; then
+            echo "tag v$TAG_VERSION does not match package version $PKG_VERSION" >&2
+            exit 1
+          fi
+      - name: Build sdist and wheel
+        run: |
+          python -m pip install --upgrade pip build twine
+          python -m build
+      - name: Check distribution metadata
+        run: python -m twine check dist/*
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
 ```

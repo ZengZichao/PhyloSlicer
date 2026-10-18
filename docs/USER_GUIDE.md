@@ -19,7 +19,7 @@ scratch files and reproduced the archived medians to within 6 % (median ratio
 committed CSVs were left in place so that the numbers the documentation quotes
 are the ones they were measured against.
 
-Version 0.1.0  ·  BSD-3-Clause  ·  Python ≥ 3.10
+Version 0.1.1  ·  BSD-3-Clause  ·  Python ≥ 3.10
 
 PhyloSlicer is an independent, vectorised Python implementation of the
 "slice phylogenies to infer phylogenetic patterns over evolutionary time"
