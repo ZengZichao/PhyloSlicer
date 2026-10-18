@@ -62,6 +62,7 @@ needs_packager = pytest.mark.skipif(
 #: therefore never occur contiguously in this file, and neither the guard nor the
 #: substitution can see them here.
 
+
 def _identity_patterns() -> dict[str, str]:
     """The guard literals, read from build-time tooling that never ships.
 
@@ -197,9 +198,7 @@ def run_packager(*args: str) -> subprocess.CompletedProcess[str]:
 def _git(*args: str) -> str | None:
     """Read-only git query: stdout on success, ``None`` when git or the repo is absent."""
     try:
-        proc = subprocess.run(
-            ["git", *args], cwd=ROOT, capture_output=True, text=True, check=False
-        )
+        proc = subprocess.run(["git", *args], cwd=ROOT, capture_output=True, text=True, check=False)
     except OSError:
         return None
     return proc.stdout if proc.returncode == 0 else None
@@ -358,8 +357,18 @@ def test_english_documents_keep_their_chinese_counterparts(
     counted = {}
     for name, data in sorted(entries.items()):
         if Path(name).suffix.lower() not in {
-            ".py", ".md", ".toml", ".yml", ".yaml", ".R", ".cff", ".json", ".txt", ".in",
-            ".cfg", ".sh",
+            ".py",
+            ".md",
+            ".toml",
+            ".yml",
+            ".yaml",
+            ".R",
+            ".cff",
+            ".json",
+            ".txt",
+            ".in",
+            ".cfg",
+            ".sh",
         }:
             continue
         n = len(cjk.findall(data.decode("utf-8", "ignore")))
@@ -369,9 +378,7 @@ def test_english_documents_keep_their_chinese_counterparts(
         f"sidecar census {mix['documents_with_chinese']} != shipped {len(counted)}"
     )
     assert mix["total_chinese_characters"] == sum(counted.values())
-    assert mix["markdown_documents_with_chinese"] == sum(
-        1 for k in counted if k.endswith(".md")
-    )
+    assert mix["markdown_documents_with_chinese"] == sum(1 for k in counted if k.endswith(".md"))
     assert mix["chinese_counterpart_documents"] == sum(1 for k in counted if "_CN." in k)
     # the census is not decoration: each counted Chinese manual must sit beside the
     # English document of record it translates.  English files may themselves quote a few
@@ -403,9 +410,9 @@ def test_provenance_sidecar_is_complete_and_self_consistent(
         assert "No git metadata" in control["note"]
         assert "b151683" in control["note"], "the release must still be named for editors"
     else:
-        assert re.fullmatch(
-            r"[0-9a-f]{40}", str(control["commit"])
-        ), f"the sidecar names something that is not a commit: {control['commit']!r}"
+        assert re.fullmatch(r"[0-9a-f]{40}", str(control["commit"])), (
+            f"the sidecar names something that is not a commit: {control['commit']!r}"
+        )
         assert "post-release maintenance commit" in control["note"]
         assert "b151683" in control["note"], "the release relationship must be stated for editors"
         # NV-04/RI-08: a dirty build is allowed only when it advertises the dirt.
@@ -443,9 +450,9 @@ def test_provenance_sidecar_is_complete_and_self_consistent(
     assert used <= rules, f"scrubbed files cite unknown rules: {used - rules}"
     # CM-20: the ORCID policy is recorded, and no synthetic iD was used for it
     assert "ORCID" in provenance["anonymisation"]["orcid_policy"]
-    assert ("0000" + "-0000-0000-000").encode() not in entries[
-        "REVIEW_ARCHIVE_PROVENANCE.json"
-    ], "the synthetic iD token came back"
+    assert ("0000" + "-0000-0000-000").encode() not in entries["REVIEW_ARCHIVE_PROVENANCE.json"], (
+        "the synthetic iD token came back"
+    )
 
 
 @needs_packager
@@ -570,8 +577,11 @@ def test_packager_refuses_an_unverified_provenance(tmp_path: Path) -> None:
         assert "--allow-no-git" in proc.stderr
         ok = run_packager("--out", str(tmp_path / "allowed"), "--allow-no-git")
         assert ok.returncode == 0, ok.stderr[-2000:]
-        side = json.loads(entries_of(next(iter(sorted((tmp_path / "allowed").glob("*.zip")))))
-                           ["REVIEW_ARCHIVE_PROVENANCE.json"])
+        side = json.loads(
+            entries_of(next(iter(sorted((tmp_path / "allowed").glob("*.zip")))))[
+                "REVIEW_ARCHIVE_PROVENANCE.json"
+            ]
+        )
         assert side["source_control"]["commit"] is None
         assert side["source_control"]["git_unavailable"] is True
         pytest.skip("no .git here: the dirty-worktree half of the gate cannot be exercised")
@@ -585,8 +595,9 @@ def test_packager_refuses_an_unverified_provenance(tmp_path: Path) -> None:
     allowed = run_packager("--out", str(tmp_path / "allowed"), "--allow-dirty")
     assert allowed.returncode == 0, allowed.stderr[-2000:]
     side = json.loads(
-        entries_of(next(iter(sorted((tmp_path / "allowed").glob("*.zip")))))
-        ["REVIEW_ARCHIVE_PROVENANCE.json"]
+        entries_of(next(iter(sorted((tmp_path / "allowed").glob("*.zip")))))[
+            "REVIEW_ARCHIVE_PROVENANCE.json"
+        ]
     )["source_control"]
     assert side["commit"] and re.fullmatch(r"[0-9a-f]{40}", str(side["commit"]))
     assert side["git_dirty"] is True and side["git_dirty_count"] == len(side["git_dirty_paths"])
@@ -650,9 +661,7 @@ def test_guard_fails_when_invalid_orcid_is_planted(tmp_path: Path, archive: Path
 
 
 @needs_packager
-def test_guard_fails_when_resolvable_zenodo_doi_is_planted(
-    tmp_path: Path, archive: Path
-) -> None:
+def test_guard_fails_when_resolvable_zenodo_doi_is_planted(tmp_path: Path, archive: Path) -> None:
     """RI-09/CM-02: the version DOI is the identifier that de-anonymises the archive.
 
     One ``doi.org`` click from inside a "double-blind" package reaches the Zenodo record
@@ -853,9 +862,7 @@ def test_license_preserved_mode_ships_the_notice_verbatim(tmp_path: Path) -> Non
     license nothing - and it must still scrub everything else, so checking the
     result in the default mode has to fail rather than quietly pass.
     """
-    proc = run_packager(
-        "--out", str(tmp_path), "--license", "preserved", *_provenance_flags()
-    )
+    proc = run_packager("--out", str(tmp_path), "--license", "preserved", *_provenance_flags())
     assert proc.returncode == 0, proc.stdout + proc.stderr
     assert "copyright holder" in proc.stderr, "the exception must be announced, not silent"
     kept = entries_of(next(iter(sorted(tmp_path.glob("*.zip")))))

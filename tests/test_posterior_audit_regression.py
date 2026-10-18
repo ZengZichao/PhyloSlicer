@@ -4,6 +4,7 @@
 per-draw audit block, so they reported the first n_draws *sites of draw 1* and were
 identical for every site regardless of which draw failed ultrametricity.
 """
+
 import re
 import warnings
 
@@ -19,8 +20,7 @@ def _break_ultrametricity(tree):
     nwk = tree.to_newick()
     m = re.search(r"([A-Za-z0-9_.]+):([0-9.eE+-]+)", nwk)
     label, raw = m.group(1), m.group(2)
-    return TreeArray.from_newick(
-        nwk.replace(f"{label}:{raw}", f"{label}:{float(raw) / 2}", 1))
+    return TreeArray.from_newick(nwk.replace(f"{label}:{raw}", f"{label}:{float(raw) / 2}", 1))
 
 
 @pytest.fixture()
@@ -41,7 +41,8 @@ def test_audit_counts_ultrametric_draws_per_site(pool):
     for order in ([good[0], bad, good[1]], [bad, good[0], good[1]]):
         out = _run(posterior_rate, order, mat)
         assert (out["n_ultrametric_draws"] == 2).all(), (
-            "two of three draws are ultrametric regardless of pool order")
+            "two of three draws are ultrametric regardless of pool order"
+        )
 
 
 def test_audit_columns_are_not_constant_across_sites_when_sites_differ(pool):

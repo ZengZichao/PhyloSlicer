@@ -25,10 +25,10 @@ import pandas as pd
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
+from machine_info import describe, machine_fields  # noqa: E402
+
 from phyloslicer.io.newick import read_newick
 from phyloslicer.slicing import slice_pieces
-
-from machine_info import describe, machine_fields  # noqa: E402
 
 REPS = 15  # median of REPS timed runs (sub-millisecond calls need the extra reps)
 KS = (25, 50, 100)

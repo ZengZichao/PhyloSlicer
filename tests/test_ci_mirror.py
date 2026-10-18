@@ -4,6 +4,7 @@
 `docs/CI_WORKFLOWS.md` mirrors the workflow YAML for reviewers. This test keeps
 the mirror from silently drifting.
 """
+
 from pathlib import Path
 
 import pytest

@@ -986,7 +986,9 @@ def test_comparator_writes_freely_when_the_report_is_not_tracked(tmp_path, capsy
     copied = tmp_path / "equivalence_report.csv"
     shutil.copy2(REFERENCE_DIR / "equivalence_report.csv", copied)
     assert compare._under_version_control(copied) is False
-    assert compare._under_version_control(REFERENCE_DIR / "equivalence_report.csv") is _IN_GIT_CHECKOUT
+    assert (
+        compare._under_version_control(REFERENCE_DIR / "equivalence_report.csv") is _IN_GIT_CHECKOUT
+    )
     # a run pointed at a directory with no manifest still proceeds past the guard, so
     # the refusal it reports is the manifest one and never the overwrite one
     assert compare.main(str(tmp_path / "no-such-reference-dir"), out=None) == 2

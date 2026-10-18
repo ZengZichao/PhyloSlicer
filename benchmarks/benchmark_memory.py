@@ -27,11 +27,11 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
+from machine_info import describe, machine_fields  # noqa: E402
+
 from phyloslicer import slice_pieces  # noqa: E402
 from phyloslicer.core import TreeArray  # noqa: E402
 from phyloslicer.simulate import yule_tree  # noqa: E402
-
-from machine_info import describe, machine_fields  # noqa: E402
 
 #: NV-08: read once, before any measurement, and merged into every row this driver writes.
 MACHINE = machine_fields()

@@ -126,19 +126,24 @@ ZERO_FLOOR = 1e-12
 #: "is this file under version control", not "is this next to compare.py": a reviewer
 #: who unpacks the archive and runs the documented command has no git here, and their
 #: rerun is exactly what the reproducibility claim promises.
-SHIPPED_REPORT = (Path(__file__).resolve().parent / "reference"
-                  / "equivalence_report.csv")
+SHIPPED_REPORT = Path(__file__).resolve().parent / "reference" / "equivalence_report.csv"
 
 
 def _under_version_control(path: Path) -> bool:
     import subprocess
+
     try:
-        return subprocess.run(
-            ["git", "ls-files", "--error-unmatch", str(path.resolve())],
-            cwd=str(path.resolve().parent), capture_output=True,
-        ).returncode == 0
+        return (
+            subprocess.run(
+                ["git", "ls-files", "--error-unmatch", str(path.resolve())],
+                cwd=str(path.resolve().parent),
+                capture_output=True,
+            ).returncode
+            == 0
+        )
     except OSError:
         return False
+
 
 BETA_COMPONENTS = ("sorensen", "turnover", "nestedness")
 BETA_APPROACHES = ("multisite", "pairwise")
@@ -383,11 +388,16 @@ def read_profile_reference(
     return frame.to_numpy(dtype=float), ""
 
 
-def main(ref_dir: str = "validation/reference", strict: bool = False, out=None,
-         in_place: bool = False) -> int:
+def main(
+    ref_dir: str = "validation/reference", strict: bool = False, out=None, in_place: bool = False
+) -> int:
     ref_dir = Path(ref_dir)
     destination = Path(out) if out else ref_dir / "equivalence_report.csv"
-    if destination.resolve() == SHIPPED_REPORT and _under_version_control(destination) and not in_place:
+    if (
+        destination.resolve() == SHIPPED_REPORT
+        and _under_version_control(destination)
+        and not in_place
+    ):
         # checked before any comparison runs, so a reader who follows the bare
         # documented command is told the bad news in under a second instead of
         # after the whole cross-validation.  A copy in a build directory is a

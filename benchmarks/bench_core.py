@@ -21,11 +21,11 @@ import pandas as pd
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
+from machine_info import describe, machine_fields  # noqa: E402
+
 from phyloslicer.rates.api import cpd_rate
 from phyloslicer.simulate import make_dataset, yule_tree
 from phyloslicer.slicing import slice_pieces
-
-from machine_info import describe, machine_fields  # noqa: E402
 
 #: NV-08: read once, before any timing loop, and merged into every row this driver writes.
 MACHINE = machine_fields()

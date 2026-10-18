@@ -25,12 +25,12 @@ import pandas as pd
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
+from machine_info import describe, machine_fields  # noqa: E402
+
 from phyloslicer.io.matrices import align_tree_matrix, as_matrix
 from phyloslicer.io.newick import read_newick
 from phyloslicer.rates.api import cpd_rate, cpe_rate
 from phyloslicer.slicing import slice_pieces
-
-from machine_info import describe, machine_fields  # noqa: E402
 
 REPS = 5  # median of REPS timed runs, the protocol benchmarks/README.md documents
 
