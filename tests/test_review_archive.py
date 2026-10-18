@@ -814,6 +814,22 @@ def test_reviewer_can_rerun_the_cross_validation(unpacked: Path, tmp_path: Path)
 )
 def test_reviewer_can_install_the_archived_package(unpacked: Path, tmp_path: Path) -> None:
     """``pip install`` of the archive alone must work, with no author metadata."""
+    # ``--no-build-isolation`` builds with the ambient toolchain — that is the
+    # offline reviewer's situation, where pip cannot fetch a build environment.
+    # setuptools >= 70 vendors the bdist_wheel command itself; older toolchains
+    # (macOS framework builds still bundle one) need the ``wheel`` package, so
+    # provide it once.  Bootstrapping the toolchain is separate from the claim
+    # under test, which is that the *archive* needs nothing but that toolchain.
+    if subprocess.run([PY, "-c", "import wheel"], capture_output=True).returncode != 0:
+        bootstrap = subprocess.run(
+            [PY, "-m", "pip", "install", "--quiet", "wheel"],
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        assert bootstrap.returncode == 0, (
+            f"toolchain bootstrap (wheel) failed:\n{bootstrap.stdout}\n{bootstrap.stderr}"
+        )
     target = tmp_path / "site"
     proc = subprocess.run(
         [
