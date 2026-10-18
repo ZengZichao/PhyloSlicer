@@ -4,12 +4,14 @@
 [![CodeQL](https://github.com/ZengZichao/PhyloSlicer/actions/workflows/codeql.yml/badge.svg)](https://github.com/ZengZichao/PhyloSlicer/actions/workflows/codeql.yml)
 [![build](https://github.com/ZengZichao/PhyloSlicer/actions/workflows/build.yml/badge.svg)](https://github.com/ZengZichao/PhyloSlicer/actions/workflows/build.yml)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23057620.svg)](https://doi.org/10.5281/zenodo.23057620)
+[![PyPI](https://img.shields.io/pypi/v/phyloslicer.svg)](https://pypi.org/project/phyloslicer/)
 
 **面向宏生态学的系统发育树时间切片与多样性累积速率分析工具（Python）**
 
 版本 0.1.1 · BSD-3-Clause · Python ≥ 3.10
 
 仓库地址：<https://github.com/ZengZichao/PhyloSlicer>
+PyPI：<https://pypi.org/project/phyloslicer/>
 
 ---
 
@@ -60,6 +62,17 @@ PhyloSlicer 独立实现了 R 包 **treesliceR** 开创的"切片系统发育树
 不会悄悄退化成节译。
 
 ## 安装
+
+PhyloSlicer 已发布到 PyPI，多数读者只需：
+
+```bash
+pip install phyloslicer             # 核心包（numpy、scipy、pandas、matplotlib）
+pip install "phyloslicer[io]"       # + DendroPy / Biopython 适配器
+pip install "phyloslicer[spatial]"  # + GeoPandas
+pip install "phyloslicer[accel]"    # + numba 批量加速内核
+```
+
+若从源码检出工作：
 
 ```bash
 pip install -e .            # 核心包（numpy、scipy、pandas、matplotlib）

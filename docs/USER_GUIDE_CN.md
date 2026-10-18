@@ -34,6 +34,14 @@ PhyloSlicer 是对**"切片系统发育树以推断进化时间维度上的系�
 
 ## 1. 安装
 
+PhyloSlicer 已发布到 PyPI，多数读者只需：
+
+```bash
+pip install phyloslicer
+```
+
+若从源码检出工作：
+
 ```bash
 # core package (numpy, scipy, pandas, matplotlib)
 pip install -e .

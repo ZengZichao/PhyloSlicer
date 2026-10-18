@@ -4,12 +4,14 @@
 [![CodeQL](https://github.com/ZengZichao/PhyloSlicer/actions/workflows/codeql.yml/badge.svg)](https://github.com/ZengZichao/PhyloSlicer/actions/workflows/codeql.yml)
 [![build](https://github.com/ZengZichao/PhyloSlicer/actions/workflows/build.yml/badge.svg)](https://github.com/ZengZichao/PhyloSlicer/actions/workflows/build.yml)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23057620.svg)](https://doi.org/10.5281/zenodo.23057620)
+[![PyPI](https://img.shields.io/pypi/v/phyloslicer.svg)](https://pypi.org/project/phyloslicer/)
 
 **Temporal slicing of phylogenies and cumulative-diversity rate analysis for macroecology in Python.**
 
 Version 0.1.1 · BSD-3-Clause · Python ≥ 3.10
 
 Repository: <https://github.com/ZengZichao/PhyloSlicer>
+PyPI: <https://pypi.org/project/phyloslicer/>
 
 ---
 
@@ -67,6 +69,17 @@ when the two heading structures drift apart, so the pair cannot quietly become a
 translation.
 
 ## Installation
+
+PhyloSlicer is on PyPI; this is all most readers need:
+
+```bash
+pip install phyloslicer             # core (numpy, scipy, pandas, matplotlib)
+pip install "phyloslicer[io]"       # + dendropy/biopython adapters
+pip install "phyloslicer[spatial]"  # + geopandas
+pip install "phyloslicer[accel]"    # + numba batched kernels
+```
+
+Working from a source checkout instead:
 
 ```bash
 pip install -e .            # core (numpy, scipy, pandas, matplotlib)
