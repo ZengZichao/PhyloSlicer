@@ -10,6 +10,7 @@ lazily and skips when ``tools/`` is absent, as it already does for every other
 packager-driven case.
 """
 
+
 def _frag(*parts: str) -> str:
     """Join fragments so this file neither hits the guard nor is scrubbed."""
     return "".join(parts)

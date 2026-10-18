@@ -783,7 +783,7 @@ def test_reviewer_can_rerun_the_cross_validation(unpacked: Path, tmp_path: Path)
     """The hash-registered-reference claim the manuscript rests on.
 
     ``validation/compare.py`` — unlike ``examples/quickstart.py`` and the
-    benchmark runners — does not put ``src/`` on ``sys.path`` itself, so a
+    benchmark drivers — does not put ``src/`` on ``sys.path`` itself, so a
     reviewer runs it either with ``PYTHONPATH=src`` (what the user guide's
     "run everything" block implies for a source checkout) or after installing
     the package.  Both are exercised: here the no-install form, and in

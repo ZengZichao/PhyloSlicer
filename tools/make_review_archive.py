@@ -540,8 +540,7 @@ def enforce_provenance_policy(
         more = len(dirty) - 10  # type: ignore[arg-type]
         raise SystemExit(
             f"{DIRTY_MESSAGE}\n  {len(dirty)} uncommitted path(s):"  # type: ignore[arg-type]
-            f"\n{listed}"
-            + (f"\n    … and {more} more" if more > 0 else "")
+            f"\n{listed}" + (f"\n    … and {more} more" if more > 0 else "")
         )
 
 
@@ -635,12 +634,14 @@ def source_control(state: dict[str, object]) -> dict[str, object]:
     reachable = {True: "an ancestor of", False: "not an ancestor of", None: "unresolvable in"}[
         known
     ]
+    prep_subject = git("log", "-1", "--format=%s", str(RELEASE_PREP_COMMIT))
+    prep_subject = prep_subject or "subject unavailable"
     note = (
         f"Built from post-release maintenance commit {str(head)[:7]} on '{branch}', "
         f"{after} commits after the released tag {RELEASED_TAG} ({str(released)[:7]}). "
         f"HEAD is therefore neither the tagged release commit nor the "
         f"release-preparation commit {RELEASE_PREP_COMMIT[:7]} "
-        f"('{git('log', '-1', '--format=%s', str(RELEASE_PREP_COMMIT)) or 'subject unavailable'}'), "
+        f"('{prep_subject}'), "
         f"which is {reachable} HEAD and is what the deposited Zenodo record was "
         "cut from."
     )
@@ -800,7 +801,7 @@ python benchmarks/recompute_ratios.py        # re-derives the quoted speed-ups
 ```
 
 `pyproject.toml` puts `src/` on the path for pytest, and the example and the
-benchmark runners insert it themselves, so those need no install step.  For the
+benchmark drivers insert it themselves, so those need no install step.  For the
 cross-validation comparator and the CLI, use either form:
 
 ```bash
@@ -923,7 +924,7 @@ def orcid_violations(name: str, data: bytes) -> list[Hit]:
         body = found.replace("-", "")
         want = orcid_check_digit(body[:15])
         if want == found[-1]:
-            continue  # a genuine, checksum-valid iD: not this tool's business (and never the authors')
+            continue  # a genuine, checksum-valid iD: not this tool's business
         start = text.find(found)
         hits.append(
             Hit(
@@ -1049,9 +1050,7 @@ def _literal_sequence(node: ast.AST | None) -> list[str] | None:
     return None
 
 
-def fragment_violations(
-    name: str, data: bytes, literals: dict[str, str]
-) -> list[Hit]:
+def fragment_violations(name: str, data: bytes, literals: dict[str, str]) -> list[Hit]:
     """RI-17/CM-03: reject an archived file that reassembles a withheld literal.
 
     The guard compares every closed string-literal expression in an archived Python
@@ -1359,9 +1358,9 @@ def build(
             },
             "orcid_policy": (
                 "withheld as a non-identifier token ('"
-                f"{WITHHELD_ORCID_TOKEN}'), never a synthetic iD; every ORCID-shaped string in an "
-                "archived entry is re-checked against the ISO 7064 Mod 11,2 rule and rejected if it "
-                "fails"
+                f"{WITHHELD_ORCID_TOKEN}'), never a synthetic iD; every ORCID-shaped string in "
+                "an archived entry is re-checked against the ISO 7064 Mod 11,2 rule and "
+                "rejected if it fails"
             ),
             "rules": [
                 {"rule": name, **spec}  # never the removed literal, only its description
@@ -1547,13 +1546,14 @@ def check(path: Path, *, license_mode: str, verbose: bool) -> list[Hit]:
         if verbose:
             control = provenance["source_control"]
             commit = control["commit"]
+            decided = provenance["anonymisation"]["licence_decision"]["decided_mode"]
             print(
                 f"sidecar: {len(declared)} hashed entries, "
                 f"{len(provenance['anonymisation']['scrubbed_files'])} scrubbed files, "
                 f"version {provenance['package']['version']}, "
                 f"commit {commit[:7] if commit else 'null (git_unavailable)'}, "
                 f"licence mode {provenance['anonymisation']['licence_mode']} "
-                f"(recorded decision {provenance['anonymisation']['licence_decision']['decided_mode']}), "
+                f"(recorded decision {decided}), "
                 f"{provenance['language_mix']['documents_with_chinese']} documents carry Chinese"
             )
     return [h for h in hits if not _allowed_by_mode(h, license_mode)]
@@ -1752,12 +1752,8 @@ def main(argv: list[str] | None = None) -> int:
         return 0
 
     state = worktree_state()
-    enforce_provenance_policy(
-        state, allow_dirty=args.allow_dirty, allow_no_git=args.allow_no_git
-    )
-    archive = build(
-        root, out_dir, license_mode=args.license, verbose=args.verbose, state=state
-    )
+    enforce_provenance_policy(state, allow_dirty=args.allow_dirty, allow_no_git=args.allow_no_git)
+    archive = build(root, out_dir, license_mode=args.license, verbose=args.verbose, state=state)
     path = finalise(out_dir, args.format, archive, args.verbose)
 
     # The guard runs on the bytes that were actually written, not on the
