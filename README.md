@@ -5,6 +5,9 @@
 [![build](https://github.com/ZengZichao/PhyloSlicer/actions/workflows/build.yml/badge.svg)](https://github.com/ZengZichao/PhyloSlicer/actions/workflows/build.yml)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23057620.svg)](https://doi.org/10.5281/zenodo.23057620)
 [![PyPI](https://img.shields.io/pypi/v/phyloslicer.svg)](https://pypi.org/project/phyloslicer/)
+[![Python](https://img.shields.io/pypi/pyversions/phyloslicer)](https://pypi.org/project/phyloslicer/)
+[![License: BSD-3-Clause](https://img.shields.io/badge/License-BSD--3--Clause-blue.svg)](LICENSE)
+[![ORCID](https://img.shields.io/badge/ORCID-0000--0001--6553--970X-a6ce39?logo=orcid&logoColor=white)](https://orcid.org/0000-0001-6553-970X)
 
 **Temporal slicing of phylogenies and cumulative-diversity rate analysis for macroecology in Python.**
 
