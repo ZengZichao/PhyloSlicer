@@ -184,10 +184,17 @@ class TestValidateGate:
         assert "True" in out.read_text()
 
     def test_disagreement_is_a_nonzero_exit(self, tmp_path, cpd_reference):
-        """The gate's whole purpose: a 0 % equivalence rate must not exit 0."""
+        """The gate's whole purpose: a reference that disagrees beyond the
+        tolerance must not exit 0.  The disagreement is manufactured (a 1 %
+        bump on the first rate) rather than relied upon: whether the CSV
+        round-trip of an agreeing reference loses precision is a property of
+        the serialiser, not of the gate under test."""
         from phyloslicer.cli.main import main
 
         tree_path, sites_path, ref_path, _ = cpd_reference
+        frame = pd.read_csv(ref_path, index_col=0)
+        frame.iloc[0, 0] = float(frame.iloc[0, 0]) * 1.01 + 1e-3
+        frame.to_csv(ref_path)
         manifest = _register(tmp_path, ref_path, "CpD", n_slices=8)
         out = tmp_path / "report.csv"
         assert (
