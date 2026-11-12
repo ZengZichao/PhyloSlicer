@@ -1,12 +1,12 @@
 # PhyloSlicer 基准测试报告
 
-中文译文，正文以 [BENCHMARK_REPORT.md](BENCHMARK_REPORT.md) 为准。
+本文件是 [`BENCHMARK_REPORT.md`](BENCHMARK_REPORT.md) 的中文译文，正文以英文文件为准。
 
 **版本：** 0.1.0  
 **日期：** 2026-09-26  
 **Python：** 3.12.14  
 
-## 方法
+## 测试方法
 
 每个配置运行 3 次；表中报告的是中位数。
 内存是峰值追踪内存（tracemalloc）。
@@ -23,15 +23,13 @@
 | 200 | 50 | 100 | 0.0042 | 0.0127 | 0.0795 | 1.0 | 0.2710 | 50 |
 | 500 | 100 | 100 | 0.0170 | 0.0551 | 0.0836 | 3.0 | 0.4725 | 100 |
 
-> 上面这张表只是对英文报告的翻译，不是一次独立的测量。权威版本是机器生成的英文
-> 文件：`testing_suite/scripts/run_benchmarks.py` 在一次真实运行中写出
-> `BENCHMARK_REPORT.md`。重新运行 `python testing_suite/scripts/run_benchmarks.py`
-> 会刷新英文文件，届时必须同一个改动里同步更新本译文，否则这份中文表就会与真实
-> 数据漂移。
+上面这张表是机器生成的：`testing_suite/scripts/run_benchmarks.py` 在一次真实运行中写出
+`BENCHMARK_REPORT.md`，而 `BENCHMARK_REPORT_CN.md` 是对它的翻译，不是一次独立的测量；因此
+重新运行基准测试时，必须在同一个改动里同步更新这张中文表，否则这份译文就会与数据漂移。
 
-## 缩放
+## 规模扩展性
 
-贡献矩阵是 `E x k`（edges x slices），所以：
+贡献矩阵是 `E x k`（边数 × 切片数），所以：
 - 切片开销是 O(E * k) —— 对树规模和切片数都是线性的。
-- 每切片的 PD 是 O(S * E * k)，经由稀疏矩阵乘积得到。
-- 速率拟合是向量化的：所有位点同时求解。
+- 每切片的 PD 是 O(S * E * k)，通过稀疏矩阵乘积得到。
+- 速率拟合是向量化的：所有样区同时求解。

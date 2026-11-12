@@ -1,6 +1,7 @@
 # Contributor Covenant Code of Conduct
 
-*本文件英文版为唯一有效版本。中文摘要附于文末。*
+*The English text is the only valid version; a Chinese summary is appended at the
+end of this file. 本文件英文版为唯一有效版本，中文摘要附于文末。*
 
 ## Our Pledge
 

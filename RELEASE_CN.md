@@ -4,10 +4,10 @@
 
 PhyloSlicer 版本 0.1.1 · BSD-3-Clause
 
-这里的"一次发布"指文档、引用元数据与存档验证基准在同一时刻描述的是同一个版本。
+这里的“一次发布”指文档、引用元数据与存档验证基准在同一时刻描述的是同一个版本。
 请按下面的顺序切版。
 
-## 1. 固定版本记录
+## 1. 锁定记录版本（version of record）
 
 `src/phyloslicer/__init__.py` 是唯一允许出现版本字面量的位置，`pyproject.toml`
 动态读取它。所有标注版本的文件都要同步更新：
@@ -21,7 +21,7 @@ PhyloSlicer 版本 0.1.1 · BSD-3-Clause
 
 上述任何一处发生漂移，`python -m pytest tests/test_release_hygiene.py` 就会失败。
 
-## 2. 跑一遍 CI 的全部检查
+## 2. 运行 CI 的全部门禁
 
 ```bash
 ruff check src tests benchmarks examples testing_suite validation
@@ -44,8 +44,8 @@ python benchmarks/recompute_ratios.py
 
 裸跑 `validation/compare.py` 会拒绝覆写受版本控制的
 `validation/reference/equivalence_report.csv`；发布门禁传 `--in-place`，因为
-发布者确实要重写它。只有当报告确实应随本次发布移动时才提交它；而被钉住的
-基准文件本身，在不重跑 `validation/r/` 中 R 生成器的前提下绝不允许改动。
+发布者确实要重写它。只有当报告确实应随本次发布一同更新时才提交它；未重跑
+`validation/r/` 中的 R 生成器，就绝不允许改动这些已固定（pinned）的参考文件本身。
 
 ## 3. 打标签并发布
 
@@ -61,14 +61,14 @@ Publishing）登记一次发布者：项目名 `phyloslicer`、owner `ZengZichao
 `PhyloSlicer`、工作流文件名 `publish.yml`、环境名 `pypi`。若标签先于登记被
 推送，`publish` 工作流会失败，事后重新运行即可。
 
-然后为该标签创建 GitHub Release，发布说明直接取 `CHANGELOG.md` 中对应小节。
+然后为该标签创建 GitHub Release，用 `CHANGELOG.md` 中对应的小节作为发布说明。
 
 ## 4. 生成并记录 DOI
 
 先在 <https://zenodo.org/account/settings/github/> 一次性开启 Zenodo 的 GitHub
 集成，并打开本仓库。此后 Zenodo 会抓取打了标签的发布：`.zenodo.json` 用于预填
 草稿，其中的 `version` 与 `publication_date` 会被标签元数据覆盖，这是正常现象。
-**不要**在 `.zenodo.json` 里写 `conceptdoi` 字段——DOI 由 Zenodo 生成，提前写入会
+不要在 `.zenodo.json` 里写 `conceptdoi` 字段——DOI 由 Zenodo 生成，提前写入会
 造成冲突。
 
 返回的 DOI 有两个：**版本 DOI**（每个发布各一个）与**与版本无关的概念 DOI**
@@ -79,13 +79,13 @@ Publishing）登记一次发布者：项目名 `phyloslicer`、owner `ZengZichao
 - 绝不要把占位 DOI 提交进仓库：一个解析不到任何东西的保留值比没有 DOI 更糟，
   因为会有人本着信任去引用它
 - 若要挂版本徽章，用版本 DOI：`https://zenodo.org/badge/DOI/<version-doi>.svg`
-- 这个占位符存在，只是为了让元数据在首个标签出现之前就能写全；带着它发布是不允许的
+- 切勿带着该占位符发布；它只是为了让元数据在首个标签之前就能写全
 
 ## 5. 在干净环境里确认
 
 ```bash
 python -m venv /tmp/phyloslicer-check && source /tmp/phyloslicer-check/bin/activate
-pip install "phyloslicer==0.1.1"  # 从 PyPI 安装；或改用 @ git+...@v0.1.1 从标签安装
+pip install "phyloslicer==0.1.1"  # 从 PyPI 安装；或在后面追加 @ git+...@v0.1.1 以从标签安装
 python -c "import phyloslicer; print(phyloslicer.__version__)"
 phyloslicer --version
 ```

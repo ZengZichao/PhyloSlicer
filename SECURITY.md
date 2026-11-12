@@ -13,16 +13,19 @@ PhyloSlicer 是科研软件包，只有最新的 minor 版本线会获得安全�
 
 ## Reporting a vulnerability / 报告安全漏洞
 
-**Preferred channel / 首选渠道:** GitHub 私密漏洞报告 —— 仓库页
+**Preferred channel / 首选渠道:** GitHub private vulnerability reporting, opened
+from the repository's **Security → Report a vulnerability** page; the report is
+visible only to maintainers. GitHub 私密漏洞报告——仓库页
 **Security → Report a vulnerability**，仅维护者可见。
 
-**Alternative / 备选渠道:** email <zengzichao@sjtu.edu.cn>
-（邮件标题请注明 "PhyloSlicer security"）。
+**Alternative / 备选渠道:** email <zengzichao@sjtu.edu.cn>, with
+"PhyloSlicer security" in the subject line（邮件标题请注明
+"PhyloSlicer security"）。
 
 Please **do not open a public GitHub issue** for anything you suspect to be a
 security problem.
 
-任何疑似安全问题请**不要**开公开 issue。
+任何疑似安全问题都**不要**开公开的 GitHub issue。
 
 Please include, where possible / 如可能请附上：
 
@@ -35,8 +38,9 @@ Please include, where possible / 如可能请附上：
 
 - Acknowledgement within **7 days** / **7 天内**确认收到
 - A fix or mitigation coordinated with you, with credit unless you prefer
-  anonymity / 与你协作修复并致谢（可选择匿名）
-- A release + CVE-style advisory entry in the CHANGELOG once fixed / 修复后发版并在 CHANGELOG 记录
+  anonymity / 与你协作修复或缓解，并致谢（可选择匿名）
+- A release + CVE-style advisory entry in the CHANGELOG once fixed / 修复后发版，
+  并在 CHANGELOG 中写入一条 CVE 风格的安全公告
 
 ## Scope notes / 范围说明
 
