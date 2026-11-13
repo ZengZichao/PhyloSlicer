@@ -95,10 +95,10 @@ that file totals 4288 tokens, so **W = 5030** and **M = 4141** are arithmeticall
 impossible for it. The delivered checklist quotes a third set again: it names
 **3969** words as the figure it stands behind, **3990** over the
 Introduction→References span and **3850** over the narrower one, with a
-**276**-word abstract, and its rule drops `Reference` as well as `FigureCaption`
-and `Equation`. Three sets, three files. The published figures are left exactly
-as measured here rather than replaced by the 2714/2821/3694/197 above, because a
-manuscript word count is an editorial claim about the article as submitted, and
+**276**-word abstract, and its rule drops `Reference` on top of `FigureFrame`,
+`FigureCaption` and `Equation`. Three sets, three files. The published figures
+are left exactly as measured here rather than replaced by the
+2714/2821/3694/197 above, because a manuscript word count is an editorial claim about the article as submitted, and
 this repository ships neither the manuscript source nor the scripts that
 assembled it, so it holds no artifact from which any of the three sets could be
 re-derived; swapping in today's number would trade a dated measurement for an
@@ -204,11 +204,12 @@ python -c "import zipfile,re,collections,sys;c=collections.Counter(re.search(r'<
   manuscript `.docx` the project folder ships today, but on a different reading
   of that sentence: that file carries **no hyperlink at all** (0
   `<w:hyperlink>` elements in `word/document.xml`, and 0 found through
-  `python-docx` 1.2.0), while its reference paragraphs do carry 24 `doi` strings
-  as plain text, so there is nothing for the two readings to disagree about and
-  both return 2714 / 2821 / 3694 (re-measured 13 November 2026). A future
-  revision that hyperlinks a DOI *in place of* its text would make the stdlib
-  count the honest one.
+  `python-docx` 1.2.0), while its 26 `Reference` paragraphs spell out 23
+  identifiers as plain text (`doi:10.…`; the only other occurrence of those
+  letters is the word `DOI` in one note), so there is nothing for the two
+  readings to disagree about and both return 2714 / 2821 / 3694 (re-measured
+  13 November 2026). A future revision that hyperlinks a DOI *in place of* its
+  text would make the stdlib count the honest one.
 * **Not a substitute for the journal's own counter.** Word counts the 4000-word
   cap for a Software Note on the span the journal names; if the editorial office
   counts differently, its count governs and this file explains the difference
