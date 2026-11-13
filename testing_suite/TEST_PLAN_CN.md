@@ -19,7 +19,7 @@
 4. **核心算法** — 贡献矩阵、切片窗口、PD/PE/PB 指数、速率拟合。
 5. **输出结果** — CSV/Newick 文件正确性、字段完整性、数值一致性。
 6. **异常处理** — 非法输入、边界条件、退化场景的错误信息。
-7. **边界条件** — 2-tip 树、空位点、退化邻域、NaN 处理。
+7. **边界条件** — 2 枝端树、空样区、退化邻域、NaN 处理。
 8. **真实数据全流程** — 使用模拟数据集完成从树读取到速率计算、后验分析、可视化的完整工作流。
 9. **性能/基准测试** — 不同规模数据集的运行时间和内存。
 10. **可重复性验证** — 相同随机种子结果一致性、数值稳定性。
@@ -79,7 +79,7 @@
 | T-IO-04 | 带方括号注释的 Newick | 注释被正确剥离 |
 | T-IO-05 | 带引号标签的 Newick | 引号标签正确解析 |
 | T-IO-06 | Newick 往返 (parse → write → parse) | 结构一致 |
-| T-IO-07 | 长格式表转存在/缺失矩阵 | 正确的 sites×species DataFrame |
+| T-IO-07 | 长格式表转存在/缺失矩阵 | 正确的样区 × 物种 DataFrame |
 | T-IO-08 | 宽格式表转存在/缺失矩阵 | 正确转换 |
 | T-IO-09 | align_tree_matrix 树-矩阵对齐 | 正确修剪/丢弃 + 警告 |
 | T-IO-10 | 树和矩阵无公共物种 | ValueError |
@@ -92,10 +92,10 @@
 | T-CORE-02 | 节点深度计算 | 每个节点深度 = 父深度 + 分支长度 |
 | T-CORE-03 | tip_intervals 正确性 | 每条边的 [lo, hi) 覆盖正确的 tip 范围 |
 | T-CORE-04 | 贡献矩阵 C[e,j] | 等于 max(0, min(d_e, t_j) - max(b_e, t_{j-1})) |
-| T-CORE-05 | 切片窗口 (equal-time) | 窗口等宽，覆盖 [0, T] |
-| T-CORE-06 | 切片窗口 (equal-PD) | 每片 PD 相等 |
+| T-CORE-05 | 切片窗口（等时间） | 窗口等宽，覆盖 [0, T] |
+| T-CORE-06 | 切片窗口（等 PD） | 每片 PD 相等 |
 | T-CORE-07 | subarray 修剪 | 保留 MRCA 子树 |
-| T-CORE-08 | ultrametric 检测 | 超度量树返回 True |
+| T-CORE-08 | 超度量检测 | 超度量树返回 True |
 | T-CORE-09 | 非超度量树检测 | 返回 False + 警告/错误 |
 | T-CORE-10 | total_pd 计算 | 等于所有分支长度之和 |
 
@@ -108,9 +108,9 @@
 | T-INDICES-03 | pb() 全树 beta 多样性 | 值在 [0, 1] |
 | T-INDICES-04 | pd_per_slice 每片 PD | 行和等于总 PD |
 | T-INDICES-05 | pe_per_slice 每片 PE | 行和等于总 PE |
-| T-INDICES-06 | pb_per_slice 行和为 1 (partition) | np.allclose(row_sums, 1.0) |
-| T-INDICES-07 | pb_per_slice sorensen/turnover/nestedness | 所有 component 正确 |
-| T-INDICES-08 | pb_per_slice multisite/pairwise | 两种 approach 正确 |
+| T-INDICES-06 | pb_per_slice 行和为 1（划分） | np.allclose(row_sums, 1.0) |
+| T-INDICES-07 | pb_per_slice sorensen/turnover/nestedness | 所有分量正确 |
+| T-INDICES-08 | pb_per_slice multisite/pairwise | 两种途径正确 |
 | T-INDICES-09 | multisite_domain mixed vs paired | 值符合预期 |
 | T-INDICES-10 | 退化邻域处理 | converged=False + reason |
 
@@ -123,7 +123,7 @@
 | T-RATES-03 | cpb_rate 返回正确 DataFrame | 含 CpB/PB/pBO |
 | T-RATES-04 | fit_rate 对已知指数曲线恢复参数 | r 误差 < 1% |
 | T-RATES-05 | origin_time 计算 | pXO = -ln(1-p)/r |
-| T-RATES-06 | 空位点处理 | converged=False, reason 非空 |
+| T-RATES-06 | 空样区处理 | converged=False, reason 非空 |
 | T-RATES-07 | 边界拟合标记 | at_lower_bound/at_upper_bound |
 | T-RATES-08 | sensitivity 切片数敏感性 | 返回 suggested_slices |
 | T-RATES-09 | rate_profile (normalize=True) | 行和为 1 |
@@ -143,29 +143,29 @@
 | T-SLICING-08 | slice_pieces(width=0.5) | 正确宽度 |
 | T-SLICING-09 | slice_pieces criterion="pd" | 等PD切片 |
 | T-SLICING-10 | prune_tips 正确修剪 | 保留/丢弃正确 tips |
-| T-SLICING-11 | 时间超过 root_age → ValueError | 异常信息明确 |
-| T-SLICING-12 | 负时间 → ValueError | 异常信息明确 |
+| T-SLICING-11 | 时间超过 root_age → ValueError | 错误信息明确 |
+| T-SLICING-12 | 负时间 → ValueError | 错误信息明确 |
 
 ### 3.8 后验不确定性测试 (T-UNCERTAINTY)
 
 | ID | 描述 | 预期 |
 |---|---|---|
-| T-UNC-01 | posterior_rate 目录输入 | 正确的 per-site 汇总 |
+| T-UNC-01 | posterior_rate 目录输入 | 正确的逐样区汇总 |
 | T-UNC-02 | posterior_rate Newick 字符串输入 | 同上 |
 | T-UNC-03 | posterior_origin 计算 | 含 origin_median/hdi_low/high |
 | T-UNC-04 | bootstrap_sites | 返回 n_boot 行 |
 | T-UNC-05 | iter_trees 多格式输入 | 正确迭代所有树 |
-| T-UNC-06 | 坏树跳过 + 警告 | 不中断, n_trees 减少 |
+| T-UNC-06 | 坏树跳过 + 警告 | 不中断，n_trees 减少 |
 | T-UNC-07 | HDI 区间计算 | hdi_low <= rate_median <= hdi_high |
-| T-UNC-08 | ESS proxy 计算 | ess_proxy <= n_trees |
+| T-UNC-08 | ESS 代理计算 | ess_proxy <= n_trees |
 
 ### 3.9 空间工具测试 (T-SPATIAL)
 
 | ID | 描述 | 预期 |
 |---|---|---|
-| T-SPATIAL-01 | adjacency_from_bounds queen | 对角线=1, 角接触=1 |
+| T-SPATIAL-01 | adjacency_from_bounds queen | 对角线=1，角接触=1 |
 | T-SPATIAL-02 | adjacency_from_bounds rook | 角接触=0 |
-| T-SPATIAL-03 | adjacency_from_coords knn | 对称, 对角线=1 |
+| T-SPATIAL-03 | adjacency_from_coords knn | 对称，对角线=1 |
 | T-SPATIAL-04 | adjacency_from_coords radius | 对称 |
 | T-SPATIAL-05 | to/from_adjacency_dict 往返 | 一致 |
 | T-SPATIAL-06 | rate_map 生成图形 | 返回 matplotlib Axes |
@@ -176,16 +176,16 @@
 |---|---|---|
 | T-COMPAT-01 | squeeze_root == slice_rootward | 结果一致 |
 | T-COMPAT-02 | squeeze_tips == slice_tipward | 结果一致 |
-| T-COMPAT-03 | squeeze_int invert 返回顺序 | (younger, older) R 风格 |
-| T-COMPAT-04 | phylo_pieces timeSteps | 递增深度向量 |
-| T-COMPAT-05 | prune_tips method=1/2 | side after/before |
+| T-COMPAT-03 | squeeze_int invert 返回顺序 | (younger, older)，R 风格 |
+| T-COMPAT-04 | phylo_pieces timeSteps | 单调递增的深度向量 |
+| T-COMPAT-05 | prune_tips method=1/2 | `side` 在 method=1/2 下分别取 `after`/`before` |
 
 ### 3.11 模拟与数据集测试 (T-SIM)
 
 | ID | 描述 | 预期 |
 |---|---|---|
-| T-SIM-01 | yule_tree 生成正确 | n_tips 正确, ultrametric |
-| T-SIM-02 | birth_death_tree 生成正确 | n_tips 正确, ultrametric |
+| T-SIM-01 | yule_tree 生成正确 | n_tips 正确，且为超度量 |
+| T-SIM-02 | birth_death_tree 生成正确 | n_tips 正确，且为超度量 |
 | T-SIM-03 | make_dataset random | 正确维度矩阵 |
 | T-SIM-04 | make_dataset clustered | 空间自相关 |
 | T-SIM-05 | sim_passerines 数据集 | 含 trees/mat/coords/bounds/adj |
@@ -215,10 +215,10 @@
 
 | ID | 描述 | 预期 |
 |---|---|---|
-| T-ERR-01 | 1-tip 树 → ValueError | 明确错误信息 |
+| T-ERR-01 | 1 枝端树 → ValueError | 明确错误信息 |
 | T-ERR-02 | NaN 分支长度 → ValueError | 明确错误信息 |
 | T-ERR-03 | 负分支长度 → ValueError | 明确错误信息 |
-| T-ERR-04 | 重复 tip 标签 → ValueError | 明确错误信息 |
+| T-ERR-04 | 重复枝端标签 → ValueError | 明确错误信息 |
 | T-ERR-05 | 环 → ValueError | 明确错误信息 |
 | T-ERR-06 | 不连通树 → ValueError | 明确错误信息 |
 | T-ERR-07 | n_slices < 1 → ValueError | 明确错误信息 |
@@ -230,8 +230,8 @@
 
 | ID | 描述 | 预期 |
 |---|---|---|
-| T-PERF-01 | 100-tip 树 CpD 速率 | < 5s |
-| T-PERF-02 | 1000-tip 树 CpD 速率 | < 60s |
+| T-PERF-01 | 100 枝端树 CpD 速率 | < 5s |
+| T-PERF-02 | 1000 枝端树 CpD 速率 | < 60s |
 | T-PERF-03 | 切片数扩展性 (10→200) | 线性时间 |
 | T-PERF-04 | 内存使用合理 | 无内存泄漏 |
 | T-PERF-05 | 与内置基准 (`benchmarks/`) 对比 | 结果可复现 |
@@ -242,12 +242,12 @@
 
 ### 4.1 模拟数据
 
-- **小树**: 4-tip 对称树 `((A:1,B:1):1,(C:1,D:1):1);`
-- **中等树**: 20-tip Yule 树 (seed=42, age=10.0)
-- **大树**: 100-tip 出生-死亡树 (seed=42, age=10.0)
-- **后验树集**: 5 棵 50-tip Yule 树 (不同 seed)
-- **存在/缺失矩阵**: 30 sites × 20 species (seed=7)
-- **邻接矩阵**: queen 邻接 (6×6 网格，取前 30 个单元)
+- **小树**：4 枝端对称树 `((A:1,B:1):1,(C:1,D:1):1);`
+- **中等树**：20 枝端 Yule 树 (seed=42, age=10.0)
+- **大树**：100 枝端出生-死亡树 (seed=42, age=10.0)
+- **后验树集**：5 棵 50 枝端 Yule 树 (不同 seed)
+- **存在/缺失矩阵**：30 样区 × 20 物种 (seed=7)
+- **邻接矩阵**：queen 邻接 (6×6 网格，取前 30 个单元)
 
 ### 4.2 已有验证参考数据
 
@@ -269,6 +269,6 @@
 
 ## 6. 通过/失败标准
 
-- **通过**: 所有断言成立，无异常，输出文件正确。
-- **失败**: 任何断言失败、异常未捕获、输出缺失/错误。
-- **整体**: 100% 通过方可进入仓库整理阶段。
+- **通过**：所有断言成立，无异常，输出文件正确。
+- **失败**：任何断言失败、异常未捕获、输出缺失/错误。
+- **整体**：100% 通过方可进入仓库整理阶段。

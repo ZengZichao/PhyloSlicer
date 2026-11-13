@@ -3,7 +3,7 @@
 **Version:** 0.1.0
 **Test date:** 2026-10-08 (this report supersedes the 2026-09-29 issue, whose
 figures — 411 cases from 316 functions, 409 passed / 0 failed / 2 skipped — were
-pre-release and are no longer reproducible; see section 6.1)
+pre-release and are no longer reproducible; see section 6.6)
 **Executed by:** `testing_suite/scripts/run_all_tests.py` (end-to-end harness) and
 `pytest` (unit/regression), both from a copy of the delivered tree
 **Report re-issued as part of the review-round documentation fixes; the numbers
@@ -21,7 +21,7 @@ re-derivable with the commands in section 6.**
 | The **reviewer archive** (this package's zip/tar.gz) | **Python**, `tools/make_review_archive.py` | the same 3.11.15 interpreter; `validation/reference/manifest.txt` additionally records an earlier manifest-writing pass under Python 3.14.6 |
 
 **Machine:** Apple M5 (arm64), macOS 27.0.1 (`python -c "import platform;
-print(platform.platform())"` → `macOS-27.0.1-arm64-arm-64bit`). Timings in section 3
+print(platform.platform())"` → `macOS-27.0.1-arm64-arm-64bit`). Timings in section 7
 are not comparable to a different machine and are quoted only as "this run".
 
 ## 2. Test summary (measured)
@@ -43,7 +43,7 @@ build from a working tree with uncommitted edits (its provenance gate; the
 documented escape is `--allow-dirty`, which records every uncommitted path in the
 sidecar). The suite passes that flag itself when the checkout says it is dirty
 (`tests/test_review_archive.py:228`, asserted against the sidecar at `:416`), so the
-450/1/0 above is what the delivered working tree produces.
+455/1/0 above is what the delivered working tree produces.
 
 One earlier snapshot of the same commands, taken about 25 minutes before the final
 one and against a copy made while that propagation was still being written,
@@ -85,7 +85,7 @@ the harness's `T-INSTALL-06` prefers the *installed* console script
 from an earlier `pip install -e .` whose checkout has since moved, that check fails
 with `ModuleNotFoundError: No module named 'phyloslicer'` while the package itself
 is fine. The 118/118 above was therefore taken in an interpreter with no such shim
-(a `--system-site-packages` venv, section 6.2), which is the state a fresh clone +
+(a `--system-site-packages` venv, section 6.5), which is the state a fresh clone +
 `pip install -e .` gives. `python -m phyloslicer.cli.main --version` prints
 `phyloslicer 0.1.0` with exit code 0 in both states.
 
@@ -188,7 +188,7 @@ the plain command above, or read the count off the `-rs`/`-rf` short summary.
 
 The 2026-09-29 issue of this report measured the tree as it stood *before* the
 review-archive tooling, the output-schema test, the published-numbers guards and
-the CI mirror tests existed. The suite has since grown by 40 cases and 35 test
+the CI mirror tests existed. The suite has since grown by 40 cases and 38 test
 functions, and the packager acquired its provenance gate, which is why the archive
 now skips 27 rather than 2. Any figure in this report that a reader cannot
 reproduce from the delivered tree is a bug in this report; section 6 is the

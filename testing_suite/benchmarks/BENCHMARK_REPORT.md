@@ -21,6 +21,11 @@ Memory is peak traced memory (tracemalloc).
 | 200 | 50 | 100 | 0.0042 | 0.0127 | 0.0795 | 1.0 | 0.2710 | 50 |
 | 500 | 100 | 100 | 0.0170 | 0.0551 | 0.0836 | 3.0 | 0.4725 | 100 |
 
+This table is machine-generated: `testing_suite/scripts/run_benchmarks.py` writes this
+file from a real run, and `BENCHMARK_REPORT_CN.md` is a translation of it rather than an
+independent measurement, so a rerun of the benchmark must update the Chinese table in the
+same change or that translation will drift from the data.
+
 ## Scaling
 
 The contribution matrix is `E x k` (edges x slices), so:

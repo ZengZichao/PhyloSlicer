@@ -140,9 +140,9 @@ tolerance rationale.
 `benchmarks/` holds four independent protocols and the archived tables they
 produced. Read [`benchmarks/README.md`](benchmarks/README.md) before quoting a
 number from them: two column names mean different things in different files, and
-only the fixed-k scaling tables are cross-language. `python
-benchmarks/recompute_ratios.py` recomputes every documented speed-up range from
-the CSVs and is run by CI.
+only the fixed-k scaling tables are cross-language.
+`python benchmarks/recompute_ratios.py` recomputes every documented speed-up
+range from the CSVs and is run by CI.
 
 ## Citation
 
