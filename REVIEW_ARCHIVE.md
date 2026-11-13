@@ -135,14 +135,14 @@ written.  Hits found, with file and line, and the handling:
 | --- | --- | --- |
 | `.github/CODEOWNERS:3`, `.github/ISSUE_TEMPLATE/config.yml:4` | owner handle, repo URL | whole `.github/` excluded |
 | `LICENSE:3` | `Copyright (c) 2026, Zichao Zeng and Yinzhao Wang` | both holder names tokenised as a unit, licence text intact (see below) |
-| `pyproject.toml:12,56-60` | author name + e-mail, five repository URLs | tokenised |
-| `CITATION.cff:14-27,31,35` | both authors: names, e-mails, ORCIDs, affiliation, Zenodo DOI, repo URL | tokenised |
+| `pyproject.toml:12,56-61` | author name + e-mail, five repository URLs | tokenised |
+| `CITATION.cff:14-27,31,45` | both authors: names, e-mails, ORCIDs, affiliation, Zenodo DOI, repo URL | tokenised |
 | `.zenodo.json:11-19,31,35` | same, as `creators`/`related_identifiers` | tokenised |
-| `README.md:3-6,12,128,143-145` / `README_CN.md:3-6,12,117,132-134` | CI and Zenodo badges, repo URL, DOI, author block with affiliation and ORCID | tokenised |
-| `SECURITY.md:19` / `SECURITY_CN.md:18` | reporter e-mail | tokenised |
-| `CODE_OF_CONDUCT.md:65,137` / `CODE_OF_CONDUCT_CN.md:50` | reporter e-mail | tokenised |
-| `CONTRIBUTING.md:13` / `CONTRIBUTING_CN.md:14`, `RELEASE.md:85` / `RELEASE_CN.md:80` | clone/install URL, Zenodo GitHub settings URL | owner segment tokenised |
-| `tests/test_release_hygiene.py:191,194,202` | the hygiene test *asserts* the real name, e-mail and URL | tokenised by the same map (see below) |
+| `README.md:3-6,16,152,197-199` / `README_CN.md:5-8,18,143,181-183` | CI and Zenodo badges, repo URL, DOI, author block with affiliation and ORCID | tokenised |
+| `SECURITY.md:21` / `SECURITY_CN.md:18` | reporter e-mail | tokenised |
+| `CODE_OF_CONDUCT.md:66,138` / `CODE_OF_CONDUCT_CN.md:50` | reporter e-mail | tokenised |
+| `CONTRIBUTING.md:13` / `CONTRIBUTING_CN.md:14`, `RELEASE.md:72` / `RELEASE_CN.md:68` | clone/install URL, Zenodo GitHub settings URL | owner segment tokenised |
+| `tests/test_release_hygiene.py:248,249,257` | the hygiene test *asserts* the real name, e-mail and URL | tokenised by the same map (see below) |
 | `docs/USER_GUIDE.md`, `docs/USER_GUIDE_CN.md`, `validation/*.py`, `examples/*.py`, `benchmarks/*`, `testing_suite/*` | checked: **no** author string, repo URL or absolute local path found | shipped unchanged |
 
 Nothing matched a home-directory path (the macOS or Windows user-directory
@@ -170,7 +170,7 @@ suite passes unmodified inside the archive.  Tokens used:
 `GRANT_WITHHELD_FOR_PEER_REVIEW`.  Two extra rules exist because of the
 substitution's own blind spots: the home directory and this checkout's absolute
 path (derived at build time from `Path.home()` and the account name, not
-hard-coded), and the fact that `README.md:143` wraps `Shanghai⏎Jiao Tong
+hard-coded), and the fact that `README.md:197` wraps `Shanghai⏎Jiao Tong
 University` across a line break, which the full institution string cannot match —
 without the `Jiao Tong University` / `Shanghai` rules the affiliation survived in
 plain sight.

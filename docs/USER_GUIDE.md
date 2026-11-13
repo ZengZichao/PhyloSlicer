@@ -141,7 +141,7 @@ is performed, and `root_age` is then the deepest tip depth.
 ### 3.2 The contribution matrix
 
 Every edge `e` spans the interval `[b_e, d_e]` in depth coordinates, and a
-slice is a window `[t_{j−1}, t_j]`. The branch length edge `e` contributes
+slice is a window `[t_{j−1}, t_j]`. The branch length that edge `e` contributes
 to slice `j` is
 
 ```

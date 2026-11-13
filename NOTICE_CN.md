@@ -37,7 +37,7 @@ PhyloSlicer 代码的版权由本包两位作者共同持有，措辞与 `LICENS
 安装的 treesliceR 来复现比对表格，它们是驱动脚本，其中不含任何 treesliceR 代码。
 
 由于参考值由另一个浮点路径不同的外部程序产生，
-[`validation/NOTES_CN.md`](validation/NOTES_CN.md) 中的容差本身就是这份存档产物
+[`validation/NOTES_CN.md`](validation/NOTES_CN.md) 中的容差本身就是该产物
 的一部分：一条速率行在 1e-4 上相符，说的是两个不同的优化器求解同一个目标函数，
 而不是说二者逐位相同。
 
