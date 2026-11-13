@@ -114,14 +114,14 @@ python -m pip install -e .
 | --- | --- | --- |
 | `.github/CODEOWNERS:3`、`.github/ISSUE_TEMPLATE/config.yml:4` | 所有者账号、仓库 URL | 整个 `.github/` 排除 |
 | `LICENSE:3` | `Copyright (c) 2026, Zichao Zeng and Yinzhao Wang` | 两位持有人姓名作为一个整体一并替换为占位符，许可全文保留（见下文） |
-| `pyproject.toml:12,56-60` | 作者姓名与邮箱、五条仓库 URL | 占位符替换 |
-| `CITATION.cff:14-27,31,35` | 两位作者的姓名、邮箱、ORCID、机构、Zenodo DOI、仓库 URL | 占位符替换 |
+| `pyproject.toml:12,56-61` | 作者姓名与邮箱、五条仓库 URL | 占位符替换 |
+| `CITATION.cff:14-27,31,45` | 两位作者的姓名、邮箱、ORCID、机构、Zenodo DOI、仓库 URL | 占位符替换 |
 | `.zenodo.json:11-19,31,35` | 同上，位于 `creators`/`related_identifiers` | 占位符替换 |
-| `README.md:3-6,12,128,143-145` / `README_CN.md:3-6,12,117,132-134` | CI 与 Zenodo 徽章、仓库 URL、DOI、含机构与 ORCID 的作者栏 | 占位符替换 |
-| `SECURITY.md:19` / `SECURITY_CN.md:18` | 报告者邮箱 | 占位符替换 |
-| `CODE_OF_CONDUCT.md:65,137` / `CODE_OF_CONDUCT_CN.md:50` | 报告者邮箱 | 占位符替换 |
-| `CONTRIBUTING.md:13` / `CONTRIBUTING_CN.md:14`、`RELEASE.md:85` / `RELEASE_CN.md:80` | 克隆/安装 URL、Zenodo GitHub 设置页 URL | 所有者段替换 |
-| `tests/test_release_hygiene.py:191,194,202` | 卫生测试*本身断言*了真实姓名、邮箱与 URL | 用同一张映射表一并替换（理由见下） |
+| `README.md:3-6,16,152,197-199` / `README_CN.md:5-8,18,143,181-183` | CI 与 Zenodo 徽章、仓库 URL、DOI、含机构与 ORCID 的作者栏 | 占位符替换 |
+| `SECURITY.md:21` / `SECURITY_CN.md:18` | 报告者邮箱 | 占位符替换 |
+| `CODE_OF_CONDUCT.md:66,138` / `CODE_OF_CONDUCT_CN.md:50` | 报告者邮箱 | 占位符替换 |
+| `CONTRIBUTING.md:13` / `CONTRIBUTING_CN.md:14`、`RELEASE.md:72` / `RELEASE_CN.md:68` | 克隆/安装 URL、Zenodo GitHub 设置页 URL | 所有者段替换 |
+| `tests/test_release_hygiene.py:248,249,257` | 卫生测试*本身断言*了真实姓名、邮箱与 URL | 用同一张映射表一并替换（理由见下） |
 | `docs/USER_GUIDE.md`、`docs/USER_GUIDE_CN.md`、`validation/*.py`、`examples/*.py`、`benchmarks/*`、`testing_suite/*` | 经检查：**未发现**作者字符串、仓库 URL 或本机绝对路径 | 原样收录 |
 
 未发现任何家目录绝对路径（macOS 或 Windows 的用户目录前缀，也没有本检出自身的路径），
@@ -142,7 +142,7 @@ python -m pip install -e .
 `WITHHELD_FOR_PEER_REVIEW`（ORCID 字段）、`Institution Withheld For Peer Review`、
 `School Withheld For Peer Review`、`10.5281/zenodo.WITHHELD_FOR_PEER_REVIEW`、
 `GRANT_WITHHELD_FOR_PEER_REVIEW`。另有两条规则是为替换自身的盲区而设：其一是家目录与
-本检出的绝对路径（构建时由 `Path.home()` 与账户名推导，不写死）；其二是 `README.md:143`
+本检出的绝对路径（构建时由 `Path.home()` 与账户名推导，不写死）；其二是 `README.md:197`
 把 `Shanghai⏎Jiao Tong University` 拆在了两行，整串机构名规则无法命中——若没有
 `Jiao Tong University` 与 `Shanghai` 两条规则，机构信息就会原样留在包里。
 

@@ -6,7 +6,21 @@ modified". The live definitions live in `.github/workflows/`, which the review
 archive cannot ship as-is: `.github/CODEOWNERS` in that directory names the
 repository owner and would defeat double-blind review, so the whole directory is
 excluded by the packager. This file mirrors the workflow definitions themselves,
-which carry no author identity, so that a reviewer can read exactly what CI runs.
+so that a reviewer can read exactly what CI runs.
+
+The mirror is kept byte-verbatim (`tests/test_ci_mirror.py` enforces it), so it
+is **not** anonymised at rest: the mirrored `publish.yml` really does carry an
+author identity, the repository owner's GitHub account in the line
+`owner=…` of its PyPI trusted-publisher registration note. What keeps the review
+archive blind is therefore not the absence of identity from these definitions
+but the packager's scrub, which is what the archive is actually built from:
+`docs/` ships in the archive, and the packager rewrites every author literal in
+its table — that login among them — to a withheld token before writing any byte,
+then re-reads its own output and fails the build if anything survives. A
+reviewer opening this file in the archive therefore reads
+`owner=AUTHOR_WITHHELD_FOR_PEER_REVIEW`; a reader of the public repository reads
+the login the fenced YAML carries. Both statements are about the same four
+blocks of YAML.
 
 Mirrored from the working tree on 2026-10-18. `tests/test_ci_mirror.py` fails if a workflow changes without refreshing this file.
 

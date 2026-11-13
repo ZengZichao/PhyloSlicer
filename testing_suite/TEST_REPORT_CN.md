@@ -35,14 +35,14 @@ print(platform.platform())"` → `macOS-27.0.1-arm64-arm-64bit`）。第 7 节�
 | pytest（从审稿包内部） | **收集 454 → 427 通过、27 跳过、0 失败**，10.5 s（263 个条目，身份守卫 PASSED） |
 | CI `with-accel` 流水线分支 | 0 跳过 |
 | CI `no-accel` 流水线分支 | 1 跳过（第 5 节） |
-| `def test_` 函数数 / `@pytest.mark.parametrize` 标记数 | **354 / 28**（AST 普查，见第 6 节） |
+| `def test_` 函数数 / `@pytest.mark.parametrize` 标记数 | **359 / 28**（AST 普查，见第 6 节） |
 
 ### 2.1 打包器门禁，以及这些数字背后的两个快照
 
 `tests/test_review_archive.py` 会驱动打包器，而打包器如今拒绝在有未提交改动的工作树上
 构建（这是它的来源门禁 provenance gate；文档化的逃生门是 `--allow-dirty`，它会把每个未提交
 路径记进 sidecar）。检出目录若自报为脏，套件自己就会带上该旗标
-（`tests/test_review_archive.py:228`，并在 `:416` 与 sidecar 互相核对），所以上表的
+（`tests/test_review_archive.py:227`，并在 `:423` 与 sidecar 互相核对），所以上表的
 455/1/0 就是交付工作树实际产生的结果。
 
 同一批命令更早的一个快照——在最终那次运行约 25 分钟前取，且是在一份尚未复制完成的
@@ -96,13 +96,17 @@ HDI/ESS 代理）、`spatial`（邻接、速率图）、`compat`（treesliceR �
 
 | 跳过分组 | 源码检出 | 审稿包 | 原因 |
 |---|---|---|---|
-| `tools/` 不存在 | 0 | **22** | `tests/test_review_archive.py` 惰性导入 `tools/identity_literals.py`，`tools/` 缺失时整模块跳过——它是构建期工具，被刻意排除，因为它的替换表会引用被删除的字面量 |
+| `tools/` 不存在 | 0 | **24** | `tests/test_review_archive.py` 惰性导入 `tools/identity_literals.py`，`tools/` 缺失时整模块跳过——它是构建期工具，被刻意排除，因为它的替换表会引用被删除的字面量；该模块收集的全部 24 个用例都带这一标记 |
 | `.github/` 不存在 | 0 | **1** | `tests/test_ci_mirror.py` 按 `.github/workflows/*.yml` 参数化；包里工作流为空集，pytest 记 1 个跳过。`docs/CI_WORKFLOWS.md` 才是面向审稿人的那份镜像，守卫转而检查它 |
+| `.git/` 不存在 | 0 | **1** | `tests/test_validation_chain.py:975`——那条阻止比对器改写受版本控制的 `equivalence_report.csv` 的守卫会跳过，因为解包后的审稿包并不在版本控制之下 |
 | geopandas 不存在 | **1** | **1** | `tests/test_io_spatial_cli.py:404`，`could not import 'geopandas'` |
-| **合计** | **1** | **24** | |
+| **合计** | **1** | **27** | |
 
-也就是说，包里 24 个跳过 = 23 个*作者侧工具与 CI 配置*缺失的守卫 + 1 个可选后端跳过；
-两种语境下都没有跳过任何数值类用例。
+也就是说，包里 27 个跳过 = 26 个*作者侧工具、CI 配置与版本控制元数据*缺失的守卫 +
+1 个可选后端跳过；两种语境下都没有跳过任何数值类用例。这两列量的就是第 2 节那个
+`27 skipped`，读数来自 6.4 节那次运行的 `-rs` 短摘要，并以第 1 节的解释器为前提
+（numba 与 dendropy 都已安装）：缺哪一个可选 extra，就往每一列上为受影响的每个用例
+各加一个跳过。
 
 ## 5. CI 的两条流水线分支
 
@@ -133,7 +137,7 @@ PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src pytest --collect-only -q -p no:cachepro
 # 6.2 完整运行（455 通过 / 1 跳过 / 0 失败）
 PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src pytest -p no:cacheprovider --tb=line -rs
 
-# 6.3 AST 普查（354 / 28）
+# 6.3 AST 普查（359 / 28）
 python - <<'PY'
 import ast, pathlib
 fns = marks = 0
@@ -176,7 +180,7 @@ python -m venv --system-site-packages ../venv && ../venv/bin/python testing_suit
 ### 6.6 411/316 这组数字是怎么过期的
 
 2026-09-29 那一版测的是审稿包工具、输出字段模式测试、发布数字守卫与 CI 镜像测试
-都还不存在时的树。此后套件增加了 40 个用例、38 个测试函数，打包器也添上了它的来源
+都还不存在时的树。此后套件增加了 45 个用例、43 个测试函数，打包器也添上了它的来源
 门禁——这就是包里跳过数从 2 变成 27 的原因。本报告里任何读者无法从
 交付树复现的数字，都是本报告自身的缺陷；第 6 节就是补救，也正是把命令原样印出来
 而不是转述的理由。
@@ -185,7 +189,7 @@ python -m venv --system-site-packages ../venv && ../venv/bin/python testing_suit
 
 下表来自 `testing_suite/scripts/run_benchmarks.py`，2026-09-29 重新生成（3 次重复取中位数）；
 随包的 `testing_suite/benchmarks/benchmark_results.csv` 仍是 2026-09-26 在 Python 3.12.14 下的
-那次运行，其峰值内存列与下表在舍入误差内一致，而计时比下表大 3-5 倍。哪些数字可以引用、
+那次运行，其峰值内存列与下表在舍入误差内一致，而计时比下表大 3-12 倍。哪些数字可以引用、
 可以怎么引用，以 `benchmarks/README.md` 为准。
 
 | 树规模 | 样区数 | 切片数 | 切片 (s) | PD/切片 (s) | CpD 速率 (s) | 后验 (s) | 内存 (MB) |
@@ -271,5 +275,5 @@ testing_suite/
 **建议。** 软件可以按 0.1.0 发布。仍有两条命令属于作者本人的事，因为它们需要一台
 本报告并未在其中取数的机器：一条是装了 `[spatial]` extra 的运行（让
 `tests/test_io_spatial_cli.py:404` 真正执行），另一条是从*已提交*的 tag 运行的检查
-（让打包器无需 `--allow-dirty` 即可构建、sidecar 指名一个干净的 commit，并使那 22 个
+（让打包器无需 `--allow-dirty` 即可构建、sidecar 指名一个干净的 commit，并使那 24 个
 打包器驱动的审稿包用例在编辑真正会收到的状态上执行）。

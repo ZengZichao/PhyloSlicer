@@ -6,11 +6,13 @@ style statistics quoted in the submission checklist are not assertions.
 
 The submission checklist states its length statistics and promises that "a reader
 can re-derive each of those numbers from the delivered document". This file is
-the rule that makes the promise true for the word counts. It gives the counting
-rule verbatim, the span boundaries it is applied over, the numbers each span
-gave when it was last measured, and a pure-standard-library script that
-reproduces them from the manuscript `.docx` alone — no Word, no pandoc, no
-`python-docx`.
+the rule that makes that promise meaningful for the word counts. It gives the
+counting rule verbatim, the span boundaries it is applied over, the numbers each
+span gave on the manuscript snapshot it was last run against, and a
+pure-standard-library script that re-derives the count of *whatever* manuscript
+`.docx` it is pointed at — no Word, no pandoc, no `python-docx`. Read §2's last
+paragraph before quoting any number from this file: the rule travels, the
+numbers do not.
 
 ---
 
@@ -66,8 +68,9 @@ checklist printed **3665** as its headline while quoting a rule that stops at th
 one thing; they are two different spans, **D** and **M**, and the difference
 between them is exactly the AI statement plus its section heading (157 tokens of
 statement text and 7 of heading in the round that measured 3665/3829; 150 tokens
-in the second measurement). The checklist now names **M = 3829** as the figure it
-stands behind and quotes **D** as the narrower reading the journal page names.
+in the second measurement). In that round the checklist named **M = 3829** as the
+figure it stood behind and quoted **D** as the narrower reading the journal page
+names.
 Either way the article is inside the 4000-word cap for a Software Note on the
 span the journal measures.
 
@@ -80,6 +83,30 @@ same file on the same day, taken in good faith and reported as they came out.
 Anyone who re-runs the script on the `.docx` they were sent will get the number
 for *that* file. This is the reason the rule is published here rather than the
 number alone.
+
+**Which file each of these numbers belongs to.** Every figure in the table is a
+measurement of a manuscript snapshot on the date its column names, and none of
+them can be re-derived from the manuscript `.docx` the project folder holds now.
+Running the script of §3 on `PhyloSlicer-手稿正文.docx`, whose SHA-256 begins
+`5c90250d` and ends `9de92598` (re-measured 13 November 2026), gives **D 2714,
+M 2821, W 3694, abstract 197** — no value in the table above. That is a
+different document, not a different reading: every paragraph and every style of
+that file totals 4288 tokens, so **W = 5030** and **M = 4141** are arithmetically
+impossible for it. The delivered checklist quotes a third set again: it names
+**3969** words as the figure it stands behind, **3990** over the
+Introduction→References span and **3850** over the narrower one, with a
+**276**-word abstract, and its rule drops `Reference` on top of `FigureFrame`,
+`FigureCaption` and `Equation`. Three sets, three files. The published figures
+are left exactly as measured here rather than replaced by the
+2714/2821/3694/197 above, because a manuscript word count is an editorial claim about the article as submitted, and
+this repository ships neither the manuscript source nor the scripts that
+assembled it, so it holds no artifact from which any of the three sets could be
+re-derived; swapping in today's number would trade a dated measurement for an
+undated one and would silently disagree with the checklist that was actually
+submitted. What this file guarantees is the *rule*: point §3 at any `.docx` of
+the manuscript and it returns that file's number, which is all "re-derivable" in
+the title can mean. Which of the three snapshots is the one of record is an
+author's decision, not something this file can settle.
 
 ## 3. The script
 
@@ -137,8 +164,9 @@ print("Abstract paragraph:", sum(words(p) for p in body if style(p) != "Manuscri
 ```
 
 A worked re-derivation, run on 8 October 2026 at 22:3x on the manuscript `.docx`
-that the language pass had just rewritten (the file beside this repository in the
-project folder), `python word_count.py <manuscript>.docx`:
+that the language pass had just rewritten — *that* snapshot of the file beside
+this repository in the project folder, not the one sitting there today —
+`python word_count.py <manuscript>.docx`:
 
 ```
 D  Intro -> end of Discussion (excl. AI statement): 3991
@@ -147,22 +175,41 @@ W  Intro -> end of file (incl. references): 5030
 Abstract paragraph: 278
 ```
 
+The same script run verbatim today against the manuscript `.docx` the project
+folder ships (13 November 2026) prints a different article — §2's last paragraph
+explains the gap, and the file it is run on is the one §5 documents:
+
+```
+D  Intro -> end of Discussion (excl. AI statement): 2714
+M  Intro -> through the AI statement (the headline): 2821
+W  Intro -> end of file (incl. references): 3694
+Abstract paragraph: 197
+```
+
 One more check worth running, because the whole rule keys on paragraph styles:
 
 ```bash
 # the paragraph styles the rule keys on, and how many of each the file holds
-python -c "import zipfile,re,collections;c=collections.Counter(re.search(r'<w:pStyle w:val=\"([^\"]+)\"',p).group(1) if re.search(r'<w:pStyle w:val=\"([^\"]+)\"',p) else '' for p in re.findall(r'<w:p\b[^>]*>.*?</w:p>',zipfile.ZipFile(sys.argv[1]).read('word/document.xml').decode('utf-8'),re.S));print(c)" MANUSCRIPT.docx
+python -c "import zipfile,re,collections,sys;c=collections.Counter(re.search(r'<w:pStyle w:val=\"([^\"]+)\"',p).group(1) if re.search(r'<w:pStyle w:val=\"([^\"]+)\"',p) else '' for p in re.findall(r'<w:p\b[^>]*>.*?</w:p>',zipfile.ZipFile(sys.argv[1]).read('word/document.xml').decode('utf-8'),re.S));print(c)" MANUSCRIPT.docx
 ```
 
 ## 4. Two things this rule is not
 
 * **Not a `python-docx` reading.** `python-docx` exposes a paragraph's text
   through `p.runs`, which skips runs nested in a hyperlink; the rule above
-  concatenates every `<w:t>` in the paragraph. In the delivered manuscript the
-  two agree exactly (measured: 3991 / 4141 / 5030 both ways) because the only
-  hyperlinks in the body sit in the reference list, whose DOIs are already
-  written out as text in the same paragraph. A future revision that hyperlinks a
-  DOI *in place of* its text would make the stdlib count the honest one.
+  concatenates every `<w:t>` in the paragraph. In the 8 October round quoted
+  above the two agreed exactly (measured: 3991 / 4141 / 5030 both ways) because
+  the only hyperlinks in the body sat in the reference list, whose DOIs are
+  already written out as text in the same paragraph. They still agree on the
+  manuscript `.docx` the project folder ships today, but on a different reading
+  of that sentence: that file carries **no hyperlink at all** (0
+  `<w:hyperlink>` elements in `word/document.xml`, and 0 found through
+  `python-docx` 1.2.0), while its 26 `Reference` paragraphs spell out 23
+  identifiers as plain text (`doi:10.…`; the only other occurrence of those
+  letters is the word `DOI` in one note), so there is nothing for the two
+  readings to disagree about and both return 2714 / 2821 / 3694 (re-measured
+  13 November 2026). A future revision that hyperlinks a DOI *in place of* its
+  text would make the stdlib count the honest one.
 * **Not a substitute for the journal's own counter.** Word counts the 4000-word
   cap for a Software Note on the span the journal names; if the editorial office
   counts differently, its count governs and this file explains the difference
@@ -171,15 +218,29 @@ python -c "import zipfile,re,collections;c=collections.Counter(re.search(r'<w:pS
 ## 5. Provenance note on the manuscript files themselves
 
 The five manuscript `.docx` files are assembled programmatically: the build
-scripts write them with `python-docx`, so each file's `docProps/core.xml` carries
-the creator string `python-docx`. That is recorded here because the AI-use
-statement in the manuscript has to describe the production route honestly — the
-documents were generated by scripts from text the authors wrote and revised, and
-the generation scripts are part of the reproducibility story rather than
-something to hide. Check it in one command:
+scripts write them with `python-docx`, and that shows up in each file's
+`docProps/core.xml` in two fields, not one. `dc:description` carries the
+generator's own stamp, `generated by python-docx`. `dc:creator` carries no
+person's name, but it does not carry the string `python-docx` either: it holds
+the provenance sentence the build writes into it, `PhyloSlicer submission files,
+assembled programmatically (no individual author metadata)`. So the literal
+`python-docx` is in the description, not in the creator, and a check that greps
+only `<dc:creator>` shows the provenance sentence and not the generator. That is
+recorded here because the AI-use statement in the manuscript has to describe the
+production route honestly — the documents were generated by scripts from text the
+authors wrote and revised, and the generation scripts are part of the
+reproducibility story rather than something to hide. Check both fields in one
+command:
 
 ```bash
-python -c "import zipfile,sys;print(zipfile.ZipFile(sys.argv[1]).read('docProps/core.xml').decode('utf-8'))" MANUSCRIPT.docx | grep -o "<dc:creator>[^<]*</dc:creator>"
+python -c "import zipfile,sys;print(zipfile.ZipFile(sys.argv[1]).read('docProps/core.xml').decode('utf-8'))" MANUSCRIPT.docx | grep -o "<dc:creator>[^<]*</dc:creator>\|<dc:description>[^<]*</dc:description>"
+```
+
+which prints the same two lines for every one of the five files, in that order:
+
+```
+<dc:creator>PhyloSlicer submission files, assembled programmatically (no individual author metadata)</dc:creator>
+<dc:description>generated by python-docx</dc:description>
 ```
 
 The `Application` field in `docProps/app.xml` of the same files claims a desktop

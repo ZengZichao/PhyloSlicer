@@ -34,7 +34,7 @@ are not comparable to a different machine and are quoted only as "this run".
 | pytest, from inside the reviewer archive | **454 collected → 427 passed, 27 skipped, 0 failed** in 10.5 s (263 entries, identity guard PASSED) |
 | CI, `with-accel` leg | 0 skipped |
 | CI, `no-accel` leg | 1 skipped (section 5) |
-| `def test_` functions / `@pytest.mark.parametrize` marks | **354 / 28** (AST census, section 6) |
+| `def test_` functions / `@pytest.mark.parametrize` marks | **359 / 28** (AST census, section 6) |
 
 ### 2.1 The packager gate and the two snapshots behind these figures
 
@@ -42,7 +42,7 @@ are not comparable to a different machine and are quoted only as "this run".
 build from a working tree with uncommitted edits (its provenance gate; the
 documented escape is `--allow-dirty`, which records every uncommitted path in the
 sidecar). The suite passes that flag itself when the checkout says it is dirty
-(`tests/test_review_archive.py:228`, asserted against the sidecar at `:416`), so the
+(`tests/test_review_archive.py:227`, asserted against the sidecar at `:423`), so the
 455/1/0 above is what the delivered working tree produces.
 
 One earlier snapshot of the same commands, taken about 25 minutes before the final
@@ -103,14 +103,19 @@ rate/origin, bootstrap, HDI/ESS proxies), `spatial` (adjacency, rate maps),
 
 | Skip group | Checkout | Archive | Cause |
 |---|---|---|---|
-| `tools/` absent | 0 | **22** | `tests/test_review_archive.py` imports `tools/identity_literals.py` lazily and skips the whole module when `tools/` is missing — it is build-time tooling, deliberately excluded because its scrub table quotes the literals it removes |
+| `tools/` absent | 0 | **24** | `tests/test_review_archive.py` imports `tools/identity_literals.py` lazily and skips the whole module when `tools/` is missing — it is build-time tooling, deliberately excluded because its scrub table quotes the literals it removes; all 24 cases the module collects carry that mark |
 | `.github/` absent | 0 | **1** | `tests/test_ci_mirror.py` parametrises over `.github/workflows/*.yml`; with no workflows in the archive the parameter set is empty and pytest reports one skip. `docs/CI_WORKFLOWS.md` is the reviewer-facing mirror, and it is what the guard checks instead |
+| `.git/` absent | 0 | **1** | `tests/test_validation_chain.py:975` — the guard that stops the comparator rewriting the tracked `equivalence_report.csv` skips, because an unpacked archive is not under version control |
 | geopandas absent | **1** | **1** | `tests/test_io_spatial_cli.py:404`, `could not import 'geopandas'` |
-| **Total** | **1** | **24** | |
+| **Total** | **1** | **27** | |
 
-So the archive's 24 skips are 23 guards against missing *author-side tooling and
-CI configuration* plus the one optional-backend skip; nothing numerical is skipped
-in either context.
+So the archive's 27 skips are 26 guards against missing *author-side tooling, CI
+configuration and version-control metadata* plus the one optional-backend skip;
+nothing numerical is skipped in either context. The two columns are the same
+quantity as the `27 skipped` of section 2, read off the `-rs` short summary of the
+section 6.4 run, and they presuppose the interpreter of section 1 (numba and
+dendropy installed): wherever an optional extra is missing, one skip is added per
+affected test to each column.
 
 ## 5. The two CI legs
 
@@ -144,7 +149,7 @@ PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src pytest --collect-only -q -p no:cachepro
 # 6.2 the full run (455 passed / 1 skipped / 0 failed)
 PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src pytest -p no:cacheprovider --tb=line -rs
 
-# 6.3 the AST census (354 / 28)
+# 6.3 the AST census (359 / 28)
 python - <<'PY'
 import ast, pathlib
 fns = marks = 0
@@ -188,7 +193,7 @@ the plain command above, or read the count off the `-rs`/`-rf` short summary.
 
 The 2026-09-29 issue of this report measured the tree as it stood *before* the
 review-archive tooling, the output-schema test, the published-numbers guards and
-the CI mirror tests existed. The suite has since grown by 40 cases and 38 test
+the CI mirror tests existed. The suite has since grown by 45 cases and 43 test
 functions, and the packager acquired its provenance gate, which is why the archive
 now skips 27 rather than 2. Any figure in this report that a reader cannot
 reproduce from the delivered tree is a bug in this report; section 6 is the
@@ -199,7 +204,7 @@ remedy, and it is the reason the commands are printed rather than paraphrased.
 Timings from `testing_suite/scripts/run_benchmarks.py`, regenerated 2026-09-29
 (median of 3 repetitions); the shipped `testing_suite/benchmarks/benchmark_results.csv`
 still holds the 2026-09-26 run made under Python 3.12.14, whose peak-memory column
-agrees with the table below to within rounding while its timings are 3-5x larger.
+agrees with the table below to within rounding while its timings are 3-12x larger.
 `benchmarks/README.md` governs which of these numbers may be quoted and how.
 
 | Tree size | Sites | Slices | Slice (s) | PD/slice (s) | CpD rate (s) | Posterior (s) | Memory (MB) |
@@ -299,5 +304,5 @@ carry the `origin_within_tree` column.
 remain the author's own, because they need a machine this report was not taken on:
 a run with the `[spatial]` extra installed (so `tests/test_io_spatial_cli.py:404`
 executes) and a run from the *committed* tag (so the packager builds without
-`--allow-dirty`, the sidecar names a clean commit, and the 22 packager-driven
+`--allow-dirty`, the sidecar names a clean commit, and the 24 packager-driven
 archive cases are exercised in the state an editor will actually receive).
