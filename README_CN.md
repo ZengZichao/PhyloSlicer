@@ -26,7 +26,7 @@ PhyloSlicer 是独立实现的**向量化** Python 版，实现的是 R 包 **tr
 
 "快"是结构性的结果，不是宣传用语。切片只是一张 `E × k` 的区间相交贡献矩阵，
 而参考设计要为 `k` 个切片各复制一棵完整的树：唯一随 `k` 增长的只有这一个数组，
-而 `k` 份整树复制在本包中根本不存在。Python 侧峰值内存已实测
+而 `k` 份整树复制并不随之增长。Python 侧峰值内存已实测
 （`benchmarks/benchmark_memory.py` → `benchmarks/results_memory_py.csv`）：
 在 2000 枝端处，单张 `(E, k)` 数组在 k = 25 / 50 / 100 时峰值为
 1.93 / 3.49 / 6.69 MB，而 `k` 份数组级整树复制为 2.81 / 5.62 / 11.23 MB，
@@ -51,7 +51,7 @@ PhyloSlicer 是独立实现的**向量化** Python 版，实现的是 R 包 **tr
 
 ## 文档
 
-- **英文使用手册（权威版）：** [docs/USER_GUIDE.md](docs/USER_GUIDE.md)
+- **英文使用手册（主版本）：** [docs/USER_GUIDE.md](docs/USER_GUIDE.md)
 - **中文使用手册：** [docs/USER_GUIDE_CN.md](docs/USER_GUIDE_CN.md)
 - **变更日志：** [CHANGELOG_CN.md](CHANGELOG_CN.md) · 英文：[CHANGELOG.md](CHANGELOG.md)
 - **贡献指南：** [CONTRIBUTING_CN.md](CONTRIBUTING_CN.md) · 英文：[CONTRIBUTING.md](CONTRIBUTING.md)
@@ -60,7 +60,7 @@ PhyloSlicer 是独立实现的**向量化** Python 版，实现的是 R 包 **tr
 - **稿件字数统计口径（可复现）：** [docs/WORD_COUNT_CN.md](docs/WORD_COUNT_CN.md) · 英文：[docs/WORD_COUNT.md](docs/WORD_COUNT.md)
 - **Zenodo 存档核对清单（仅作者可执行）：** [docs/ZENODO_DEPOSIT_CHECKLIST_CN.md](docs/ZENODO_DEPOSIT_CHECKLIST_CN.md) · 英文：[docs/ZENODO_DEPOSIT_CHECKLIST.md](docs/ZENODO_DEPOSIT_CHECKLIST.md)
 
-每一对文档中，英文版是权威版本，中文版是它的翻译，两者保持同一章节结构；
+每一对文档中，英文版是记录版本，中文版是它的翻译，两者保持同一章节结构；
 `tests/test_release_hygiene.py` 会在两侧标题结构出现偏离时让构建失败，因此这一对
 文档不会悄悄退化成节译。
 
@@ -128,7 +128,7 @@ treesliceR 1.1.0 做数值交叉核对。完整缺口清单与容差依据见
 
 ## 基准测试
 
-`benchmarks/` 收录四套彼此独立的协议及其存档表格。引用其中数字前请先读
+`benchmarks/` 收录四套彼此独立的协议及其归档表格。引用其中数字前请先读
 [`benchmarks/README_CN.md`](benchmarks/README_CN.md)：有两个同名列在不同文件里含义不同，
 且只有固定 k 的缩放表是跨语言比较。`python benchmarks/recompute_ratios.py`
 会从 CSV 重算文档引用的每一个加速比区间，CI 会执行它。
@@ -144,7 +144,7 @@ treesliceR 1.1.0 做数值交叉核对。完整缺口清单与容差依据见
 > phylogenetic patterns over evolutionary time. *Ecography* 2025, e07364.
 > https://doi.org/10.1111/ecog.07364
 
-## 许可
+## 许可证
 
 代码：BSD-3-Clause（见 [LICENSE](LICENSE)）。文档：CC-BY 4.0。
 第三方署名，包括 `treesliceR` 参考值的来源说明：[NOTICE_CN.md](NOTICE_CN.md) ·
@@ -170,7 +170,7 @@ BSD-3-Clause 原文。
 录用、签署 Wiley 作者许可协议时核实当期费用与任何机构协议安排。
 减免与折扣确实存在（Wiley 面向符合条件国家的 Research4Life 计划，以及 NSO 资助的
 豁免），因此没有出版经费的团队应当询问编辑部，而不是默认这笔费用无法避免。请注意
-边界划分：知识共享许可证管的是*文章*本身；软件仍然是 BSD-3-Clause，本仓库的文字
+边界划分：知识共享许可证管的是发表后的*文章*；软件仍然是 BSD-3-Clause，本仓库的文字
 仍然是 CC-BY 4.0（见 [NOTICE_CN.md](NOTICE_CN.md)）。
 
 ## 作者

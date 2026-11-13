@@ -7,7 +7,7 @@ security fixes.
 
 PhyloSlicer 是科研软件包，只有最新的 minor 版本线会获得安全修复。
 
-| Version | Supported / 受支持 |
+| Version / 版本 | Supported / 受支持 |
 | ------- | ------------------ |
 | 0.1.x   | ✅                 |
 
@@ -32,7 +32,8 @@ Please include, where possible / 如可能请附上：
 - the PhyloSlicer version (`python -c "import phyloslicer; print(phyloslicer.__version__)"`) / 版本号
 - Python version and operating system / Python 版本与操作系统
 - a minimal reproduction (command, input file, stack trace) / 最小复现（命令、输入文件、报错栈）
-- your assessment of impact (data corruption? wrong results? code execution?) / 影响评估
+- your assessment of impact (data corruption? wrong results? code execution?) /
+  你的影响评估（数据损坏？结果错误？代码执行？）
 
 ## What to expect / 处理流程
 

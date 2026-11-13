@@ -2,13 +2,13 @@
 
 本文件是 [`CHANGELOG.md`](CHANGELOG.md) 的中文译文，正文以英文文件为准。
 
-本文档记录 PhyloSlicer 的所有重要改动。版本记录以 `phyloslicer.__version__`
+本文档记录 PhyloSlicer 的所有重要改动。记录版本以 `phyloslicer.__version__`
 为准；下面的日期是该版本公开的日期，更早的源码定稿日期写在条目正文里。
 
 ## 0.1.1 — 2026-10-18
 
-首次发布到 PyPI。0.1.0 谱系按 2026-10-08 审阅意见加固：修复了唯一的库级缺陷，
-扩充验证套件以钉住修正后的行为，并让发布管线获得 PyPI 发布能力。源码于
+首次发布到 PyPI。0.1.0 谱系按 2026-10-08 审稿报告加固：修复了唯一的库级缺陷，
+扩充验证套件以钉住修正后的行为，并让发布流水线获得 PyPI 发布能力。源码于
 2026-10-18 定稿并公开。
 
 ### 新增
@@ -63,11 +63,11 @@
   来源清单（`validation/`）。
 - 基准测试阶梯：进程内朴素对照、跨语言切片内核（固定 `k`）、跨树规模的缩放曲线、
   1000/2000 枝端的端到端 CpD；另有 `benchmarks/benchmark_memory.py` 记录 Python 侧峰值
-  内存，以及 `benchmarks/recompute_ratios.py` 从存档表格重算文档引用的每个加速比区间。
+  内存，以及 `benchmarks/recompute_ratios.py` 从归档表格重算文档引用的每个加速比区间。
 - 测试套件（`tests/`）与端到端测试方案/报告（`testing_suite/`）。
 - `.pre-commit-config.yaml`（ruff check、ruff format），与 `dev` 可选依赖相匹配。
 - 手册之外的发布文档集：`docs/CI_WORKFLOWS*.md`（CI 工作流定义的逐字镜像——因为
-  `.github/` 与 `tools/` 无法进入审稿代码包）、`docs/WORD_COUNT*.md`（让稿件篇幅统计
+  `.github/` 与 `tools/` 无法进入审稿包）、`docs/WORD_COUNT*.md`（让稿件篇幅统计
   可复现的计数口径），以及 `docs/ZENODO_DEPOSIT_CHECKLIST*.md`（存档记录的逐字段更正
   清单）。每一份英文文档都配一份中文对应件，该规则由
   `tests/test_release_hygiene.py` 强制校验。

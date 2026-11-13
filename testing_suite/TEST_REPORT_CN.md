@@ -37,7 +37,7 @@ print(platform.platform())"` → `macOS-27.0.1-arm64-arm-64bit`）。第 7 节�
 | CI `no-accel` 流水线分支 | 1 跳过（第 5 节） |
 | `def test_` 函数数 / `@pytest.mark.parametrize` 标记数 | **354 / 28**（AST 普查，见第 6 节） |
 
-### 2.1 打包器门禁，以及这两个快照的来龙去脉
+### 2.1 打包器门禁，以及这些数字背后的两个快照
 
 `tests/test_review_archive.py` 会驱动打包器，而打包器如今拒绝在有未提交改动的工作树上
 构建（这是它的来源门禁 provenance gate；文档化的逃生门是 `--allow-dirty`，它会把每个未提交
@@ -45,8 +45,8 @@ print(platform.platform())"` → `macOS-27.0.1-arm64-arm-64bit`）。第 7 节�
 （`tests/test_review_archive.py:228`，并在 `:416` 与 sidecar 互相核对），所以上表的
 455/1/0 就是交付工作树实际产生的结果。
 
-同一批命令更早的一个快照——在最终那次运行约 25 分钟前取，且是在上述旗标还在传递时复制的
-一份副本上取——曾报出 `7 failed / 428 passed / 1 skipped / 15 errors`。被阻塞的 22 个用例全部是
+同一批命令更早的一个快照——在最终那次运行约 25 分钟前取，且是在一份尚未复制完成的
+副本上取——曾报出 `7 failed / 428 passed / 1 skipped / 15 errors`。被阻塞的 22 个用例全部是
 打包器驱动的审稿包测试，外加 `test_no_dangling_internal_references` 对
 `REVIEW_ARCHIVE_CN.md:146` 的抱怨；两者都属作者侧文档问题，都不是软件缺陷，并在上面那次
 最终运行取数之前已经解决。这里保留这段记录，是因为在半复制的树上跑套件的审稿人会撞上它，
@@ -101,7 +101,7 @@ HDI/ESS 代理）、`spatial`（邻接、速率图）、`compat`（treesliceR �
 | geopandas 不存在 | **1** | **1** | `tests/test_io_spatial_cli.py:404`，`could not import 'geopandas'` |
 | **合计** | **1** | **24** | |
 
-也就是说，包里 24 个跳过 = 23 个"作者侧工具与 CI 配置不可见"的守卫 + 1 个可选后端跳过；
+也就是说，包里 24 个跳过 = 23 个*作者侧工具与 CI 配置*缺失的守卫 + 1 个可选后端跳过；
 两种语境下都没有跳过任何数值类用例。
 
 ## 5. CI 的两条流水线分支
@@ -186,7 +186,7 @@ python -m venv --system-site-packages ../venv && ../venv/bin/python testing_suit
 下表来自 `testing_suite/scripts/run_benchmarks.py`，2026-09-29 重新生成（3 次重复取中位数）；
 随包的 `testing_suite/benchmarks/benchmark_results.csv` 仍是 2026-09-26 在 Python 3.12.14 下的
 那次运行，其峰值内存列与下表在舍入误差内一致，而计时比下表大 3-5 倍。哪些数字可以引用、
-应当怎么引用，以 `benchmarks/README.md` 为准。
+可以怎么引用，以 `benchmarks/README.md` 为准。
 
 | 树规模 | 样区数 | 切片数 | 切片 (s) | PD/切片 (s) | CpD 速率 (s) | 后验 (s) | 内存 (MB) |
 |---|---|---|---|---|---|---|---|

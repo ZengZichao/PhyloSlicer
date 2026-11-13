@@ -128,7 +128,7 @@ C[e, j] = max(0, min(d_e, t_j) − max(b_e, t_{j−1}))
 | `converged` | 仅当优化器认证了最优解时为 True |
 | `r_squared` | 拟合累积曲线的 1 − SSE/SST |
 | `residuals` | 逐切片残差（`diagnostics=False` 时为空） |
-| `start_used`、`n_iter` | 优化器溯源信息 |
+| `start_used`、`n_iter` | 优化器来源信息 |
 | `reason` | 收敛时为空；否则给出失败的通俗语言解释 |
 
 起源时间按 `pXO = −ln(1 − percentile) / r` 计算；默认的 `percentile=0.95` 与 treesliceR 的默认 `pDO = 5` 相对应：两者都返回 `-ln(0.05)/r`，即拟合曲线取值为 0.05 的那个年龄——参考实现直接命名剩余的那 5 %，本包命名的是累积到的 95 % 补集。
@@ -341,7 +341,7 @@ bc_tot = Σ_(C(m,2) pairs) (b + c)_pair      grows ~ quadratically in m
   请注意该警示的适用范围：它针对的是**指数**（`PB`），而不是所有下游数字。`pb_per_slice()` 把每行除以本行之和，所以对 `sorensen` 与 `turnover` 而言，multisite 剖面——以及 `cpb_rate()` 由此拟合出的 `CpB`——在两个域下*完全相同*，只有 `PB` 会变。`nestedness` 是速率会随求和域改变的唯一分量，因为它的两项分母不同。
 * `multisite_domain="paired"` 把共有项也放进与 `b + c` 和 `min(b, c)` 相同的按配对求和域，从而消除漂移：上表每档 *m* 的值都回到 0.5000，并与同一邻域的 `approach="pairwise"` 聚合一致，同时 `m = 2` 不受影响（两个域在该点重合）。这是对 treesliceR 的**有意偏离**：使用 `"paired"` 之后，multisite 输出不再与 R 结果互相可比。
 
-请注意，跟随参考算术并不等于满足某个已发表的定义。treesliceR 背后的方法学论文（Araujo et al. 2025, *Ecography*, e07364, doi:10.1111/ecog.07364，即本包所引用的条目）是本项目所载的唯一同类引用条目，但参考包自带的 vignette 仍写作 "Araujo et al. (in review)"，也没有给出 multisite 公式，因此我们无法对照某个发表过的方程去核验“`a` 按样区、`b+c` 按配对”。上述内部不一致已如实如此陈述，并在该核对完成之前保持为可选项。若确需已发表的多站点指标（Baselga 2010 / Carrasco et al. 2013 一族），请用 `approach="pairwise"` 并显式聚合。
+请注意，跟随参考算术并不等于满足某个已发表的定义。treesliceR 背后的方法学论文（Araujo et al. 2025, *Ecography*, e07364, doi:10.1111/ecog.07364，即本包所引用的条目）是本项目所载的唯一同类引用条目，但参考包自带的 vignette 仍写作 "Araujo et al. (in review)"，也没有给出 multisite 公式，因此我们无法对照某个发表过的方程去核验“`a` 按样区、`b+c` 按配对”。上述内部不一致已如实如此陈述，并在该核对完成之前保持为可选项。若确需已发表的多站点（multiple-site）指数（Baselga 2010 / Carrasco et al. 2013 一族），请用 `approach="pairwise"` 并显式聚合。
 
 ## 7. 累积速率（CpD、CpE、CpB）
 
@@ -365,7 +365,7 @@ site_id, CpE, PE, pEO, converged, r_squared, reason, at_lower_bound, at_upper_bo
 site_id, CpB (CpB_RW), PB (PB_RW), pBO, converged, r_squared, reason, at_lower_bound, at_upper_bound, ultrametric, origin_within_tree
 ```
 
-末尾四列是拟合与切片的审计线索：`at_lower_bound` / `at_upper_bound` 说明所报告的速率是边界最优而非估计值；`ultrametric` 记录被切片的树是否通过超度量检验（`False` 只有在传入 `allow_non_ultrametric=True` 时才可能出现）；`origin_within_tree` 说明拟合出的起源时刻是否落在树的范围之内。`pXO = -ln(1 - percentile) / rate` 是对拟合指数曲线的外推，因此速率偏慢时会把起源放在**根之前**，而系统发育树中并不存在对应的节点；数值原样报告，由该标记连同 `reason` 加以说明。`posterior_rate` 与 `posterior_origin` 在整个抽样池上给出 `n_ultrametric_draws` 与 `origin_within_tree`。
+末尾四列是拟合与切片的审计线索：`at_lower_bound` / `at_upper_bound` 说明所报告的速率是边界最优而非估计值；`ultrametric` 记录被切片的树是否通过超度量检验（`False` 只有在传入 `allow_non_ultrametric=True` 时才可能出现）；`origin_within_tree` 说明拟合出的起源时刻是否落在树的范围之内。`pXO = -ln(1 - percentile) / rate` 是对拟合指数曲线的外推，因此速率偏慢时可能把起源放在**根之前**，而系统发育树中并不存在对应的节点；数值原样报告，由该标记连同 `reason` 加以说明。`posterior_rate` 与 `posterior_origin` 在整个抽样池上给出 `n_ultrametric_draws` 与 `origin_within_tree`。
 
 常用参数：
 
@@ -395,7 +395,7 @@ sens = ps.sensitivity(tree, mat, slice_grid=[10, 25, 50, 100, 200],
 #          at_upper_bound, suggested_slices
 ```
 
-`suggested_slices` 是使某样区速率在相邻网格点之间的变化小于 5% 的最小网格计数。
+`suggested_slices` 是使某样区速率在其后的相邻网格点之间的变化都小于 5% 的最小网格计数。
 
 ### 7.1 直接调用拟合函数
 
@@ -532,10 +532,10 @@ phyloslicer validate  TREE SITES --reference REF_CSV [--manifest PATH]
 * `--rootward` / `--tipward` / `--n-slices` 有且只有一个被接受。
 * 已存在的 `--out` 会被拒绝，除非给出 `--force`。这对 `--n-slices` 影响最大：没有这项检查，把 `slice` 重复输出到同一目录会残留上一代的 `slice_*.tre` 文件，于是 `posterior` 会把两次运行的切片混作一池，而 `slice` 只报告它本次写出的数量。
 * `--log FILE` 写出 JSON 运行摘要（版本、命令、`elapsed_s`、`started_at`、关键统计量）。没有 `--seed`：CLI 不做任何随机抽样，而 `sensitivity(..., seed=)` 经由 API 提供可复现性。
-* `validate` 将累积速率运行与 treesliceR 参考 CSV 比对。被比较的列是**来源清单**登记为 `rate_column` 的那一列（因此 `CpD` 与 `CpE` 参考都可用，报告会按实际比较的指标命名列）；`--reference` 若在清单中没有条目则一律拒绝，退出码 2。清单可通过 `--manifest`、`$PHYLOSLICER_REFERENCE_MANIFEST`、参考文件同目录下的 `manifest.txt`，或 `validation/reference/manifest.txt` 提供。β 类参考（`CpB`、`CpB_RW`）需要邻接矩阵，而本子命令不接受该参数——请用 `python validation/compare.py` 为它们评分。
+* `validate` 将累积速率运行与 treesliceR 参考 CSV 比对。被比较的列是**来源清单**登记为 `rate_column` 的那一列（因此 `CpD` 与 `CpE` 参考都可用，报告会按实际比较的指数命名列）；`--reference` 若在清单中没有条目则一律拒绝，退出码 2。清单可通过 `--manifest`、`$PHYLOSLICER_REFERENCE_MANIFEST`、参考文件同目录下的 `manifest.txt`，或 `validation/reference/manifest.txt` 提供。β 类参考（`CpB`、`CpB_RW`）需要邻接矩阵，而本子命令不接受该参数——请用 `python validation/compare.py` 为它们评分。
 * `--n-slices` 必须等于清单头部记录的 `n_slices`，因为两个不同的窗口数不是同一个量。
 * 一致性规则：双侧均有限的按相对误差 ≤ 容差比较（默认 `1e-4`，与随包参考实际达到的优化器一致性水平（约 2e-6）相符）；**双侧**均为 NA 的样区计为一致；单侧 NA 计为不一致。运行时会在通过率旁打印实测的最大相对误差。
-* 退出码：`0` 成功；`1` 数值不一致（可用 `--no-strict` 抑制，仅供探索性使用）；`2` 请求被拒绝或格式有误。因此 `validate` 可以用于把关 CI：等价率不足 1 即为非零退出。
+* 退出码：`0` 成功；`1` 数值不一致（可用 `--no-strict` 抑制，仅供探索性使用）；`2` 请求被拒绝或格式有误。因此 `validate` 可以作为 CI 门禁：等价率不足 1 即为非零退出。
 
 ## 13. 从 treesliceR（R）迁移
 
@@ -574,7 +574,7 @@ complement = squeeze_int(tree, from_=7.0, to=1.0, invert=True)
 
 上述两处顺序均由 `tests/test_compat.py` 断言钉住。
 
-### 13.1 不只是改名的行为差异
+### 13.1 *不只是*改名的行为差异
 
 * 静默的 `NA` 行被替换为 `converged=False`，并附带一个 `reason`。
 * 每次树/矩阵调整（删物种、剪枝端）都会警告。

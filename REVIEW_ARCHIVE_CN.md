@@ -1,11 +1,11 @@
-# 匿名化同行评审存档包
+# 匿名化审稿包
 
 本文件是 [`REVIEW_ARCHIVE.md`](REVIEW_ARCHIVE.md) 的中文译文，正文以英文文件为准。
 
 Ecography《Software Notes》栏目允许投稿以补充压缩包的形式送审，而不必借助匿名仓库
-镜像：“It can be made available to reviewers either via a service such as Anonymous
+镜像：*“It can be made available to reviewers either via a service such as Anonymous
 Github … or by submitting the full source-code package and data as a supplementary
-zip file.” 本文说明生成该压缩包的打包工具、它移除了什么、刻意保留了什么，以及如何
+zip file.”* 本文说明生成该压缩包的打包工具、它移除了什么、刻意保留了什么，以及如何
 验证结果。
 
 投稿清单中由此得到支撑的陈述范围很窄、且可检验：**CI 通过打包工具构建审稿包，
@@ -29,7 +29,7 @@ python tools/make_review_archive.py --allow-no-git       # 仅用于确实不存
 输出目录已被 git 忽略（`.gitignore` 同时列出 `dist/review_archive/` 与
 `review_archive/`）。
 
-退出码：守护检查通过为 `0`；残留身份或构建产物为 `1`；存档无法作出诚实的来源声明
+退出码：仅当守护检查通过时为 `0`；残留身份或构建产物为 `1`；存档无法作出诚实的来源声明
 （读不到 git 元数据，或工作树有未提交改动）而又未给出对应的 `--allow-*` 开关时，同样
 以 `PROVENANCE GATE` 信息退出 `1`；指定的存档文件不存在为 `2`。
 
@@ -44,7 +44,7 @@ python -m pytest -q tests/test_review_archive.py
 ```
 
 `--check-only` 会重新读取每个条目、扫描身份模式、把每个条目的 SHA-256 与来源清单
-逐条比对，并拒绝任何构建/VCS 产物。测试中有两个用例故意在正常压缩包内植入作者姓名
+逐条比对，并拒绝任何构建/VCS 产物。测试中有两个用例故意在一份正常压缩包的副本内植入作者姓名
 和一个 `__pycache__` 文件，并断言守护检查**会失败**——一个不可能失败的检查毫无价值。
 
 可复现性：条目排序、所有时间戳统一取 HEAD 的提交日期（可用 `SOURCE_DATE_EPOCH`
@@ -57,8 +57,8 @@ python -m pytest -q tests/test_review_archive.py
 一个过期的摘要和一个错误的条目数（263），正是这个道理：打包工具、来源清单与两种存档格式
 一贯给出的都是 260。交付文件的摘要记在编辑持有的投稿检查清单里，那在存档之外，因此才可能为真。
 
-本文档是维护者说明，打包工具把它与其中文对应件、以及 `tools/` 本身一起排除在评审所得
-之外：这三处都在讲匿名化，并且复述了被清除的身份字面量，一旦随包交付就会让清除前功
+本文档是维护者说明，打包工具把它与其中文对应件、以及 `tools/` 本身一起排除在审稿所得
+之外：这三处都在讲匿名化，并且复述了被脱敏的身份字面量，一旦随包交付就会让脱敏前功
 尽弃（理由记在 `EXCLUDED_TOPLEVEL`）。读者拿到的替代物比自我引用更强：
 `REVIEW_ARCHIVE_PROVENANCE.json` 记下构建树所在的提交（`source_control.commit`）、
 包与打包工具版本、解释器、工作树是否干净（`git_dirty_paths`）、每一个条目的 SHA-256，
@@ -88,7 +88,7 @@ python -m pip install -e .
 
 这份清单由两条规则而非主观偏好决定：
 
-* 评审者必须能够安装、运行并独立复核该软件包；
+* 审稿人必须能够安装、运行并独立复核该软件包；
 * 软件包自身的卫生测试必须在存档内通过，因此这些测试读取的文件必须在包内——
   `test_version_licence_and_release_date_are_stated` 会读取 `CITATION.cff`、
   `.zenodo.json` 与十份手册/变更日志，
@@ -101,7 +101,7 @@ python -m pip install -e .
 以及关键的 `tools/` 与 `REVIEW_ARCHIVE.md`/`REVIEW_ARCHIVE_CN.md`。打包工具的替换表
 和本文档必然包含它们所删除的字面量，收录进来等于自行拆掉匿名化，而运行软件包并不需要
 它们。替代做法是：包内由打包工具生成
-`PEER_REVIEW_NOTICE.md` / `PEER_REVIEW_NOTICE_CN.md`，向评审者解释这些占位符的含义。
+`PEER_REVIEW_NOTICE.md` / `PEER_REVIEW_NOTICE_CN.md`，向审稿人解释这些占位符的含义。
 
 所有被收录的文档都保留其中文对照件，因为项目自身的卫生规则如此要求：生成的说明
 以成对形式写入；排除 `.github/` 是整目录排除，不会拆散任何一对文档。
@@ -121,7 +121,7 @@ python -m pip install -e .
 | `SECURITY.md:19` / `SECURITY_CN.md:18` | 报告者邮箱 | 占位符替换 |
 | `CODE_OF_CONDUCT.md:65,137` / `CODE_OF_CONDUCT_CN.md:50` | 报告者邮箱 | 占位符替换 |
 | `CONTRIBUTING.md:13` / `CONTRIBUTING_CN.md:14`、`RELEASE.md:85` / `RELEASE_CN.md:80` | 克隆/安装 URL、Zenodo GitHub 设置页 URL | 所有者段替换 |
-| `tests/test_release_hygiene.py:191,194,202` | 卫生测试本身断言了真实姓名、邮箱与 URL | 用同一张映射表一并替换（理由见下） |
+| `tests/test_release_hygiene.py:191,194,202` | 卫生测试*本身断言*了真实姓名、邮箱与 URL | 用同一张映射表一并替换（理由见下） |
 | `docs/USER_GUIDE.md`、`docs/USER_GUIDE_CN.md`、`validation/*.py`、`examples/*.py`、`benchmarks/*`、`testing_suite/*` | 经检查：**未发现**作者字符串、仓库 URL 或本机绝对路径 | 原样收录 |
 
 未发现任何家目录绝对路径（macOS 或 Windows 的用户目录前缀，也没有本检出自身的路径），
@@ -134,7 +134,7 @@ python -m pip install -e .
 脱敏采用**一次性、统一的字面量到占位符替换，作用于所有被收录的文本文件**——文档、
 代码、元数据*以及测试*。这是整个设计的关键取舍：`tests/test_release_hygiene.py` 要求
 `pyproject.toml`、`CITATION.cff`、`.zenodo.json`、`README*.md` 与 `LICENSE` 指向同一
-作者与同一仓库，因此只替换其中一部分会让评审者拿到一个“自身一致性测试失败”的包。
+作者与同一仓库，因此只替换其中一部分会让审稿人拿到一个“自身一致性测试失败”的包。
 全量替换则让测试读取的字面量与元数据携带的字面量始终相同，套件在存档内原样通过。
 所用占位符：`Author One Withheld`、`AuthorTwo`、`Withheld`、
 `AUTHOR_WITHHELD_FOR_PEER_REVIEW`、`author.one.withheld@example.invalid` /
@@ -176,7 +176,7 @@ holder"`。于是审稿包要么含作者姓名，要么就没有许可——不
 
 **决定已经作出并记录在案：送审存档就是 BSD-3-Clause 许可的 `placeholder` 构建——许可
 全文照发，仅把两位持有人姓名替换为占位符**——
-`Copyright (c) 2026, Author One Withheld and Author Two Withheld`。三项条件与免责声明逐字未改，评审者拿到的
+`Copyright (c) 2026, Author One Withheld and Author Two Withheld`。三项条件与免责声明逐字未改，审稿人拿到的
 授权范围完全不变；真实持有人在公开发布版本中恢复，而那才是真正必须载明持有人署名的那份副本。
 替代方案是已实现的、不只是文字描述：
 
@@ -224,7 +224,7 @@ BSD-3-Clause 陈述，以及在刻意偏离时附上的 `deviation` 说明），
 过度声称。两种状态会直接停止构建：
 
 * **读不到 git 元数据**（没有 `.git`，或 PATH 上没有 `git`）。此前它把字面量 `"unknown"`
-  写进 `source_control.commit`，于是包内套件以 `assert 7 == 40` 失败——丢掉 `.git` 的评审者
+  写进 `source_control.commit`，于是包内套件以 `assert 7 == 40` 失败——丢掉 `.git` 的审稿人
   既遇到红灯，又遇到一个伪装成哈希的假话。现在构建会以 `PROVENANCE GATE` 信息被拒绝并
   说明缘由；加 `--allow-no-git` 才继续，并把 `commit: null` 与 `git_unavailable: true`
   写入清单，即完全不声明任何提交；`tests/test_review_archive.py` 读到该标记后跳过提交断言
@@ -232,14 +232,14 @@ BSD-3-Clause 陈述，以及在刻意偏离时附上的 `deviation` 说明），
 * **工作树存在未提交的改动。** 在几十个路径与 HEAD 不一致时只写 HEAD，是假的来源声明，
   因此除非显式加 `--allow-dirty` 否则拒绝构建；加了之后，清单会记录 `git_dirty: true`、
   `git_dirty_count` 与完整的 `git_dirty_paths`，并在 `source_control.note` 里毫不含糊地
-  对 HEAD 作出免责说明。`check()` 会拒绝“脏构建却未如实记录”，也会在 git 可读时拒绝任何不是
+  对 HEAD 作出免责说明。`check()` 会拒绝“脏构建却未如实记录”，也会在 git *确实*可读时拒绝任何不是
   40 字符的 SHA-1 提交号。
 
 诚实的工作流因此是：先由编排流程（orchestrator）完成提交，再从已定稿的检出构建（无需
 任何开关），并以 CI 中位于测试之后的那一步生成最终递交文件。`--allow-dirty` 的存档之所以
 合法，正是因为它自我声明为脏构建产物。
 
-## 评审者预期应当能够运行什么
+## 审稿人预期应当能够运行什么
 
 以下清单中的每一条都在解包后的存档内、仅凭存档本身、无需安装步骤实际运行过：
 
@@ -264,7 +264,7 @@ BSD-3-Clause 陈述，以及在刻意偏离时附上的 `deviation` 说明），
 `validation/reference/manifest.txt`，清单条目只记录裸文件名（比较器相对 `reference/`
 目录解析它们，不依赖任何被记录的路径），在比对前先校验每个 SHA-256，并拒绝未登记的
 参考文件。这条链上没有任何一处引用作者的开发机，因此它能穿过匿名化、在存档内重新跑
-通——论文里“评审者可自行核验哈希”那句话所需要的正是这一点。
+通——论文里“审稿人可自行核验哈希”那句话所需要的正是这一点。
 
 存档内执行类测试是 `tests/test_review_archive.py` 中最慢的部分：实测该模块 19 个测试
 共 26 s，其中约 15 s 来自解包后的套件、示例与比较器。这远在 3 分钟预算之内，因此
@@ -274,11 +274,11 @@ BSD-3-Clause 陈述，以及在刻意偏离时附上的 `deviation` 说明），
 
 ## 致编辑
 
-作者身份**仅**在评审期间、且仅在压缩包内被隐去。稿件标题页与仓库中的记录版本仍然载有
+作者身份**仅**在审稿期间、且仅在压缩包内被隐去。稿件标题页与仓库中的记录版本仍然载有
 身份：`CITATION.cff`（姓名、邮箱、ORCID、机构）、`LICENSE`
 （`Copyright (c) 2026, Zichao Zeng and Yinzhao Wang`）、`.zenodo.json`，以及公开版本中 `v0.1.0` 标签提交
 上的 README 作者栏。匿名化包里没有任何一处是永久改动：打包工具只把脱敏后的字节写进
 压缩包，从不编辑源文件，因此 Zenodo 与 GitHub 在录用后承载的存档仍然写明作者；包内元
 数据字段读作 `Withheld`，而不是“尚未完成”的占位符。来源清单记录了构建所用的确切提交，
-便于两相核对；包内的 `PEER_REVIEW_NOTICE.md` / `PEER_REVIEW_NOTICE_CN.md` 会向评审者
-解释这些占位符的含义，但不会解释它们是谁。
+便于两相核对；包内的 `PEER_REVIEW_NOTICE.md` / `PEER_REVIEW_NOTICE_CN.md` 会向审稿人
+解释这些占位符的含义，但不会说明作者是谁。

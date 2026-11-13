@@ -21,7 +21,7 @@ pre-commit install
 `[accel]`（numba）与 `[spatial]`（geopandas）是可选后端。缺少后端时相关用例会
 跳过，因此完整本地运行应两者都装；CI 故意让加速内核与纯 Python 内核互相对照。
 
-## 变更必须通过的检查
+## 变更必须通过的门禁
 
 ```bash
 ruff check src tests benchmarks examples testing_suite validation
@@ -33,7 +33,7 @@ python validation/compare.py
 python benchmarks/recompute_ratios.py
 ```
 
-`.pre-commit-config.yaml` 在提交时执行两条 ruff 检查；CI 在 Ubuntu 与 macOS 上、
+`.pre-commit-config.yaml` 在提交时执行两条 ruff 门禁；CI 在 Ubuntu 与 macOS 上、
 Python 3.10-3.13 全部版本上执行上述七项。
 
 ## 约定
@@ -50,7 +50,7 @@ Python 3.10-3.13 全部版本上执行上述七项。
 - **诊断信息是 API 的一部分。** 拟合失败时返回 `converged=False` 且带可读
   `reason` 的行；不要把读者必须能看到的退化情形用异常吞掉。
 - **文档成对交付。** 无后缀的英文文件是记录版本；每个 `X.md` 都有小节结构相同的
-  `X_CN.md` 中文版。改动英文正文时，同一个拉取请求（PR）里一并改中文。
+  `X_CN.md` 中文版。改动英文正文时，同一个 PR 里一并改中文。
 - **不得出现个人路径。** 代码树中任何位置的绝对本地路径都会让
   `tests/test_release_hygiene.py::test_no_personal_paths_or_names_anywhere_in_the_tree`
   失败。
@@ -58,7 +58,7 @@ Python 3.10-3.13 全部版本上执行上述七项。
 ## 提出变更
 
 凡涉及公开行为、指数定义或 `validation/` 中容差的改动，请先开 issue。PR 应当写
-明你执行了哪些检查输出、关联的 issue，并附一个"没有该修复就会失败"的回归测试
+明你执行了哪些门禁的输出、关联的 issue，并附一个"没有该修复就会失败"的回归测试
 （本仓库惯例见 `tests/test_defect_regressions.py`：一个缺陷一条钉住测试，以症状
 命名）。
 

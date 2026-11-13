@@ -27,4 +27,4 @@
 
 ## 类型 / Type
 
-- [ ] bug fix　[ ] feature　[ ] docs　[ ] CI/maintenance（CI/维护）　[ ] other（其他）
+- [ ] bug fix（缺陷修复）　[ ] feature（新功能）　[ ] docs（文档）　[ ] CI/maintenance（CI/维护）　[ ] other（其他）

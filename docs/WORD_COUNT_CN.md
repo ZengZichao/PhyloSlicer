@@ -17,7 +17,7 @@
 2. 按文档顺序以 `<w:p …> … </w:p>` 切分段落。
 3. 段落的*样式*取其 `w:pStyle`/`w:val` 属性值；没有 `w:pStyle` 的段落样式记为空。
 4. 段落的*文本*是该段落内所有 `<w:t>` 元素按文档顺序的拼接。超链接里的文本
-   （例如 DOI）**计入**。
+   （例如 DOI）计入。
 5. *词*指一段尽可能长的连续非空白字符，且其中至少含一个字母或数字；"字母或数字"按 Python
    `str.isalnum()` 判定（即 Unicode 字母与数字都算，所以 `α`、`CpD`、`e07364`、
    `2025` 各算一个词）。纯标点不算词：`—`、`;`、`%`、`(1)`、`·`、单独的减号都是零贡献。
@@ -158,11 +158,11 @@ python -c "import zipfile,sys;print(zipfile.ZipFile(sys.argv[1]).read('docProps/
 同一批文件的 `docProps/app.xml` 里 `Application` 字段写的是某桌面字处理软件；该字符串
 由生成器模板带出，并不表示文件在 Word 里编辑过。在 Word 或 LibreOffice 中把这五份文件
 各另存一次，即可对齐属性并刷新 PAGE/NUMPAGES 缓存字段，代价是脚本构建不再是这些文件
-的唯一来源。
+的事实来源。
 
 ## 6. 参见
 
-* `docs/CI_WORKFLOWS.md` / `docs/CI_WORKFLOWS_CN.md`——CI 两条流水线分别测什么。
+* `docs/CI_WORKFLOWS.md` / `docs/CI_WORKFLOWS_CN.md`——CI 各条流水线分别测什么。
 * `docs/ZENODO_DEPOSIT_CHECKLIST.md` / `_CN.md`——外部元数据记录（Zenodo 记录）。
 * `testing_suite/TEST_REPORT.md` / `_CN.md`——测试计数，并附上重新推出这些数字的命令；
   正是本文件对字数所采用的那一套纪律。

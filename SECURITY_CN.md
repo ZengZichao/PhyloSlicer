@@ -12,7 +12,7 @@ PhyloSlicer 是科研软件包，只有最新的 minor 版本线会获得安全�
 
 ## 报告安全漏洞
 
-**首选渠道：** GitHub 私密漏洞报告 —— 仓库页 **Security → Report a
+**首选渠道：** GitHub 私密漏洞报告——仓库页 **Security → Report a
 vulnerability**，仅维护者可见。
 
 **备选渠道：** 邮件 <zengzichao@sjtu.edu.cn>（邮件标题请注明

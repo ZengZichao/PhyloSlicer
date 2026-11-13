@@ -47,7 +47,7 @@ PhyloSlicer 代码的版权由本包两位作者共同持有，措辞与 `LICENS
 numba 为可选扩展。PhyloSlicer 在调用时才导入它们，不做任何拷贝，并且即使缺少
 可选依赖，功能依然完全可用。
 
-## 文档许可
+## 文档许可证
 
 `README*.md`、`docs/USER_GUIDE*.md`、`benchmarks/README*.md`、
 `validation/NOTES*.md`、`testing_suite/*.md` 的文字部分以 CC-BY 4.0 发布；本仓库
