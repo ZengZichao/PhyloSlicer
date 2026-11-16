@@ -16,7 +16,7 @@ it prints the offending entry, the pattern and the surrounding text and exits
 non-zero.  ``--check-only`` runs the same guard over an archive that already
 exists, so the guard can be exercised without rebuilding anything.
 
-Two design decisions are load-bearing and explained in ``REVIEW_ARCHIVE.md``:
+Two design decisions are load-bearing:
 
 1. Scrubbing is a *uniform token substitution* applied to every archived text
    file, including the tests that assert on the metadata.  Because
@@ -28,9 +28,8 @@ Two design decisions are load-bearing and explained in ``REVIEW_ARCHIVE.md``:
    fails.  The source files in the working tree are never modified.
 2. ``tools/`` itself is *not* shipped inside the archive, because the scrub
    table here necessarily contains the literals it removes; shipping it would
-   undo the anonymisation.  ``REVIEW_ARCHIVE.md`` is excluded for the same
-   reason.  ``tests/test_review_archive.py`` ships, and skips itself when there
-   is no packager to drive.  Its scrub table used to sit inside that shipped
+   undo the anonymisation.  ``tests/test_review_archive.py`` ships, and skips
+   itself when there is no packager to drive.  Its scrub table used to sit inside that shipped
    file, spelled in fragments so the guard could not see it - which also meant a
    reviewer could reassemble it (RI-17/CM-03); the literals now live in
    ``tools/identity_literals.py``, which is excluded with this module, and
@@ -115,10 +114,8 @@ EXCLUDED_TOPLEVEL = {
     ".mypy_cache": "tool cache",
     "build": "build output",
     "dist": "build output",
-    # author-side documentation
+    # author-side tooling
     "tools": "build-time packager: its scrub table necessarily quotes the literals it removes",
-    "REVIEW_ARCHIVE.md": "documents the anonymisation and therefore quotes the literals it removes",
-    "REVIEW_ARCHIVE_CN.md": "Chinese counterpart of the above, same reason",
 }
 
 #: Directory names pruned wherever they appear.
@@ -241,7 +238,7 @@ WITHHELD_ORCID_TOKEN = "WITHHELD_FOR_PEER_REVIEW"
 
 #: Static rules, longest literal first so that ``Zichao Zeng`` is never left as a
 #: fragment of an earlier ``Zeng`` replacement.  These are the strings the audit
-#: found in the tree; see REVIEW_ARCHIVE.md for the file:line evidence.
+#: found in the tree; tools/identity_literals.py records where each one appears.
 STATIC_RULES: tuple[Rule, ...] = (
     Rule(
         "author_name_cn_block",

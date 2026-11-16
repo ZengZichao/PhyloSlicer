@@ -253,5 +253,3 @@ of losing the scripted build as the source of truth.
 
 * `docs/CI_WORKFLOWS.md` / `docs/CI_WORKFLOWS_CN.md` — what the CI legs measure.
 * `docs/ZENODO_DEPOSIT_CHECKLIST.md` / `_CN.md` — the external metadata record.
-* `testing_suite/TEST_REPORT.md` / `_CN.md` — the test tallies, with the commands
-  that re-derive them; the same discipline this file applies to word counts.

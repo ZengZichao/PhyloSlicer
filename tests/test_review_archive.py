@@ -873,7 +873,7 @@ def test_license_preserved_mode_ships_the_notice_verbatim(tmp_path: Path) -> Non
     """The escape hatch for the licence decision, and its documented cost.
 
     ``--license preserved`` is the alternative the author may choose instead of
-    tokenising the copyright holder (see REVIEW_ARCHIVE.md).  It must ship
+    tokenising the copyright holder.  It must ship
     ``LICENSE`` byte-for-byte - a half-substituted notice would name nobody and
     license nothing - and it must still scrub everything else, so checking the
     result in the default mode has to fail rather than quietly pass.
@@ -904,4 +904,3 @@ def test_source_files_were_not_modified() -> None:
     )
     pyproject = (ROOT / "pyproject.toml").read_text(encoding="utf-8")
     assert _identity_patterns()["author_email"] in pyproject
-    assert (ROOT / "REVIEW_ARCHIVE.md").is_file(), "the archive recipe must be documented"

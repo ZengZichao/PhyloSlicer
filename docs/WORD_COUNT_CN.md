@@ -212,5 +212,3 @@ python -c "import zipfile,sys;print(zipfile.ZipFile(sys.argv[1]).read('docProps/
 
 * `docs/CI_WORKFLOWS.md` / `docs/CI_WORKFLOWS_CN.md`——CI 各条流水线分别测什么。
 * `docs/ZENODO_DEPOSIT_CHECKLIST.md` / `_CN.md`——外部元数据记录（Zenodo 记录）。
-* `testing_suite/TEST_REPORT.md` / `_CN.md`——测试计数，并附上重新推出这些数字的命令；
-  正是本文件对字数所采用的那一套纪律。
