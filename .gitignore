@@ -43,3 +43,7 @@ tmp/
 # explicit entry below also covers a custom --out review_archive.
 dist/review_archive/
 review_archive/
+
+# Test-run artefacts, regenerated on every run_all_tests.py invocation
+testing_suite/logs/
+testing_suite/results/
