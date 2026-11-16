@@ -3,8 +3,7 @@
 The archived timing tables carry no hardware field.  That is why the manuscript can
 only say "a single Apple silicon laptop" and must not assert a CPU model or a memory
 size for them: the precise specification ("Apple M5, 10 cores, 32 GB RAM, macOS 27.0")
-exists in ``testing_suite/TEST_REPORT.md``, which documents the *test-suite* session,
-not the timing session.
+was recorded for the *test-suite* session, not the timing session.
 
 This module closes that gap for **future** runs only.  Every driver in this directory
 merges :func:`machine_fields` into the rows it writes, so a re-issued table names the

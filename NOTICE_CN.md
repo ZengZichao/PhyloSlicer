@@ -13,7 +13,7 @@ PhyloSlicer 代码的版权由本包两位作者共同持有，措辞与 `LICENS
 > BSD 3-Clause License — Copyright (c) 2026, Zichao Zeng and Yinzhao Wang
 
 本文件以与 `LICENSE` 相同的措辞写明持有人：两份文件都不拆分作品，也不把版权划给某
-个机构。审稿包中这两个姓名会被 `REVIEW_ARCHIVE.md` 所记录的中性占位符替换，因此归档
+个机构。审稿包中这两个姓名会被中性占位符替换，因此归档
 的 `LICENSE` 读作 `Copyright (c) 2026, Author One Withheld and Author Two Withheld`，
 而公开与存档副本仍逐字保留姓名。
 

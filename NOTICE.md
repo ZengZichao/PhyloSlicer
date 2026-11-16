@@ -14,7 +14,7 @@ the words `LICENSE` carries:
 
 This file states the holder in the same words as `LICENSE`; neither document splits
 the work up or assigns it to an institution. In the review archive both names are
-replaced by the neutral tokens `REVIEW_ARCHIVE.md` documents, so the archived
+replaced by neutral tokens, so the archived
 `LICENSE` reads `Copyright (c) 2026, Author One Withheld and Author Two Withheld`
 while the public and deposited copies carry the names verbatim.
 

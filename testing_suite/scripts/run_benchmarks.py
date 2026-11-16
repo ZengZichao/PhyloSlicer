@@ -141,38 +141,6 @@ def main():
     print("\nBenchmark summary:")
     print(df.to_string(index=False))
 
-    # Also write a markdown summary
-    md_path = BENCH_DIR / "BENCHMARK_REPORT.md"
-    with open(md_path, "w") as f:
-        f.write("# PhyloSlicer Benchmark Report\n\n")
-        f.write(f"**Version:** {ps.__version__}  \n")
-        f.write(f"**Date:** {time.strftime('%Y-%m-%d')}  \n")
-        f.write(f"**Python:** {sys.version.split()[0]}  \n\n")
-        f.write("## Methodology\n\n")
-        f.write("Each configuration is run 3 times; the table reports the median.\n")
-        f.write("Memory is peak traced memory (tracemalloc).\n\n")
-        f.write("## Results\n\n")
-        f.write(
-            "| n_tips | n_sites | n_slices | slice (s) | pd_per_slice (s) "
-            "| cpd_rate (s) | cpd_MB | posterior (s) | n_converged |\n"
-        )
-        f.write(
-            "|--------|---------|----------|-----------|------------------|--------------|--------|---------------|-------------|\n"
-        )
-        for _, row in df.iterrows():
-            f.write(
-                f"| {int(row['n_tips'])} | {int(row['n_sites'])} | {int(row['n_slices'])} "
-                f"| {row['slice_s']:.4f} | {row['pd_per_slice_s']:.4f} "
-                f"| {row['cpd_rate_s']:.4f} | {row['cpd_rate_MB']:.1f} "
-                f"| {row['posterior_s']:.4f} | {int(row['n_converged'])} |\n"
-            )
-        f.write("\n## Scaling\n\n")
-        f.write("The contribution matrix is `E x k` (edges x slices), so:\n")
-        f.write("- Slicing cost is O(E * k) — linear in both tree size and slice count.\n")
-        f.write("- PD per slice is O(S * E * k) via sparse matrix product.\n")
-        f.write("- Rate fitting is vectorised: all sites solved simultaneously.\n")
-    print(f"Benchmark report saved to: {md_path}")
-
 
 if __name__ == "__main__":
     main()
